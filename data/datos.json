@@ -1,0 +1,32 @@
+[
+    {
+        "fecha":"2026-06-29T00:00:00",
+        "giro":25,
+        "oxigeno":5.6,
+        "temperatura":28.3
+    },
+    {
+        "fecha":"2026-06-29T03:00:00",
+        "giro":30,
+        "oxigeno":6.2,
+        "temperatura":28.1
+    },
+    {
+        "fecha":"2026-06-29T06:00:00",
+        "giro":35,
+        "oxigeno":6.7,
+        "temperatura":27.9
+    },
+    {
+        "fecha":"2026-06-29T09:00:00",
+        "giro":32,
+        "oxigeno":6.5,
+        "temperatura":28.0
+    },
+    {
+        "fecha":"2026-06-29T12:00:00",
+        "giro":28,
+        "oxigeno":6.1,
+        "temperatura":28.6
+    }
+]
