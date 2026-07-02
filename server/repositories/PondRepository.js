@@ -14,6 +14,17 @@ class PondRepository {
         const data = fs.readFileSync(filePath, "utf8");
 
         return JSON.parse(data);
+
+    }
+
+    saveAll(ponds) {
+
+        fs.writeFileSync(
+            filePath,
+            JSON.stringify(ponds, null, 4),
+            "utf8"
+        );
+
     }
 
 }
