@@ -1,19 +1,5 @@
-import { obtenerDatos } from "./api.js";
+import Application from "./core/Application.js";
 
-import { crearDatasets } from "./datasets.js";
+const app = new Application();
 
-import { crearGrafico } from "./chart.js";
-
-async function iniciar() {
-
-    const datos = await obtenerDatos();
-
-    const datasets = crearDatasets(datos);
-
-    const canvas = document.getElementById("grafico");
-
-    crearGrafico(canvas, datasets);
-
-}
-
-iniciar();
+app.start();
