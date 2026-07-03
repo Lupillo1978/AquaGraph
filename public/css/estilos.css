@@ -95,3 +95,23 @@ footer{
     border-top:1px solid #444;
 
 }
+
+.card{
+
+    background:#303134;
+
+}
+
+.card-header{
+
+    background:#2b2b2b;
+
+    font-weight:600;
+
+}
+
+.card-footer{
+
+    background:#2b2b2b;
+
+}

@@ -55,6 +55,22 @@ export default class Application{
 
       }
 
+      document.addEventListener("click", (event) => {
+
+        if (event.target.id === "btnNewPond") {
+
+            const modal = new bootstrap.Modal(
+
+                document.getElementById("newPondModal")
+
+            );
+
+            modal.show();
+
+        }
+
+        });
+      
     }
 
 }

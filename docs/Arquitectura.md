@@ -53,3 +53,14 @@ AquaGraph
 Alarmas
 
 Usuarios
+
+Decisión #003
+
+A partir de este momento, todas las listas del sistema compartirán el mismo patrón visual:
+
+Encabezado.
+Botón principal de acción.
+Lista de elementos.
+Contador al pie.
+
+Esto no solo mejora la experiencia del usuario, sino que simplifica el desarrollo, ya que podremos reutilizar componentes y estilos para Estanques, Alimentadores, Gateways, Sensores y cualquier otra entidad.

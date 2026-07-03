@@ -24,32 +24,60 @@ export default class InfoPanel {
 
     }
 
-    showPonds() {
+    showPonds(){
 
-        document.getElementById("infoPanel").innerHTML = `
+     document.getElementById("infoPanel").innerHTML=`
 
-            <div class="p-3">
+        <div class="p-3">
 
-                <h5>Gestión de Estanques</h5>
+            <h5>Gestión de Estanques</h5>
 
-                <hr>
+            <hr>
 
-                <button
-                    class="btn btn-success w-100 mb-3">
+            <button
+                id="btnNewPond"
+                class="btn btn-success w-100 mb-3">
 
-                    + Nuevo Estanque
+                + Nuevo Estanque
 
-                </button>
+            </button>
 
-                <div id="pondList">
+            <div class="card bg-dark text-white border-secondary">
 
-                    No hay estanques registrados.
+                <div class="card-header">
+
+                    Estanques
+
+                </div>
+
+                <div
+                    id="pondList"
+                    class="card-body">
+
+                    <div class="text-center text-secondary">
+
+                        No existen estanques registrados.
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+
+                    Total:
+                    <span id="pondCount">
+
+                        0
+
+                    </span>
 
                 </div>
 
             </div>
 
-        `;
+        </div>
+
+      `;
 
     }
 
