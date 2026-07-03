@@ -9,6 +9,8 @@ import StatusBar from "../components/StatusBar.js";
 
 import MapEngine from "../engines/MapEngine.js";
 
+import PondEngine from "../engines/PondEngine.js";
+
 export default class Application{
 
     constructor(){
@@ -27,50 +29,26 @@ export default class Application{
 
         this.map=new MapEngine("map");
 
+        this.pondEngine = new PondEngine(this.infoPanel);
+
     }
 
-    async start(){
+    async start() {
 
-        Logger.success("Iniciando AD&M AquaControl");
+    Logger.success("Iniciando AD&M AquaControl");
 
-        this.header.render();
+    this.header.render();
 
-        this.sidebar.render();
+    this.sidebar.render();
 
-        this.infoPanel.render();
+    this.infoPanel.render();
 
-        this.statusBar.render();
+    this.statusBar.render();
 
-        this.map.initialize();
+    this.map.initialize();
 
-        const btnPonds = document.getElementById("btnPonds");
+    this.pondEngine.initialize();
 
-        if (btnPonds) {
-
-           btnPonds.addEventListener("click", () => {
-
-            this.infoPanel.showPonds();
-
-        });
-
-      }
-
-      document.addEventListener("click", (event) => {
-
-        if (event.target.id === "btnNewPond") {
-
-            const modal = new bootstrap.Modal(
-
-                document.getElementById("newPondModal")
-
-            );
-
-            modal.show();
-
-        }
-
-        });
-      
-    }
+}
 
 }
