@@ -1,8 +1,12 @@
+import PondService from "../services/PondService.js";
+
 export default class PondEngine {
 
     constructor(infoPanel) {
 
         this.infoPanel = infoPanel;
+
+        this.service = new PondService();
 
     }
 
@@ -15,6 +19,8 @@ export default class PondEngine {
             btnPonds.addEventListener("click", () => {
 
                 this.infoPanel.showPonds();
+
+                this.loadPonds();
 
             });
 
@@ -37,5 +43,14 @@ export default class PondEngine {
         });
 
     }
+
+    async loadPonds() {
+
+     const response = await this.service.getAll();
+
+     console.log(response);
+
+    }
+
 
 }
