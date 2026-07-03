@@ -43,6 +43,18 @@ export default class Application{
 
         this.map.initialize();
 
+        const btnPonds = document.getElementById("btnPonds");
+
+        if (btnPonds) {
+
+           btnPonds.addEventListener("click", () => {
+
+            this.infoPanel.showPonds();
+
+        });
+
+      }
+
     }
 
 }

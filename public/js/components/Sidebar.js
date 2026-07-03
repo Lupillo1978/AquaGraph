@@ -16,7 +16,7 @@ export default class Sidebar{
 
             </button>
 
-            <button class="btn btn-outline-light w-100 mb-2">
+            <button id="btnPonds" class="btn btn-outline-light w-100 mb-2">
 
                 Estanques
 
