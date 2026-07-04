@@ -1,34 +1,20 @@
 export default class Pond {
 
-    constructor() {
+    constructor(data = {}) {
 
-        this.id = null;
+        this.id = data.id ?? null;
 
-        this.code = "";
+        this.code = data.code ?? "";
 
-        this.name = "";
+        this.name = data.name ?? "";
 
-        this.description = "";
+        this.area = data.area ?? 0;
 
-        this.area = 0;
+        this.status = data.status ?? "Activo";
 
-        this.color = "#00A651";
+        this.feeders = data.feeders ?? [];
 
-        this.status = "ACTIVE";
-
-        this.geometry = null;
-
-        this.feeders = [];
-
-        this.schedules = [];
-
-        this.sensors = [];
-
-        this.production = {};
-
-        this.createdAt = null;
-
-        this.updatedAt = null;
+        this.geometry = data.geometry ?? null;
 
     }
 

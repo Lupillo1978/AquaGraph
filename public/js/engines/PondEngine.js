@@ -1,4 +1,4 @@
-import PondService from "../services/PondService.js";
+import PondController from "../controllers/PondController.js";
 
 export default class PondEngine {
 
@@ -8,7 +8,7 @@ export default class PondEngine {
 
         this.eventBus = eventBus ;
 
-        this.service = new PondService();
+        this.controller = new PondController();
 
         this.currentGeometry = null ;
 
@@ -70,11 +70,19 @@ export default class PondEngine {
 
     async loadPonds() {
 
-     const response = await this.service.getAll();
+    const response = await this.controller.getAll();
 
-     console.log(response);
+    if (!response.success) {
+
+        return;
 
     }
+
+    console.log("Estanques cargados");
+
+    console.table(response.data);
+
+}
 
 
 }

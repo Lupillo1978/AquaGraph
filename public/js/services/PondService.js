@@ -1,12 +1,28 @@
+
+import Pond from "../models/Pond.js";
 export default class PondService {
 
     async getAll() {
 
-        const response = await fetch("/api/ponds");
+    const response = await fetch("/api/ponds");
 
-        return await response.json();
+    const json = await response.json();
+
+    if (!json.success) {
+
+        return json;
 
     }
+
+    json.data = json.data.map(
+
+        pond => new Pond(pond)
+
+    );
+
+    return json;
+
+}
 
     async create(pond) {
 
