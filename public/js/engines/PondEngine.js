@@ -42,7 +42,15 @@ export default class PondEngine {
 
                 );
 
-                modal.show();
+                //modal.show();
+
+                this.infoPanel.showCreatePondStep1();
+
+                this.eventBus.emit(
+
+                  EventTypes.MAP_DRAW_POLYGON
+
+                );
 
             }
 

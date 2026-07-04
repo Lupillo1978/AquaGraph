@@ -18,6 +18,38 @@ export default class InfoPanel {
 
     }
 
+    showCreatePondStep1() {
+
+       document.getElementById("infoPanel").innerHTML = `
+
+           <div class="p-3">
+
+               <h5>Nuevo Estanque</h5>
+
+               <hr>
+
+               <div class="alert alert-info">
+
+                   <strong>Paso 1 de 3</strong><br>
+
+                   Dibuje el perímetro del estanque sobre el mapa.
+
+               </div>
+
+               <button
+                   id="btnCancelCreatePond"
+                   class="btn btn-secondary w-100">
+
+                   Cancelar
+
+               </button>
+
+           </div>
+
+       `;
+
+    }
+
     showWelcome(){
 
         this.container.innerHTML = `

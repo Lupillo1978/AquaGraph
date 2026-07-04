@@ -127,6 +127,18 @@ export default class MapEngine {
 
         });
 
+        this.eventBus.on(
+
+           EventTypes.MAP_DRAW_POLYGON,
+
+              () => {
+
+                    console.log("🗺️ Iniciar dibujo de polígono");
+
+                }
+
+        );
+
     }
 
 }
