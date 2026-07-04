@@ -1,67 +1,114 @@
 export default class MapEngine {
 
-    constructor(container, eventBus){
+    constructor(container, eventBus) {
 
-        this.container=container;
+        this.container = container;
+        this.eventBus = eventBus;
 
-        this.eventBus=eventBus;
+        this.map = null;
+        this.layers = {
 
-        this.map=null;
+            temporary: null,
 
-        this.drawnItems = null;
+            ponds: null,
+
+            feeders: null
+
+        };
 
     }
 
-    initialize(){
+    initialize() {
 
-        this.map=L.map(this.container);
+        this.createMap();
 
-        this.drawnItems = new L.FeatureGroup();
+        this.createLayers();
+        
+        this.createBaseMap();
 
-        this.map.addLayer(this.drawnItems);
+        this.createDrawControls();
 
-        this.map.setView([26.000776,-109.387543],15);
+        this.registerEvents();
+
+    }
+
+    createMap() {
+
+        this.map = L.map(this.container);
+
+        this.map.setView([26.000776, -109.387543], 15);
+
+    }
+
+    createLayers() {
+
+       this.layers.temporary = new L.FeatureGroup();
+
+       this.layers.ponds = new L.FeatureGroup();
+
+       this.layers.feeders = new L.FeatureGroup();
+
+       this.map.addLayer(this.layers.temporary);
+
+       this.map.addLayer(this.layers.ponds);
+
+       this.map.addLayer(this.layers.feeders);
+
+    }
+
+    createBaseMap() {
 
         L.tileLayer(
-                   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                   {
-                   attribution: "Tiles © Esri"
-                   }
-        
-                ).addTo(this.map);
-        
+
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+
+            {
+
+                attribution: "Tiles © Esri"
+
+            }
+
+        ).addTo(this.map);
+
+    }
+
+    createDrawControls() {
+
         const drawControl = new L.Control.Draw({
 
-               draw:{
+            draw: {
 
-                 polyline:false,
+                polyline: false,
 
-                 rectangle:false,
+                rectangle: false,
 
-                 circle:false,
+                circle: false,
 
-                 marker:false,
+                marker: false,
 
-                 circlemarker:false
+                circlemarker: false
 
-                },
+            },
 
-                edit:{
+            edit: {
 
-                    featureGroup:this.drawnItems
+                featureGroup: this.layers.temporary
 
-                }
+            }
 
-            });
+        });
 
-          this.map.addControl(drawControl);
+        this.map.addControl(drawControl);
 
-          
-          this.map.on(L.Draw.Event.CREATED, (event) => {
+    }
+
+    registerEvents() {
+
+        this.map.on(L.Draw.Event.CREATED, (event) => {
 
             const layer = event.layer;
 
-            this.drawnItems.addLayer(layer);
+            this.layers.temporary.addLayer(layer);
 
             const geoJson = layer.toGeoJSON();
 
@@ -69,9 +116,9 @@ export default class MapEngine {
 
             this.eventBus.emit(
 
-            "pond:geometryCreated",
+                "pond:geometryCreated",
 
-             geoJson
+                geoJson
 
             );
 
