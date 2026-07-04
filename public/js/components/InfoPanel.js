@@ -1,22 +1,38 @@
+import PondView from "../views/PondView.js";
+
 export default class InfoPanel {
 
-    render() {
+    constructor(){
 
-        this.showHome();
+        this.container = null;
+
+        this.pondView = new PondView();
 
     }
 
-    showHome() {
+    render(){
 
-        document.getElementById("infoPanel").innerHTML = `
+        this.container = document.getElementById("infoPanel");
+
+        this.showWelcome();
+
+    }
+
+    showWelcome(){
+
+        this.container.innerHTML = `
 
             <div class="p-3">
 
-                <h5>Información</h5>
+                <h5>AD&M AquaControl</h5>
 
                 <hr>
 
-                Seleccione un estanque o alimentador.
+                <p>
+
+                    Seleccione un módulo desde el menú.
+
+                </p>
 
             </div>
 
@@ -24,60 +40,9 @@ export default class InfoPanel {
 
     }
 
-    showPonds(){
+    showPond(pond = null){
 
-     document.getElementById("infoPanel").innerHTML=`
-
-        <div class="p-3">
-
-            <h5>Gestión de Estanques</h5>
-
-            <hr>
-
-            <button
-                id="btnNewPond"
-                class="btn btn-success w-100 mb-3">
-
-                + Nuevo Estanque
-
-            </button>
-
-            <div class="card bg-dark text-white border-secondary">
-
-                <div class="card-header">
-
-                    Estanques
-
-                </div>
-
-                <div
-                    id="pondList"
-                    class="card-body">
-
-                    <div class="text-center text-secondary">
-
-                        No existen estanques registrados.
-
-                    </div>
-
-                </div>
-
-                <div class="card-footer">
-
-                    Total:
-                    <span id="pondCount">
-
-                        0
-
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-      `;
+        this.container.innerHTML = this.pondView.render(pond);
 
     }
 

@@ -22,7 +22,7 @@ export default class PondEngine {
 
             btnPonds.addEventListener("click", () => {
 
-                this.infoPanel.showPonds();
+                this.infoPanel.showPond();
 
                 this.loadPonds();
 
