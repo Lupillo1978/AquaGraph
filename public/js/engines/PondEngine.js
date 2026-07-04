@@ -1,3 +1,5 @@
+
+import EventTypes from "../core/EventTypes.js";
 import PondController from "../controllers/PondController.js";
 
 export default class PondEngine {
@@ -48,7 +50,7 @@ export default class PondEngine {
 
         this.eventBus.on(
 
-             "pond:geometryCreated",
+             EventTypes.POND_GEOMETRY_CREATED,
 
          (geometry) => {
 

@@ -1,3 +1,5 @@
+
+import EventTypes from "../core/EventTypes.js";
 export default class MapEngine {
 
     constructor(container, eventBus) {
@@ -16,6 +18,7 @@ export default class MapEngine {
 
         };
 
+        this.drawControl = null;  
     }
 
     initialize() {
@@ -74,7 +77,7 @@ export default class MapEngine {
 
     createDrawControls() {
 
-        const drawControl = new L.Control.Draw({
+        this.drawControl = new L.Control.Draw({
 
             draw: {
 
@@ -98,7 +101,7 @@ export default class MapEngine {
 
         });
 
-        this.map.addControl(drawControl);
+        this.map.addControl(this.drawControl);
 
     }
 
@@ -116,7 +119,7 @@ export default class MapEngine {
 
             this.eventBus.emit(
 
-                "pond:geometryCreated",
+                 EventTypes.POND_GEOMETRY_CREATED,
 
                 geoJson
 
