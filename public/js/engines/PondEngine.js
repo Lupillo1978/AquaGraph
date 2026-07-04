@@ -2,11 +2,15 @@ import PondService from "../services/PondService.js";
 
 export default class PondEngine {
 
-    constructor(infoPanel) {
+    constructor(infoPanel, eventBus) {
 
         this.infoPanel = infoPanel;
 
+        this.eventBus = eventBus ;
+
         this.service = new PondService();
+
+        this.currentGeometry = null ;
 
     }
 
@@ -41,6 +45,26 @@ export default class PondEngine {
             }
 
         });
+
+        this.eventBus.on(
+
+             "pond:geometryCreated",
+
+         (geometry) => {
+
+             this.currentGeometry = geometry;
+
+                console.log(
+
+                 "Geometría recibida en PondEngine",
+
+                  geometry
+
+                );
+
+            }
+
+        );
 
     }
 

@@ -27,9 +27,21 @@ export default class Application{
 
         this.statusBar=new StatusBar();
 
-        this.map=new MapEngine("map");
+        this.map=new MapEngine(
+            
+            "map",
+        
+            this.eventBus
+        
+        );
 
-        this.pondEngine = new PondEngine(this.infoPanel);
+        this.pondEngine = new PondEngine(
+            
+            this.infoPanel,
+        
+            this.eventBus
+        
+        );
 
     }
 
