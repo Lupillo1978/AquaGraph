@@ -1,4 +1,3 @@
-
 import EventTypes from "../core/EventTypes.js";
 import PondController from "../controllers/PondController.js";
 
@@ -7,70 +6,81 @@ export default class PondEngine {
     constructor(infoPanel, eventBus) {
 
         this.infoPanel = infoPanel;
-
-        this.eventBus = eventBus ;
-
+        this.eventBus = eventBus;
         this.controller = new PondController();
 
-        this.currentGeometry = null ;
+        this.currentGeometry = null;
 
     }
 
     initialize() {
 
+        this.registerMenuEvents();
+
+        this.registerCreateEvents();
+
+        this.registerGeometryEvents();
+
+    }
+
+    registerMenuEvents() {
+
         const btnPonds = document.getElementById("btnPonds");
 
-        if (btnPonds) {
+        if (!btnPonds) return;
 
-            btnPonds.addEventListener("click", () => {
+        btnPonds.addEventListener("click", () => {
 
-                this.infoPanel.showPond();
+            this.infoPanel.showPond();
 
-                this.loadPonds();
+            this.loadPonds();
 
-            });
+        });
 
-        }
+    }
 
-        document.addEventListener("click", (event) => {
+    registerCreateEvents() {
 
-            if (event.target.id === "btnNewPond") {
+        document.addEventListener("click", async (event) => {
 
-                const modal = new bootstrap.Modal(
+            switch (event.target.id) {
 
-                    document.getElementById("newPondModal")
+                case "btnNewPond":
 
-                );
+                    this.startCreateWorkflow();
 
-                //modal.show();
+                    break;
 
-                this.infoPanel.showCreatePondStep1();
+                case "savePond":
 
-                this.eventBus.emit(
+                    await this.savePond();
 
-                  EventTypes.MAP_DRAW_POLYGON
-
-                );
+                    break;
 
             }
 
         });
 
+    }
+
+    registerGeometryEvents() {
+
         this.eventBus.on(
 
-             EventTypes.POND_GEOMETRY_CREATED,
+            EventTypes.POND_GEOMETRY_CREATED,
 
-         (geometry) => {
+            (geometry) => {
 
-             this.currentGeometry = geometry;
+                this.currentGeometry = geometry;
 
                 console.log(
-
-                 "Geometría recibida en PondEngine",
-
-                  geometry
-
+                    "Geometría recibida en PondEngine",
+                    geometry
                 );
+
+                // El formulario se abrirá automáticamente
+                // después de terminar el dibujo.
+                this.openPondForm();
 
             }
 
@@ -78,21 +88,118 @@ export default class PondEngine {
 
     }
 
-    async loadPonds() {
+    startCreateWorkflow() {
 
-    const response = await this.controller.getAll();
+        this.currentGeometry = null;
 
-    if (!response.success) {
+        this.infoPanel.showCreatePondStep1();
 
-        return;
+        this.eventBus.emit(
+
+            EventTypes.MAP_DRAW_POLYGON
+
+        );
 
     }
 
-    console.log("Estanques cargados");
+    openPondForm() {
 
-    console.table(response.data);
+        const modal = new bootstrap.Modal(
 
-}
+            document.getElementById("newPondModal")
 
+        );
+
+        modal.show();
+
+    }
+
+    async savePond() {
+
+        const pond = {
+
+            name: document.getElementById("pondName").value.trim(),
+
+            area: Number(
+                document.getElementById("pondArea").value
+            ),
+
+            description: document.getElementById("pondDescription").value.trim(),
+
+            geometry: this.currentGeometry
+
+        };
+
+        if (!pond.name) {
+
+            alert("Debe capturar el nombre del estanque.");
+
+            return;
+
+        }
+
+        if (!pond.geometry) {
+
+            alert("Debe dibujar el estanque.");
+
+            return;
+
+        }
+
+        const response = await this.controller.create(pond);
+
+        if (!response.success) {
+
+            alert(response.message);
+
+            return;
+
+        }
+
+        console.log("✅ Estanque creado", response.data);
+
+        this.clearForm();
+
+        await this.loadPonds();
+
+    }
+
+    clearForm() {
+
+        const modalElement = document.getElementById("newPondModal");
+
+        const modal = bootstrap.Modal.getInstance(modalElement);
+
+        if (modal) {
+
+            modal.hide();
+
+        }
+
+        document.getElementById("pondName").value = "";
+
+        document.getElementById("pondArea").value = "";
+
+        document.getElementById("pondDescription").value = "";
+
+        this.currentGeometry = null;
+
+    }
+
+    async loadPonds() {
+
+        const response = await this.controller.getAll();
+
+        if (!response.success) {
+
+            return;
+
+        }
+
+        console.log("Estanques cargados");
+
+        console.table(response.data);
+
+    }
 
 }

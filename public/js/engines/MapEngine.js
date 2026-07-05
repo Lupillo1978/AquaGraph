@@ -18,7 +18,12 @@ export default class MapEngine {
 
         };
 
-        this.drawControl = null;  
+        this.drawControl = null;
+        
+        this.drawTools = {
+            polygon: null
+        };
+        
     }
 
     initialize() {
@@ -103,6 +108,9 @@ export default class MapEngine {
 
         this.map.addControl(this.drawControl);
 
+        this.drawTools.polygon = new L.Draw.Polygon(this.map);
+        
+
     }
 
     registerEvents() {
@@ -133,11 +141,17 @@ export default class MapEngine {
 
               () => {
 
-                    console.log("🗺️ Iniciar dibujo de polígono");
+                     this.startPolygonDrawing();
 
                 }
 
         );
+
+    }
+
+    startPolygonDrawing() {
+             
+      this.drawTools.polygon.enable();
 
     }
 
