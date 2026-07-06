@@ -1,5 +1,6 @@
 import EventTypes from "../core/EventTypes.js";
 import PondController from "../controllers/PondController.js";
+import GeometryService from "../services/GeometryService.js";
 
 export default class PondEngine {
 
@@ -8,6 +9,7 @@ export default class PondEngine {
         this.infoPanel = infoPanel;
         this.eventBus = eventBus;
         this.controller = new PondController();
+        this.geometryService = new GeometryService();
 
         this.currentGeometry = null;
 
@@ -20,6 +22,8 @@ export default class PondEngine {
         this.registerCreateEvents();
 
         this.registerGeometryEvents();
+
+        this.loadPonds();
 
     }
 
@@ -73,14 +77,13 @@ export default class PondEngine {
 
                 this.currentGeometry = geometry;
 
-                console.log(
-                    "Geometría recibida en PondEngine",
-                    geometry
-                );
+                const area = this.geometryService.calculateArea(geometry);
 
-                // El formulario se abrirá automáticamente
-                // después de terminar el dibujo.
+                console.log("Superficie:", area.toFixed(2), "ha");
+
                 this.openPondForm();
+
+                this.fillGeometryData(area);
 
             }
 
@@ -111,6 +114,12 @@ export default class PondEngine {
         );
 
         modal.show();
+
+    }
+
+    fillGeometryData(area) {
+
+       document.getElementById("pondArea").value = area.toFixed(2);
 
     }
 
@@ -156,7 +165,23 @@ export default class PondEngine {
 
         }
 
-        console.log("✅ Estanque creado", response.data);
+       console.log("✅ Estanque creado", response.data);
+
+       // Mostrar el estanque permanente en el mapa
+       this.eventBus.emit(
+
+            EventTypes.MAP_ADD_POND,
+
+            response.data
+
+        );
+
+       // Limpiar el dibujo temporal
+       this.eventBus.emit(
+
+           EventTypes.MAP_CLEAR_TEMPORARY
+
+        );
 
         this.clearForm();
 
@@ -188,18 +213,30 @@ export default class PondEngine {
 
     async loadPonds() {
 
-        const response = await this.controller.getAll();
+       const response = await this.controller.getAll();
 
-        if (!response.success) {
+           if (!response.success) {
 
-            return;
+             return;
 
-        }
+            }
 
-        console.log("Estanques cargados");
+         console.log("Estanques cargados");
 
-        console.table(response.data);
+         console.table(response.data);
 
-    }
+         response.data.forEach(pond => {
+
+        this.eventBus.emit(
+
+            EventTypes.MAP_ADD_POND,
+
+            pond
+
+          );
+
+        });
+
+}
 
 }

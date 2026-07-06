@@ -147,6 +147,30 @@ export default class MapEngine {
 
         );
 
+        this.eventBus.on(
+
+           EventTypes.MAP_ADD_POND,
+
+             (pond) => {
+
+                  this.addPondToMap(pond);
+
+                }
+
+        );
+
+        this.eventBus.on(
+
+          EventTypes.MAP_CLEAR_TEMPORARY,
+
+           () => {
+
+              this.layers.temporary.clearLayers();
+
+            }
+
+        );
+
     }
 
     startPolygonDrawing() {
@@ -154,5 +178,51 @@ export default class MapEngine {
       this.drawTools.polygon.enable();
 
     }
+
+    addPondToMap(pond) {
+
+    // Verificar si ya existe
+    let exists = false;
+
+    this.layers.ponds.eachLayer(layer => {
+
+        if (layer.pondId === pond.id) {
+
+            exists = true;
+
+        }
+
+    });
+
+    if (exists) {
+
+        return;
+
+    }
+
+    const layer = L.geoJSON(pond.geometry, {
+
+        style: {
+
+            color: "#00ff88",
+
+            weight: 2,
+
+            fillColor: "#00cc66",
+
+            fillOpacity: 0.35
+
+        }
+
+    });
+
+    layer.pondId = pond.id;
+
+    layer.bindTooltip(pond.name);
+
+    layer.addTo(this.layers.ponds);
+
+}
+    
 
 }

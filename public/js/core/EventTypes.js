@@ -10,7 +10,11 @@ const EventTypes = {
 
     MAP_DRAW_END: "map:draw:end",
 
-    MAP_DRAW_POLYGON: "map:draw:polygon"
+    MAP_DRAW_POLYGON: "map:draw:polygon",
+    
+    MAP_ADD_POND: "map:addPond",
+
+    MAP_CLEAR_TEMPORARY: "map:clearTemporary",
 
 };
 
