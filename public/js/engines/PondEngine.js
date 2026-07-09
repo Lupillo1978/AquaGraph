@@ -69,27 +69,40 @@ export default class PondEngine {
 
     registerGeometryEvents() {
 
-        this.eventBus.on(
+    this.eventBus.on(
 
-            EventTypes.POND_GEOMETRY_CREATED,
+        EventTypes.POND_GEOMETRY_CREATED,
 
-            (geometry) => {
+        (geometry) => {
 
-                this.currentGeometry = geometry;
+            this.currentGeometry = geometry;
 
-                const area = this.geometryService.calculateArea(geometry);
+            const area = this.geometryService.calculateArea(geometry);
 
-                console.log("Superficie:", area.toFixed(2), "ha");
+            console.log("Superficie:", area.toFixed(2), "ha");
 
-                this.openPondForm();
+            this.openPondForm();
 
-                this.fillGeometryData(area);
+            this.fillGeometryData(area);
 
-            }
+        }
 
-        );
+    );
 
-    }
+    this.eventBus.on(
+
+        EventTypes.POND_SELECTED,
+
+        (pond) => {
+
+            this.infoPanel.showPond(pond);
+
+        }
+
+    );
+
+}
+    
 
     startCreateWorkflow() {
 
@@ -127,15 +140,20 @@ export default class PondEngine {
 
         const pond = {
 
-            name: document.getElementById("pondName").value.trim(),
+             name: document.getElementById("pondName").value.trim(),
 
-            area: Number(
-                document.getElementById("pondArea").value
-            ),
+    description: document.getElementById("pondDescription").value.trim(),
 
-            description: document.getElementById("pondDescription").value.trim(),
+    geometry: this.currentGeometry,
 
-            geometry: this.currentGeometry
+    metrics: {
+
+        area: Number(
+            document.getElementById("pondArea").value
+        )
+
+    }
+
 
         };
 

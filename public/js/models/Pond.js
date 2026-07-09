@@ -8,13 +8,19 @@ export default class Pond {
 
         this.name = data.name ?? "";
 
-        this.area = data.area ?? 0;
+        this.description = data.description ?? "";
 
         this.status = data.status ?? "Activo";
 
         this.feeders = data.feeders ?? [];
 
         this.geometry = data.geometry ?? null;
+
+        this.metrics = data.metrics ?? {
+
+            area: 0
+
+        };
 
     }
 

@@ -38,8 +38,31 @@ export default class PondView {
 
         return `
 
-            <!-- La vista del estanque seleccionado la dejaremos igual por ahora -->
+          <div class="p-3">
 
+        <h5>${pond.name}</h5>
+
+        <hr>
+
+        <div class="mb-3">
+
+            <strong>Superficie</strong><br>
+
+            ${pond.metrics?.area?.toFixed(2) ?? "0.00"} ha
+
+        </div>
+
+        <div class="mb-3">
+
+            <strong>Descripción</strong><br>
+
+            ${pond.description || "Sin descripción"}
+
+        </div>
+
+    </div>
+
+         
         `;
 
     }

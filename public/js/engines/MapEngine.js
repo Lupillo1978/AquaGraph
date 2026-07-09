@@ -23,6 +23,8 @@ export default class MapEngine {
         this.drawTools = {
             polygon: null
         };
+
+        this.selectedPondLayer = null;
         
     }
 
@@ -77,6 +79,38 @@ export default class MapEngine {
             }
 
         ).addTo(this.map);
+
+    }
+
+    getDefaultPondStyle() {
+
+     return {
+
+        color: "#00ff88",
+
+        weight: 2,
+
+        fillColor: "#00cc66",
+
+        fillOpacity: 0.35
+
+     };
+
+    }
+
+    getSelectedPondStyle() {
+
+     return {
+
+        color: "#FFD700",
+
+        weight: 3,
+
+        fillColor: "#FFD700",
+
+        fillOpacity: 0.50
+
+     };
 
     }
 
@@ -181,48 +215,77 @@ export default class MapEngine {
 
     addPondToMap(pond) {
 
-    // Verificar si ya existe
-    let exists = false;
+            // Verificar si ya existe
+             let exists = false;
 
-    this.layers.ponds.eachLayer(layer => {
+             this.layers.ponds.eachLayer(layer => {
 
-        if (layer.pondId === pond.id) {
+                if (layer.pondId === pond.id) {
 
-            exists = true;
+                 exists = true;
+
+                }
+
+              });
+
+              if (exists) {
+
+               return;
+
+              }
+
+             const layer = L.geoJSON(pond.geometry, {
+
+             style: this.getDefaultPondStyle()
+
+              });
+
+             layer.pondId = pond.id;
+
+             layer.bindTooltip(pond.name);
+
+            // Guardar la información completa del estanque
+            layer.pond = pond;
+
+            // Evento de selección
+            layer.on("click", () => {
+
+            this.selectPond(layer);
+            
+            this.eventBus.emit(
+
+            EventTypes.POND_SELECTED,
+
+            pond
+
+            );
+
+            });
+
+          layer.addTo(this.layers.ponds);
 
         }
+ 
+        selectPond(layer) {
 
-    });
+    // Si había un estanque seleccionado,
+    // restaurar su estilo original.
+    if (this.selectedPondLayer) {
 
-    if (exists) {
-
-        return;
+        this.selectedPondLayer.setStyle(
+            this.getDefaultPondStyle()
+        );
 
     }
 
-    const layer = L.geoJSON(pond.geometry, {
+    // Guardar la nueva selección.
+    this.selectedPondLayer = layer;
 
-        style: {
-
-            color: "#00ff88",
-
-            weight: 2,
-
-            fillColor: "#00cc66",
-
-            fillOpacity: 0.35
-
-        }
-
-    });
-
-    layer.pondId = pond.id;
-
-    layer.bindTooltip(pond.name);
-
-    layer.addTo(this.layers.ponds);
+    // Aplicar el estilo de seleccionado.
+    this.selectedPondLayer.setStyle(
+        this.getSelectedPondStyle()
+    );
 
 }
-    
 
 }

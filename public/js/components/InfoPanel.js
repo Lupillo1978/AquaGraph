@@ -74,6 +74,8 @@ export default class InfoPanel {
 
     showPond(pond = null){
 
+        console.log("InfoPanel recibió:", pond);
+
         this.container.innerHTML = this.pondView.render(pond);
 
     }

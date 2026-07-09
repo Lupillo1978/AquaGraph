@@ -20,27 +20,28 @@ class PondService {
 
         const pond = new Pond({
 
-            id: IdGenerator.generate("POND", ponds),
+    id: IdGenerator.generate("POND", ponds),
 
-            name: data.name,
+    name: data.name,
 
-            description: data.description || "",
+    description: data.description || "",
 
-            enabled: true,
+    enabled: true,
 
-            geometry: data.geometry || {
-                type: "Polygon",
-                coordinates: []
-            },
+    geometry: data.geometry || {
+        type: "Polygon",
+        coordinates: []
+    },
 
-            metrics: data.metrics || {
-                area: 0,
-                perimeter: 0
-            },
+    metrics: {
 
-            feeders: []
+        area: Number(data.metrics?.area ?? 0)
 
-        });
+    },
+
+    feeders: []
+
+});
 
         ponds.push(pond);
 
