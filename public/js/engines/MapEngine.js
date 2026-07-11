@@ -25,7 +25,10 @@ export default class MapEngine {
         };
 
         this.selectedPondLayer = null;
-        
+
+        this.mode = "NORMAL";
+
+        this.activePond = null;
     }
 
     initialize() {
@@ -205,6 +208,29 @@ export default class MapEngine {
 
         );
 
+
+        this.eventBus.on(
+
+           EventTypes.MAP_PLACE_FEEDER,
+
+             (pond) => {
+
+              this.mode = "PLACE_FEEDER";
+
+               this.activePond = pond;
+
+              console.log(
+
+                "Modo colocar alimentador:",
+
+               pond.name
+
+               );
+
+            }
+
+        );
+
     }
 
     startPolygonDrawing() {
@@ -287,5 +313,32 @@ export default class MapEngine {
     );
 
 }
+
+createFeederIcon(label = "F") {
+
+    return L.divIcon({
+
+        className: "feeder-icon",
+
+        html: `
+
+            <div class="feeder-marker">
+
+                <div class="feeder-symbol">⚙</div>
+
+                <div class="feeder-label">${label}</div>
+
+            </div>
+
+        `,
+
+        iconSize: [40, 40],
+
+        iconAnchor: [20, 20]
+
+    });
+
+}
+
 
 }

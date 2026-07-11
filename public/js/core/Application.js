@@ -1,15 +1,13 @@
 import Logger from "./Logger.js";
 import EventBus from "./EventBus.js";
 import StateManager from "./StateManager.js";
-
 import Header from "../components/Header.js";
 import Sidebar from "../components/Sidebar.js";
 import InfoPanel from "../components/InfoPanel.js";
 import StatusBar from "../components/StatusBar.js";
-
 import MapEngine from "../engines/MapEngine.js";
-
 import PondEngine from "../engines/PondEngine.js";
+import FeederEngine from "../engines/FeederEngine.js";
 
 export default class Application{
 
@@ -42,6 +40,15 @@ export default class Application{
             this.eventBus
         
         );
+        
+        this.feederEngine = new FeederEngine(
+
+           this.infoPanel,
+
+           this.eventBus
+
+        );
+
 
     }
 
@@ -60,6 +67,8 @@ export default class Application{
     this.map.initialize();
 
     this.pondEngine.initialize();
+
+    this.feederEngine.initialize();
 
 }
 
