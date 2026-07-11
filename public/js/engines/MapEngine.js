@@ -29,6 +29,8 @@ export default class MapEngine {
         this.mode = "NORMAL";
 
         this.activePond = null;
+
+        this.temporaryFeeder = null;
     }
 
     initialize() {
@@ -150,88 +152,123 @@ export default class MapEngine {
 
     }
 
-    registerEvents() {
+registerEvents() {
 
-        this.map.on(L.Draw.Event.CREATED, (event) => {
+    // ==================================================
+    // Cuando termina de dibujarse un estanque
+    // ==================================================
 
-            const layer = event.layer;
+    this.map.on(L.Draw.Event.CREATED, (event) => {
 
-            this.layers.temporary.addLayer(layer);
+        const layer = event.layer;
 
-            const geoJson = layer.toGeoJSON();
+        this.layers.temporary.addLayer(layer);
 
-            console.log(geoJson);
+        const geoJson = layer.toGeoJSON();
 
-            this.eventBus.emit(
+        console.log(geoJson);
 
-                 EventTypes.POND_GEOMETRY_CREATED,
+        this.eventBus.emit(
 
-                geoJson
+            EventTypes.POND_GEOMETRY_CREATED,
 
-            );
-
-        });
-
-        this.eventBus.on(
-
-           EventTypes.MAP_DRAW_POLYGON,
-
-              () => {
-
-                     this.startPolygonDrawing();
-
-                }
+            geoJson
 
         );
 
-        this.eventBus.on(
+    });
 
-           EventTypes.MAP_ADD_POND,
+    // ==================================================
+    // Click sobre el mapa
+    // ==================================================
 
-             (pond) => {
+    this.map.on("click", (event) => {
 
-                  this.addPondToMap(pond);
+        if (this.mode !== "PLACE_FEEDER") {
 
-                }
+            return;
 
-        );
+        }
 
-        this.eventBus.on(
+        this.placeTemporaryFeeder(event.latlng);
 
-          EventTypes.MAP_CLEAR_TEMPORARY,
+    });
 
-           () => {
+    // ==================================================
+    // Dibujar polígono
+    // ==================================================
 
-              this.layers.temporary.clearLayers();
+    this.eventBus.on(
 
-            }
+        EventTypes.MAP_DRAW_POLYGON,
 
-        );
+        () => {
 
+            this.startPolygonDrawing();
 
-        this.eventBus.on(
+        }
 
-           EventTypes.MAP_PLACE_FEEDER,
+    );
 
-             (pond) => {
+    // ==================================================
+    // Agregar estanque al mapa
+    // ==================================================
 
-              this.mode = "PLACE_FEEDER";
+    this.eventBus.on(
 
-               this.activePond = pond;
+        EventTypes.MAP_ADD_POND,
 
-              console.log(
+        (pond) => {
+
+            this.addPondToMap(pond);
+
+        }
+
+    );
+
+    // ==================================================
+    // Limpiar capas temporales
+    // ==================================================
+
+    this.eventBus.on(
+
+        EventTypes.MAP_CLEAR_TEMPORARY,
+
+        () => {
+
+            this.layers.temporary.clearLayers();
+
+        }
+
+    );
+
+    // ==================================================
+    // Entrar en modo colocar alimentador
+    // ==================================================
+
+    this.eventBus.on(
+
+        EventTypes.MAP_PLACE_FEEDER,
+
+        (pond) => {
+
+            this.mode = "PLACE_FEEDER";
+
+            this.activePond = pond;
+
+            console.log(
 
                 "Modo colocar alimentador:",
 
-               pond.name
+                pond.name
 
-               );
+            );
 
-            }
+        }
 
-        );
+    );
 
-    }
+}
 
     startPolygonDrawing() {
              
@@ -340,5 +377,87 @@ createFeederIcon(label = "F") {
 
 }
 
+isPointInsideActivePond(latlng) {
+
+    if (!this.activePond) {
+
+        return false;
+
+    }
+
+    const point = turf.point([
+
+        latlng.lng,
+
+        latlng.lat
+
+    ]);
+
+    return turf.booleanPointInPolygon(
+
+        point,
+
+        this.activePond.geometry
+
+    );
+
+}
+
+
+placeTemporaryFeeder(latlng) {
+
+    if (!this.isPointInsideActivePond(latlng)) {
+
+        alert("El alimentador debe colocarse dentro del estanque.");
+
+        return;
+
+    }
+
+    if (this.temporaryFeeder) {
+
+        this.layers.temporary.removeLayer(this.temporaryFeeder);
+
+    }
+
+    this.temporaryFeeder = L.marker(
+
+        latlng,
+
+        {
+
+            icon: this.createFeederIcon("NEW")
+
+        }
+
+    );
+
+    this.layers.temporary.addLayer(this.temporaryFeeder);
+
+    this.mode = "NORMAL";
+
+    console.log(
+
+        "Alimentador temporal:",
+
+        latlng
+
+    );
+
+   this.eventBus.emit(
+
+    EventTypes.FEEDER_POSITION_SELECTED,
+
+    {
+
+        pond: this.activePond,
+
+        latlng: latlng
+
+    }
+
+);
+
+}
 
 }

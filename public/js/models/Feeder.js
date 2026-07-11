@@ -4,23 +4,33 @@ export default class Feeder {
 
         this.id = data.id ?? null;
 
-        this.pondId = data.pondId ?? null;
+        this.code = data.code ?? "";
 
         this.name = data.name ?? "";
 
-        this.loraId = data.loraId ?? "";
+        this.pondId = data.pondId ?? "";
 
-        this.position = data.position ?? null;
+        this.nodeId = data.nodeId ?? "";
 
-        this.mode = data.mode ?? "timer";
+        this.latitude = data.latitude ?? 0;
 
-        this.enabled = data.enabled ?? true;
+        this.longitude = data.longitude ?? 0;
 
-        this.status = data.status ?? "offline";
+        this.orientation = data.orientation ?? 0;
 
-        this.battery = data.battery ?? 100;
+        this.throwRadius = data.throwRadius ?? 25;
+
+        this.status = data.status ?? "NEW";
+
+        this.battery = data.battery ?? null;
+
+        this.rssi = data.rssi ?? null;
 
         this.schedules = data.schedules ?? [];
+
+        this.createdAt = data.createdAt ?? new Date().toISOString();
+
+        this.updatedAt = data.updatedAt ?? new Date().toISOString();
 
     }
 

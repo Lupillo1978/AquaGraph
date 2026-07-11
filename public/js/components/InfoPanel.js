@@ -2,7 +2,7 @@ import PondView from "../views/PondView.js";
 
 export default class InfoPanel {
 
-    constructor(){
+    constructor() {
 
         this.container = null;
 
@@ -10,7 +10,7 @@ export default class InfoPanel {
 
     }
 
-    render(){
+    render() {
 
         this.container = document.getElementById("infoPanel");
 
@@ -18,80 +18,191 @@ export default class InfoPanel {
 
     }
 
+    // =====================================================
+    // ESTANQUES
+    // =====================================================
+
     showCreatePondStep1() {
 
-       document.getElementById("infoPanel").innerHTML = `
+        this.container.innerHTML = `
 
-           <div class="p-3">
+            <div class="p-3">
 
-               <h5>Nuevo Estanque</h5>
+                <h5>Nuevo Estanque</h5>
 
-               <hr>
+                <hr>
 
-               <div class="alert alert-info">
+                <div class="alert alert-info">
 
-                   <strong>Paso 1 de 3</strong><br>
+                    <strong>Paso 1 de 3</strong><br>
 
-                   Dibuje el perímetro del estanque sobre el mapa.
+                    Dibuje el perímetro del estanque sobre el mapa.
 
-               </div>
+                </div>
 
-               <button
-                   id="btnCancelCreatePond"
-                   class="btn btn-secondary w-100">
+                <button
+                    id="btnCancelCreatePond"
+                    class="btn btn-secondary w-100">
 
-                   Cancelar
+                    Cancelar
 
-               </button>
+                </button>
 
-           </div>
+            </div>
 
-       `;
+        `;
 
     }
+
+    // =====================================================
+    // ALIMENTADORES
+    // =====================================================
 
     showCreateFeederStep1(pond) {
 
-       this.container.innerHTML = `
+        this.container.innerHTML = `
 
-        <div class="p-3">
+            <div class="p-3">
 
-            <h5>Nuevo Alimentador</h5>
+                <h5>Nuevo Alimentador</h5>
 
-            <hr>
+                <hr>
 
-            <div class="alert alert-primary">
+                <div class="alert alert-info">
 
-                <strong>Estanque:</strong><br>
+                    <strong>Paso 1 de 2</strong><br>
 
-                ${pond.name}
+                    Seleccione la ubicación del alimentador haciendo clic dentro del estanque
+                    <strong>${pond.name}</strong>.
+
+                </div>
+
+                <button
+                    id="btnCancelCreateFeeder"
+                    class="btn btn-secondary w-100">
+
+                    Cancelar
+
+                </button>
 
             </div>
 
-            <div class="alert alert-info">
-
-                <strong>Paso 1 de 2</strong><br>
-
-                Haga clic dentro del estanque para colocar el alimentador.
-
-            </div>
-
-            <button
-                id="btnCancelCreateFeeder"
-                class="btn btn-secondary w-100">
-
-                Cancelar
-
-            </button>
-
-        </div>
-
-       `;
+        `;
 
     }
 
+    showCreateFeederForm(pond) {
 
-    showWelcome(){
+        this.container.innerHTML = `
+
+            <div class="p-3">
+
+                <h5>Nuevo Alimentador</h5>
+
+                <hr>
+
+                <div class="alert alert-success">
+
+                    <strong>Paso 2 de 2</strong><br>
+
+                    Capture la información del alimentador para el estanque
+                    <strong>${pond.name}</strong>.
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Nombre
+
+                    </label>
+
+                    <input
+                        id="feederName"
+                        class="form-control"
+                        placeholder="Ej. Alimentador Norte">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Nodo LoRa
+
+                    </label>
+
+                    <input
+                        id="feederNode"
+                        class="form-control"
+                        placeholder="Ej. 101">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Radio de lanzamiento (m)
+
+                    </label>
+
+                    <input
+                        id="feederRadius"
+                        type="number"
+                        class="form-control"
+                        value="25">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Orientación (°)
+
+                    </label>
+
+                    <input
+                        id="feederOrientation"
+                        type="number"
+                        class="form-control"
+                        value="0">
+
+                </div>
+
+                <div class="d-grid gap-2">
+
+                    <button
+                        id="btnSaveFeeder"
+                        class="btn btn-success">
+
+                        Guardar Alimentador
+
+                    </button>
+
+                    <button
+                        id="btnCancelCreateFeeder"
+                        class="btn btn-secondary">
+
+                        Cancelar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+    // =====================================================
+    // PANTALLAS GENERALES
+    // =====================================================
+
+    showWelcome() {
 
         this.container.innerHTML = `
 
@@ -113,7 +224,7 @@ export default class InfoPanel {
 
     }
 
-    showPond(pond = null){
+    showPond(pond = null) {
 
         console.log("InfoPanel recibió:", pond);
 

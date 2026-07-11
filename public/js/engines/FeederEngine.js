@@ -9,6 +9,8 @@ export default class FeederEngine {
 
         this.selectedPond = null;
 
+        this.selectedPosition = null;
+
     }
 
     initialize() {
@@ -31,6 +33,33 @@ export default class FeederEngine {
             }
 
         );
+
+
+        this.eventBus.on(
+
+    EventTypes.FEEDER_POSITION_SELECTED,
+
+    (data) => {
+
+        this.selectedPosition = data.latlng;
+
+        console.log(
+
+            "Posición del alimentador:",
+
+            this.selectedPosition
+
+        );
+
+        this.infoPanel.showCreateFeederForm(
+
+            this.selectedPond
+
+        );
+
+    }
+
+);
 
         // Botón Agregar Alimentador
         document.addEventListener("click", (event) => {
