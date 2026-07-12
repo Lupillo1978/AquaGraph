@@ -1,6 +1,11 @@
-import FeederService from "../services/FeederService.js";
+console.log("FeederController cargado");
 
-export default class FeederController {
+const FeederService = require("../services/FeederService");
+
+
+
+
+class FeederController {
 
     constructor() {
 
@@ -65,3 +70,5 @@ export default class FeederController {
     }
 
 }
+
+module.exports = FeederController;

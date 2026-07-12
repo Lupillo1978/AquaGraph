@@ -4,6 +4,7 @@ const router = express.Router();
 
 const pondRoutes = require("./ponds");
 
+const feederRoutes = require("./feeders");
 
 router.get("/health", (req, res) => {
 
@@ -19,5 +20,8 @@ router.get("/health", (req, res) => {
 
 // Rutas de estanques
 router.use("/ponds", pondRoutes);
+
+router.use("/feeders", feederRoutes);
+
 
 module.exports = router;

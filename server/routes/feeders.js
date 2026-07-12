@@ -1,7 +1,10 @@
-import express from "express";
-import FeederController from "../controllers/FeederController.js";
+console.log("===== feeders.js cargado =====");
+
+const express = require("express");
 
 const router = express.Router();
+
+const FeederController = require("../controllers/FeederController");
 
 const controller = new FeederController();
 
@@ -21,4 +24,4 @@ router.post(
 
 );
 
-export default router;
+module.exports = router;

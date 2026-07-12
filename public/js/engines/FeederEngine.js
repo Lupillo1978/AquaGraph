@@ -1,4 +1,5 @@
 import EventTypes from "../core/EventTypes.js";
+import FeederController from "../controllers/FeederController.js";
 
 export default class FeederEngine {
 
@@ -10,6 +11,11 @@ export default class FeederEngine {
         this.selectedPond = null;
 
         this.selectedPosition = null;
+
+         this.controller = new FeederController();
+
+    this.currentPosition = null;
+
 
     }
 
@@ -95,6 +101,18 @@ export default class FeederEngine {
 
         });
 
+        document.addEventListener("click", async (event) => {
+
+    if (event.target.id !== "btnSaveFeeder") {
+
+        return;
+
+    }
+
+    await this.saveFeeder();
+
+});
+
     }
 
     startCreateFeeder() {
@@ -126,5 +144,43 @@ export default class FeederEngine {
         );
 
     }
+
+
+    async saveFeeder() {
+
+    const feeder = {
+
+        pondId: this.selectedPond.id,
+
+        name: document.getElementById("feederName").value.trim(),
+
+        nodeId: document.getElementById("feederNode").value.trim(),
+
+        position: this.currentPosition,
+
+        settings: {
+
+            radius: Number(
+
+                document.getElementById("feederRadius").value
+
+            ),
+
+            orientation: Number(
+
+                document.getElementById("feederOrientation").value
+
+            )
+
+        }
+
+    };
+
+    const response = await this.controller.create(feeder);
+
+    console.log("Respuesta servidor:", response);
+
+}
+
 
 }

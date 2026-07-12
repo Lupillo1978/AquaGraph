@@ -1,6 +1,8 @@
-import FeederRepository from "../repositories/FeederRepository.js";
+const FeederRepository = require("../repositories/FeederRepository");
+const Feeder = require("../models/Feeder");
+const IdGenerator = require("../utils/IdGenerator");
 
-export default class FeederService {
+class FeederService {
 
     getAll() {
 
@@ -8,9 +10,33 @@ export default class FeederService {
 
     }
 
-    create(feeder) {
+    create(data) {
 
         const feeders = FeederRepository.getAll();
+
+        const feeder = new Feeder({
+
+            id: IdGenerator.generate(
+
+                "FEEDER",
+
+                feeders
+
+            ),
+
+            code: data.code ?? "",
+
+            name: data.name ?? "",
+
+            pondId: data.pondId ?? "",
+
+            nodeId: data.nodeId ?? "",
+
+            position: data.position,
+
+            settings: data.settings
+
+        });
 
         feeders.push(feeder);
 
@@ -21,3 +47,5 @@ export default class FeederService {
     }
 
 }
+
+module.exports = FeederService;

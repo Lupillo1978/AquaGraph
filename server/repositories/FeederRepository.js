@@ -1,11 +1,14 @@
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
-const filePath = path.resolve(
-    "server/storage/feeders.json"
+const filePath = path.join(
+    __dirname,
+    "..",
+    "storage",
+    "feeders.json"
 );
 
-export default class FeederRepository {
+class FeederRepository {
 
     static getAll() {
 
@@ -48,3 +51,5 @@ export default class FeederRepository {
     }
 
 }
+
+module.exports = FeederRepository;
