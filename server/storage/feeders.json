@@ -1,1 +1,186 @@
-[]
+[
+    {
+        "id": "FEEDER-0001",
+        "code": "",
+        "name": "A1A1",
+        "pondId": "POND-0009",
+        "nodeId": "101",
+        "position": {
+            "lat": 26.000008913683992,
+            "lng": -109.38729643821718
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:19:23.061Z",
+        "updatedAt": "2026-07-12T23:19:23.061Z"
+    },
+    {
+        "id": "FEEDER-0002",
+        "code": "",
+        "name": "A2A1",
+        "pondId": "POND-0009",
+        "nodeId": "102",
+        "position": {
+            "lat": 26.0007514494706,
+            "lng": -109.38700675964357
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:20:05.167Z",
+        "updatedAt": "2026-07-12T23:20:05.167Z"
+    },
+    {
+        "id": "FEEDER-0003",
+        "code": "",
+        "name": "A3A1",
+        "pondId": "POND-0009",
+        "nodeId": "103",
+        "position": {
+            "lat": 26.001465025772674,
+            "lng": -109.38667416572572
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:20:43.328Z",
+        "updatedAt": "2026-07-12T23:20:43.328Z"
+    },
+    {
+        "id": "FEEDER-0004",
+        "code": "",
+        "name": "A4A1",
+        "pondId": "POND-0009",
+        "nodeId": "104",
+        "position": {
+            "lat": 26.002265383224103,
+            "lng": -109.38623428344728
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:21:09.854Z",
+        "updatedAt": "2026-07-12T23:21:09.854Z"
+    },
+    {
+        "id": "FEEDER-0005",
+        "code": "",
+        "name": "A5A1",
+        "pondId": "POND-0009",
+        "nodeId": "105",
+        "position": {
+            "lat": 26.00253538209803,
+            "lng": -109.38699603080751
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:21:45.638Z",
+        "updatedAt": "2026-07-12T23:21:45.638Z"
+    },
+    {
+        "id": "FEEDER-0006",
+        "code": "",
+        "name": "A6A1",
+        "pondId": "POND-0009",
+        "nodeId": "106",
+        "position": {
+            "lat": 26.001706097868098,
+            "lng": -109.3873715400696
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:22:17.103Z",
+        "updatedAt": "2026-07-12T23:22:17.103Z"
+    },
+    {
+        "id": "FEEDER-0007",
+        "code": "",
+        "name": "A7A1",
+        "pondId": "POND-0009",
+        "nodeId": "107",
+        "position": {
+            "lat": 26.00076109242251,
+            "lng": -109.38786506652833
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:23:15.722Z",
+        "updatedAt": "2026-07-12T23:23:15.722Z"
+    },
+    {
+        "id": "FEEDER-0008",
+        "code": "",
+        "name": "A8A1",
+        "pondId": "POND-0009",
+        "nodeId": "108",
+        "position": {
+            "lat": 25.999931795666456,
+            "lng": -109.38829421997072
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-12T23:23:34.230Z",
+        "updatedAt": "2026-07-12T23:23:34.230Z"
+    }
+]

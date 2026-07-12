@@ -6,28 +6,66 @@ export default class FeederEngine {
     constructor(infoPanel, eventBus) {
 
         this.infoPanel = infoPanel;
+
         this.eventBus = eventBus;
+
+        this.controller = new FeederController();
 
         this.selectedPond = null;
 
-        this.selectedPosition = null;
-
-         this.controller = new FeederController();
-
-    this.currentPosition = null;
-
+        this.currentPosition = null;
 
     }
 
-    initialize() {
+    
 
-        this.registerEvents();
+        async initialize() {
+
+              this.registerEvents();
+
+              await this.loadFeeders();
+
+            }
+       
+
+
+
+
+    async loadFeeders() {
+
+    const response = await this.controller.getAll();
+
+    if (!response.success) {
+
+        return;
 
     }
+
+    console.log(
+
+        "Alimentadores cargados:",
+
+        response.data
+
+    );
+
+    response.data.forEach(feeder => {
+
+        this.eventBus.emit(
+
+            EventTypes.FEEDER_CREATED,
+
+            feeder
+
+        );
+
+    });
+
+}
 
     registerEvents() {
 
-        // Guardar el estanque actualmente seleccionado
+        // Estanque seleccionado
         this.eventBus.on(
 
             EventTypes.POND_SELECTED,
@@ -40,26 +78,26 @@ export default class FeederEngine {
 
         );
 
-
+        // Posición seleccionada en el mapa
         this.eventBus.on(
 
     EventTypes.FEEDER_POSITION_SELECTED,
 
-    (data) => {
+    ({ pond, latlng }) => {
 
-        this.selectedPosition = data.latlng;
+        this.selectedPond = pond;
 
-        console.log(
+        this.currentPosition = {
 
-            "Posición del alimentador:",
+            lat: latlng.lat,
 
-            this.selectedPosition
+            lng: latlng.lng
 
-        );
+        };
 
         this.infoPanel.showCreateFeederForm(
 
-            this.selectedPond
+            pond
 
         );
 
@@ -80,6 +118,19 @@ export default class FeederEngine {
 
         });
 
+        // Botón Guardar Alimentador
+        document.addEventListener("click", async (event) => {
+
+            if (event.target.id !== "btnSaveFeeder") {
+
+                return;
+
+            }
+
+            await this.saveFeeder();
+
+        });
+
         // Botón Cancelar
         document.addEventListener("click", (event) => {
 
@@ -89,29 +140,9 @@ export default class FeederEngine {
 
             }
 
-            if (this.selectedPond) {
-
-                this.infoPanel.showPond(this.selectedPond);
-
-            } else {
-
-                this.infoPanel.showWelcome();
-
-            }
+            this.cancelCreateFeeder();
 
         });
-
-        document.addEventListener("click", async (event) => {
-
-    if (event.target.id !== "btnSaveFeeder") {
-
-        return;
-
-    }
-
-    await this.saveFeeder();
-
-});
 
     }
 
@@ -127,14 +158,14 @@ export default class FeederEngine {
 
         console.log("Iniciando creación de alimentador...");
 
-        // Cambiar el panel
+        this.currentPosition = null;
+
         this.infoPanel.showCreateFeederStep1(
 
             this.selectedPond
 
         );
 
-        // Avisar al mapa
         this.eventBus.emit(
 
             EventTypes.MAP_PLACE_FEEDER,
@@ -145,42 +176,152 @@ export default class FeederEngine {
 
     }
 
-
     async saveFeeder() {
 
-    const feeder = {
+        if (!this.currentPosition) {
 
-        pondId: this.selectedPond.id,
+            alert(
 
-        name: document.getElementById("feederName").value.trim(),
+                "Seleccione la ubicación del alimentador sobre el mapa."
 
-        nodeId: document.getElementById("feederNode").value.trim(),
+            );
 
-        position: this.currentPosition,
-
-        settings: {
-
-            radius: Number(
-
-                document.getElementById("feederRadius").value
-
-            ),
-
-            orientation: Number(
-
-                document.getElementById("feederOrientation").value
-
-            )
+            return;
 
         }
 
-    };
+        const feederName = document
+            .getElementById("feederName")
+            .value
+            .trim();
 
-    const response = await this.controller.create(feeder);
+        if (feederName === "") {
 
-    console.log("Respuesta servidor:", response);
+            alert(
 
-}
+                "Capture el nombre del alimentador."
 
+            );
+
+            return;
+
+        }
+
+        const feeder = {
+
+            pondId: this.selectedPond.id,
+
+            name: feederName,
+
+            nodeId: document
+                .getElementById("feederNode")
+                .value
+                .trim(),
+
+            position: this.currentPosition,
+
+            settings: {
+
+                radius: Number(
+
+                    document.getElementById("feederRadius").value
+
+                ),
+
+                orientation: Number(
+
+                    document.getElementById("feederOrientation").value
+
+                )
+
+            }
+
+        };
+
+        try {
+
+            const response = await this.controller.create(
+
+                feeder
+
+            );
+
+            console.log(
+
+                "Respuesta servidor:",
+
+                response
+
+            );
+
+            if (!response.success) {
+
+                alert(
+
+                    "No fue posible guardar el alimentador."
+
+                );
+
+                return;
+
+            }
+
+            this.eventBus.emit(
+
+                EventTypes.FEEDER_CREATED,
+
+                response.data
+
+            );
+
+            this.reset();
+
+            this.infoPanel.showPond(
+
+                this.selectedPond
+
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+
+                "Error al comunicarse con el servidor."
+
+            );
+
+        }
+
+    }
+
+    cancelCreateFeeder() {
+
+        this.reset();
+
+        if (this.selectedPond) {
+
+            this.infoPanel.showPond(
+
+                this.selectedPond
+
+            );
+
+        }
+        else {
+
+            this.infoPanel.showWelcome();
+
+        }
+
+    }
+
+    reset() {
+
+        this.currentPosition = null;
+
+    }
 
 }

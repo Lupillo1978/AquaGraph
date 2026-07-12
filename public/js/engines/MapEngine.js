@@ -268,6 +268,18 @@ registerEvents() {
 
     );
 
+    this.eventBus.on(
+
+    EventTypes.FEEDER_CREATED,
+
+    (feeder) => {
+
+        this.renderFeeder(feeder);
+
+    }
+
+);
+
 }
 
     startPolygonDrawing() {
@@ -457,6 +469,66 @@ placeTemporaryFeeder(latlng) {
     }
 
 );
+
+}
+
+renderFeeder(feeder) {
+
+    // Eliminar el marcador temporal
+
+    if (this.temporaryFeeder) {
+
+        this.layers.temporary.removeLayer(
+            this.temporaryFeeder
+        );
+
+        this.temporaryFeeder = null;
+
+    }
+
+    const marker = L.marker(
+
+        [
+
+            feeder.position.lat,
+
+            feeder.position.lng
+
+        ],
+
+        {
+
+            icon: this.createFeederIcon(
+
+                feeder.name
+
+            )
+
+        }
+
+    );
+
+    marker.feeder = feeder;
+
+    marker.bindTooltip(
+
+        feeder.name
+
+    );
+
+    marker.addTo(
+
+        this.layers.feeders
+
+    );
+
+    console.log(
+
+        "Alimentador agregado al mapa:",
+
+        feeder.name
+
+    );
 
 }
 

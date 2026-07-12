@@ -1,28 +1,44 @@
 export default class StateManager {
 
-    constructor(){
+    constructor() {
 
-        this.state={
+        this.state = {
 
-            farm:null,
+            // =====================================================
+            // Información general
+            // =====================================================
 
-            pond:null,
+            farm: null,
 
-            feeder:null,
+            user: null,
 
-            user:null
+            // =====================================================
+            // Estanques
+            // =====================================================
+
+            ponds: [],
+
+            selectedPond: null,
+
+            // =====================================================
+            // Alimentadores
+            // =====================================================
+
+            feeders: [],
+
+            selectedFeeder: null
 
         };
 
     }
 
-    set(key,value){
+    set(key, value) {
 
-        this.state[key]=value;
+        this.state[key] = value;
 
     }
 
-    get(key){
+    get(key) {
 
         return this.state[key];
 

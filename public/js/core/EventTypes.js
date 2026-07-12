@@ -24,7 +24,13 @@ const EventTypes = {
 
     FEEDER_POSITION_SELECTED: "feeder:positionSelected",
 
-    FEEDER_SELECTED: "feeder:selected"
+    
+
+    FEEDER_CREATED: "feeder:created",
+    
+    FEEDER_SELECTED: "feeder:selected",
+
+    
 
 };
 
