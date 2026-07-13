@@ -1,4 +1,5 @@
 import PondView from "../views/PondView.js";
+import FeederView from "../views/FeederView.js";
 
 export default class InfoPanel {
 
@@ -7,6 +8,8 @@ export default class InfoPanel {
         this.container = null;
 
         this.pondView = new PondView();
+
+        this.feederView = new FeederView();
 
     }
 
@@ -231,5 +234,21 @@ export default class InfoPanel {
         this.container.innerHTML = this.pondView.render(pond);
 
     }
+
+    showFeeder(feeder) {
+
+    console.log(
+
+        "InfoPanel recibió alimentador:",
+
+        feeder
+
+    );
+
+    this.container.innerHTML =
+
+        this.feederView.render(feeder);
+
+}
 
 }

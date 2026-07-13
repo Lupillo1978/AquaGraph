@@ -31,6 +31,11 @@ export default class MapEngine {
         this.activePond = null;
 
         this.temporaryFeeder = null;
+
+        this.selectedFeederMarker = null;
+
+        this.feederMarkers = new Map();
+
     }
 
     initialize() {
@@ -280,6 +285,22 @@ registerEvents() {
 
 );
 
+// ==================================================
+// Alimentador seleccionado
+// ==================================================
+
+this.eventBus.on(
+
+    EventTypes.FEEDER_SELECTED,
+
+    (feeder) => {
+
+        this.selectFeeder(feeder);
+
+    }
+
+);
+
 }
 
     startPolygonDrawing() {
@@ -363,11 +384,19 @@ registerEvents() {
 
 }
 
-createFeederIcon(label = "F") {
+createFeederIcon(label = "F", state = "NORMAL") {
+
+    const classes = {
+
+        NORMAL: "",
+
+        SELECTED: "selected"
+
+    };
 
     return L.divIcon({
 
-        className: "feeder-icon",
+        className: `feeder-icon ${classes[state] || ""}`,
 
         html: `
 
@@ -375,7 +404,11 @@ createFeederIcon(label = "F") {
 
                 <div class="feeder-symbol">⚙</div>
 
-                <div class="feeder-label">${label}</div>
+                <div class="feeder-label">
+
+                    ${label}
+
+                </div>
 
             </div>
 
@@ -522,6 +555,14 @@ renderFeeder(feeder) {
 
     );
 
+    this.feederMarkers.set(
+
+      feeder.id,
+
+      marker
+
+    );
+
     console.log(
 
         "Alimentador agregado al mapa:",
@@ -529,6 +570,60 @@ renderFeeder(feeder) {
         feeder.name
 
     );
+
+}
+
+selectFeeder(feeder) {
+
+    // Restaurar el alimentador anteriormente seleccionado
+
+    if (this.selectedFeederMarker) {
+
+        const previous = this.selectedFeederMarker.feeder;
+
+        this.selectedFeederMarker.setIcon(
+
+            this.createFeederIcon(
+
+                previous.name,
+
+                "NORMAL"
+
+            )
+
+        );
+
+    }
+
+    // Buscar el nuevo marcador
+
+    const marker = this.feederMarkers.get(
+
+        feeder.id
+
+    );
+
+    if (!marker) {
+
+        return;
+
+    }
+
+    // Aplicar estado seleccionado
+
+    marker.setIcon(
+
+        this.createFeederIcon(
+
+            feeder.name,
+
+            "SELECTED"
+
+        )
+
+    );
+
+    this.selectedFeederMarker = marker;
 
 }
 

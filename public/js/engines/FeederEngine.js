@@ -1,5 +1,6 @@
 import EventTypes from "../core/EventTypes.js";
 import FeederController from "../controllers/FeederController.js";
+import FeederSelection from "../modules/feeders/FeederSelection.js";
 
 export default class FeederEngine {
 
@@ -15,11 +16,22 @@ export default class FeederEngine {
 
         this.currentPosition = null;
 
+        this.feeders = [];
+
+        this.selection = new FeederSelection(
+
+        this.infoPanel,
+
+        this.eventBus
+
+        );
+
     }
 
     
+    async initialize() {
 
-        async initialize() {
+              this.selection.initialize();
 
               this.registerEvents();
 
@@ -41,15 +53,17 @@ export default class FeederEngine {
 
     }
 
+    this.feeders = response.data;
+
     console.log(
 
         "Alimentadores cargados:",
 
-        response.data
+        this.feeders
 
     );
 
-    response.data.forEach(feeder => {
+    this.feeders.forEach(feeder => {
 
         this.eventBus.emit(
 
@@ -66,17 +80,58 @@ export default class FeederEngine {
     registerEvents() {
 
         // Estanque seleccionado
-        this.eventBus.on(
+this.eventBus.on(
 
-            EventTypes.POND_SELECTED,
+    EventTypes.POND_SELECTED,
 
-            (pond) => {
+    (pond) => {
 
-                this.selectedPond = pond;
+        this.selectedPond = pond;
 
-            }
+        // Obtener únicamente los alimentadores
+        // pertenecientes a este estanque.
+        pond.feeders = this.feeders.filter(
+
+            feeder => feeder.pondId === pond.id
 
         );
+
+        console.log(
+
+            "Alimentadores del estanque:",
+
+            pond.feeders
+
+        );
+
+        // Actualizar nuevamente el panel
+        this.infoPanel.showPond(pond);
+
+    }
+
+   
+
+);
+
+// ==================================================
+// Alimentador seleccionado
+// ==================================================
+
+this.eventBus.on(
+
+    EventTypes.FEEDER_SELECTED,
+
+    (feeder) => {
+
+        this.infoPanel.showFeeder(
+
+            feeder
+
+        );
+
+    }
+
+);
 
         // Posición seleccionada en el mapa
         this.eventBus.on(
@@ -130,6 +185,52 @@ export default class FeederEngine {
             await this.saveFeeder();
 
         });
+
+        // ==================================================
+        // Selección de alimentador desde la lista
+        // ==================================================
+
+        document.addEventListener("click", (event) => {
+
+           const feederItem = event.target.closest(".feeder-item");
+
+               if (!feederItem) {
+
+                return;
+
+             }
+
+           const feederId = feederItem.dataset.feederId;
+
+           const feeder = this.feeders.find(
+
+              item => item.id === feederId
+
+            );
+
+           if (!feeder) {
+
+              return;
+
+            }
+
+    console.log(
+
+        "Alimentador seleccionado:",
+
+        feeder
+
+    );
+
+    this.eventBus.emit(
+
+        EventTypes.FEEDER_SELECTED,
+
+        feeder
+
+    );
+
+});
 
         // Botón Cancelar
         document.addEventListener("click", (event) => {

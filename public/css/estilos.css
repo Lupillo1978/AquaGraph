@@ -160,6 +160,27 @@ footer{
 
 }
 
+/* ===========================================
+   ESTADOS DEL ALIMENTADOR
+=========================================== */
+
+.feeder-icon.selected .feeder-label{
+
+    background:#fbc02d;
+
+    color:#000000;
+
+    border:2px solid #ffeb3b;
+
+    box-shadow:0 0 10px rgba(255,215,0,.7);
+
+}
+
+.feeder-icon.selected .feeder-symbol{
+
+    transform:scale(1.20);
+
+}
 /*==================================================
 AD&M MARKERS
 ==================================================*/

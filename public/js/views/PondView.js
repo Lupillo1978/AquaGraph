@@ -62,23 +62,71 @@ export default class PondView {
 
             </div>
 
-            <hr>
+           <hr>
 
-            <h5>Alimentadores</h5>
+<h5>Alimentadores</h5>
 
-            <div class="text-secondary mb-3">
+${
+    pond.feeders && pond.feeders.length > 0
 
-                No existen alimentadores registrados.
+    ?
 
-            </div>
+    `
 
-            <button
-                id="btnAddFeeder"
-                class="btn btn-primary w-100">
+        <div class="list-group mb-3">
 
-                + Agregar Alimentador
+            ${pond.feeders.map(feeder => `
 
-            </button>
+                <button
+                    class="list-group-item list-group-item-action feeder-item"
+                    data-feeder-id="${feeder.id}">
+
+                    <div class="d-flex justify-content-between">
+
+                        <strong>
+
+                            ⚙ ${feeder.name}
+
+                        </strong>
+
+                        <small>
+
+                            Nodo ${feeder.nodeId}
+
+                        </small>
+
+                    </div>
+
+                </button>
+
+            `).join("")}
+
+        </div>
+
+    `
+
+    :
+
+    `
+
+        <div class="text-secondary mb-3">
+
+            No existen alimentadores registrados.
+
+        </div>
+
+    `
+
+}
+
+                <button
+                   id="btnAddFeeder"
+                   class="btn btn-primary w-100">
+
+                   + Agregar Alimentador
+
+              </button>
+
 
             <hr class="mt-4">
 
