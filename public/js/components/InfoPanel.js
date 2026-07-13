@@ -94,7 +94,7 @@ export default class InfoPanel {
 
     }
 
-    showCreateFeederForm(pond) {
+    showCreateFeederForm(pond, feeder = null) {
 
         this.container.innerHTML = `
 
@@ -122,9 +122,10 @@ export default class InfoPanel {
                     </label>
 
                     <input
-                        id="feederName"
-                        class="form-control"
-                        placeholder="Ej. Alimentador Norte">
+                         id="feederName"
+                         class="form-control"
+                         value="${feeder ? feeder.name : ""}"
+                         placeholder="Ej. Alimentador Norte">
 
                 </div>
 
@@ -137,9 +138,10 @@ export default class InfoPanel {
                     </label>
 
                     <input
-                        id="feederNode"
-                        class="form-control"
-                        placeholder="Ej. 101">
+                         id="feederNode"
+                         class="form-control"
+                         value="${feeder ? feeder.nodeId : ""}"
+                         placeholder="Ej. 101">
 
                 </div>
 
@@ -155,7 +157,7 @@ export default class InfoPanel {
                         id="feederRadius"
                         type="number"
                         class="form-control"
-                        value="25">
+                        value="${feeder ? feeder.settings.radius : 25}">
 
                 </div>
 
@@ -171,7 +173,7 @@ export default class InfoPanel {
                         id="feederOrientation"
                         type="number"
                         class="form-control"
-                        value="0">
+                        value="${feeder ? feeder.settings.orientation : 0}">
 
                 </div>
 
@@ -181,7 +183,7 @@ export default class InfoPanel {
                         id="btnSaveFeeder"
                         class="btn btn-success">
 
-                        Guardar Alimentador
+                        ${feeder ? "Actualizar Alimentador" : "Guardar Alimentador"}
 
                     </button>
 

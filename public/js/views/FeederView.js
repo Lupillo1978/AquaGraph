@@ -48,6 +48,8 @@ export default class FeederView {
                 <hr>
 
                 <button
+                    id="btnEditFeeder"
+                    data-feeder-id="${feeder.id}"
                     class="btn btn-warning w-100 mb-2">
 
                     Editar

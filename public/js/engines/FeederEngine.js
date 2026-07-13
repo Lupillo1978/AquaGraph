@@ -12,10 +12,6 @@ export default class FeederEngine {
 
         this.controller = new FeederController();
 
-        this.selectedPond = null;
-
-        this.currentPosition = null;
-
         this.feeders = [];
 
         this.selection = new FeederSelection(
@@ -25,6 +21,12 @@ export default class FeederEngine {
         this.eventBus
 
         );
+
+        this.selectedPond = null;
+
+        this.currentPosition = null;
+
+        this.editingFeeder = null;
 
     }
 
@@ -232,6 +234,42 @@ this.eventBus.on(
 
 });
 
+
+// ==================================================
+// Editar alimentador
+// ==================================================
+
+document.addEventListener("click", (event) => {
+
+    if (event.target.id !== "btnEditFeeder") {
+
+        return;
+
+    }
+
+    const feederId = event.target.dataset.feederId;
+
+    const feeder = this.feeders.find(
+
+        item => item.id === feederId
+
+    );
+
+    if (!feeder) {
+
+        return;
+
+    }
+
+    this.openEditFeeder(
+
+        feeder
+
+    );
+
+});
+
+
         // Botón Cancelar
         document.addEventListener("click", (event) => {
 
@@ -307,6 +345,12 @@ this.eventBus.on(
             return;
 
         }
+
+        if (this.editingFeeder) {
+
+    return await this.updateFeeder();
+
+}
 
         const feeder = {
 
@@ -397,6 +441,46 @@ this.eventBus.on(
         }
 
     }
+
+
+    async updateFeeder() {
+
+    console.log(
+
+        "Actualizando:",
+
+        this.editingFeeder
+
+    );
+
+}
+
+    openEditFeeder(feeder) {
+
+
+    this.selectedPond = {
+
+        id: feeder.pondId,
+
+        name: feeder.pondId
+
+    };
+
+    this.currentPosition = feeder.position;
+
+    this.editingFeeder = feeder;
+
+    this.infoPanel.showCreateFeederForm(
+
+        this.selectedPond,
+
+        feeder
+
+    );
+
+   
+}
+
 
     cancelCreateFeeder() {
 
