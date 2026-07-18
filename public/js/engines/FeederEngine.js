@@ -115,25 +115,7 @@ this.eventBus.on(
 
 );
 
-// ==================================================
-// Alimentador seleccionado
-// ==================================================
 
-this.eventBus.on(
-
-    EventTypes.FEEDER_SELECTED,
-
-    (feeder) => {
-
-        this.infoPanel.showFeeder(
-
-            feeder
-
-        );
-
-    }
-
-);
 
         // Posición seleccionada en el mapa
         this.eventBus.on(
@@ -445,15 +427,72 @@ document.addEventListener("click", (event) => {
 
     async updateFeeder() {
 
+    const feeder = {
+
+        ...this.editingFeeder,
+
+        name: document.getElementById(
+
+            "feederName"
+
+        ).value.trim(),
+
+        nodeId: document.getElementById(
+
+            "feederNode"
+
+        ).value.trim(),
+
+        settings: {
+
+            radius: Number(
+
+                document.getElementById(
+
+                    "feederRadius"
+
+                ).value
+
+            ),
+
+            orientation: Number(
+
+                document.getElementById(
+
+                    "feederOrientation"
+
+                ).value
+
+            )
+
+        }
+
+    };
+
     console.log(
 
-        "Actualizando:",
+        "Enviando actualización:",
 
-        this.editingFeeder
+        feeder
+
+    );
+
+    const response = await this.controller.update(
+
+        feeder.id,
+
+        feeder
+
+    );
+
+    console.log(
+
+        response
 
     );
 
 }
+
 
     openEditFeeder(feeder) {
 
