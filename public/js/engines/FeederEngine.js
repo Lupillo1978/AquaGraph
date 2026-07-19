@@ -171,6 +171,24 @@ this.eventBus.on(
         });
 
         // ==================================================
+        // Botón Eliminar Alimentador
+        // ==================================================
+
+        document.addEventListener("click", async (event) => {
+
+              if (event.target.id !== "btnDeleteFeeder") {
+
+               return;
+
+              }
+
+            const feederId = event.target.dataset.feederId;
+
+              await this.deleteFeeder(feederId);
+
+        });
+
+        // ==================================================
         // Selección de alimentador desde la lista
         // ==================================================
 
@@ -579,5 +597,35 @@ this.eventBus.emit(
         this.currentPosition = null;
 
     }
+
+
+    async deleteFeeder(feederId) {
+
+    const confirmed = confirm(
+
+        "¿Desea eliminar este alimentador?"
+
+    );
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+    const response = await this.controller.delete(
+
+    feederId
+
+);
+
+console.log(
+
+    response
+
+);
+
+}
+
 
 }

@@ -57,6 +57,8 @@ export default class FeederView {
                 </button>
 
                 <button
+                    id="btnDeleteFeeder"
+                    data-feeder-id="${feeder.id}"
                     class="btn btn-danger w-100 mb-2">
 
                     Eliminar

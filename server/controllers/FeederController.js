@@ -76,6 +76,25 @@ update(req, res) {
 }
 
 
+    async delete(id) {
+
+    const response = await fetch(
+
+        `/api/feeders/${id}`,
+
+        {
+
+            method: "DELETE"
+
+        }
+
+    );
+
+    return await response.json();
+
+}
+
+
     getAll(req, res) {
 
         try {
