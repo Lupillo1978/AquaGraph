@@ -286,6 +286,60 @@ registerEvents() {
 );
 
 // ==================================================
+// Actualizar alimentador
+// ==================================================
+
+this.eventBus.on(
+
+    EventTypes.FEEDER_UPDATED,
+
+    (feeder) => {
+
+        this.layers.feeders.eachLayer(
+
+            marker => {
+
+                if (marker.feederId !== feeder.id) {
+
+                    return;
+
+                }
+
+                marker.feeder = feeder;
+
+                marker.setIcon(
+
+                    this.createFeederIcon(
+
+                        feeder.name
+
+                    )
+
+                );
+
+                marker.setTooltipContent(
+
+                    feeder.name
+
+                );
+
+                console.log(
+
+                    "✅ Marcador actualizado:",
+
+                    feeder.name
+
+                );
+
+            }
+
+        );
+
+    }
+
+);
+
+// ==================================================
 // Alimentador seleccionado
 // ==================================================
 
@@ -540,6 +594,8 @@ renderFeeder(feeder) {
         }
 
     );
+
+    marker.feederId = feeder.id;
 
     marker.feeder = feeder;
 

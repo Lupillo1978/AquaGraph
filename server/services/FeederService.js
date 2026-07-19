@@ -46,6 +46,44 @@ class FeederService {
 
     }
 
+    update(id, data) {
+
+    const feeders = FeederRepository.getAll();
+
+    const feeder = feeders.find(
+
+        item => item.id === id
+
+    );
+
+    if (!feeder) {
+
+        throw new Error(
+
+            "Alimentador no encontrado."
+
+        );
+
+    }
+
+    feeder.code = data.code ?? feeder.code;
+
+    feeder.name = data.name ?? feeder.name;
+
+    feeder.pondId = data.pondId ?? feeder.pondId;
+
+    feeder.nodeId = data.nodeId ?? feeder.nodeId;
+
+    feeder.position = data.position ?? feeder.position;
+
+    feeder.settings = data.settings ?? feeder.settings;
+
+    FeederRepository.saveAll(feeders);
+
+    return feeder;
+
+}
+
 }
 
 module.exports = FeederService;

@@ -7,21 +7,11 @@ const router = express.Router();
 const FeederController = require("../controllers/FeederController");
 
 const controller = new FeederController();
+    
+router.get("/",controller.getAll.bind(controller));
 
-router.get(
+router.post("/",controller.create.bind(controller));
 
-    "/",
-
-    controller.getAll.bind(controller)
-
-);
-
-router.post(
-
-    "/",
-
-    controller.create.bind(controller)
-
-);
+router.put("/:id",controller.update.bind(controller));
 
 module.exports = router;

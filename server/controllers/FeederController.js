@@ -41,6 +41,41 @@ class FeederController {
 
     }
 
+update(req, res) {
+
+    try {
+
+        const feeder = this.service.update(
+
+            req.params.id,
+
+            req.body
+
+        );
+
+        res.json({
+
+            success: true,
+
+            data: feeder
+
+        });
+
+    } catch (error) {
+
+        res.status(400).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
+
+}
+
+
     getAll(req, res) {
 
         try {

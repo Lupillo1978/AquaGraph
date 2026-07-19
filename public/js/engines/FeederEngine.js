@@ -477,19 +477,51 @@ document.addEventListener("click", (event) => {
 
     );
 
-    const response = await this.controller.update(
+   const response = await this.controller.update(
 
-        feeder.id,
+    feeder.id,
 
-        feeder
+    feeder
 
-    );
+);
 
-    console.log(
+if (!response.success) {
 
-        response
+    alert(response.message);
 
-    );
+    return;
+
+}
+
+// Actualizar el arreglo local
+
+const index = this.feeders.findIndex(
+
+    item => item.id === response.data.id
+
+);
+
+if (index !== -1) {
+
+    this.feeders[index] = response.data;
+
+}
+
+console.log(
+
+    "✅ Alimentador actualizado:",
+
+    response.data
+
+);
+
+this.eventBus.emit(
+
+    EventTypes.FEEDER_UPDATED,
+
+    response.data
+
+);
 
 }
 
