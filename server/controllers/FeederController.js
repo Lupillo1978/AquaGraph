@@ -76,21 +76,35 @@ update(req, res) {
 }
 
 
-    async delete(id) {
+    delete(req, res) {
 
-    const response = await fetch(
+    try {
 
-        `/api/feeders/${id}`,
+        this.service.delete(
 
-        {
+            req.params.id
 
-            method: "DELETE"
+        );
 
-        }
+        res.json({
 
-    );
+            success: true,
 
-    return await response.json();
+            message: "Alimentador eliminado correctamente."
+
+        });
+
+    } catch (error) {
+
+        res.status(400).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
 
 }
 

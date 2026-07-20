@@ -28,6 +28,8 @@ const EventTypes = {
 
     FEEDER_CREATED: "feeder:created",
 
+    FEEDER_DELETED: "feeder:deleted",
+
     FEEDER_UPDATE: "feeder:update",
     
     FEEDER_SELECTED: "feeder:selected",

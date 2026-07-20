@@ -1,28 +1,5 @@
 [
     {
-        "id": "FEEDER-0001",
-        "code": "",
-        "name": "A1A1",
-        "pondId": "POND-0009",
-        "nodeId": "101",
-        "position": {
-            "lat": 26.000008913683992,
-            "lng": -109.38729643821718
-        },
-        "settings": {
-            "radius": 25,
-            "orientation": 0
-        },
-        "status": {
-            "online": false,
-            "battery": null,
-            "rssi": null,
-            "lastSeen": null
-        },
-        "createdAt": "2026-07-12T23:19:23.061Z",
-        "updatedAt": "2026-07-12T23:19:23.061Z"
-    },
-    {
         "id": "FEEDER-0002",
         "code": "",
         "name": "A2A1",
@@ -163,12 +140,12 @@
     {
         "id": "FEEDER-0008",
         "code": "",
-        "name": "A8A1",
+        "name": "A1A1",
         "pondId": "POND-0009",
-        "nodeId": "108",
+        "nodeId": "101",
         "position": {
-            "lat": 25.999931795666456,
-            "lng": -109.38829421997072
+            "lat": 25.999748552037918,
+            "lng": -109.38736081123353
         },
         "settings": {
             "radius": 25,
@@ -180,7 +157,30 @@
             "rssi": null,
             "lastSeen": null
         },
-        "createdAt": "2026-07-12T23:23:34.230Z",
-        "updatedAt": "2026-07-12T23:23:34.230Z"
+        "createdAt": "2026-07-20T03:04:44.146Z",
+        "updatedAt": "2026-07-20T03:04:44.147Z"
+    },
+    {
+        "id": "FEEDER-0009",
+        "code": "",
+        "name": "A8A1",
+        "pondId": "POND-0009",
+        "nodeId": "108",
+        "position": {
+            "lat": 25.999825696289506,
+            "lng": -109.3882727622986
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-07-20T03:05:41.759Z",
+        "updatedAt": "2026-07-20T03:05:41.759Z"
     }
 ]

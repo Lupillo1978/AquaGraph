@@ -615,15 +615,41 @@ this.eventBus.emit(
 
     const response = await this.controller.delete(
 
-    feederId
+        feederId
 
-);
+    );
 
-console.log(
+    if (!response.success) {
 
-    response
+        alert(response.message);
 
-);
+        return;
+
+    }
+
+    // Eliminar del arreglo local
+    this.feeders = this.feeders.filter(
+
+        feeder => feeder.id !== feederId
+
+    );
+
+    // Notificar al resto de la aplicación
+    this.eventBus.emit(
+
+        EventTypes.FEEDER_DELETED,
+
+        feederId
+
+    );
+
+    console.log(
+
+        "Alimentador eliminado:",
+
+        feederId
+
+    );
 
 }
 

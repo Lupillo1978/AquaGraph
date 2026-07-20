@@ -60,4 +60,22 @@ export default class FeederController {
 
 }
 
+async delete(id) {
+
+    const response = await fetch(
+
+        `/api/feeders/${id}`,
+
+        {
+
+            method: "DELETE"
+
+        }
+
+    );
+
+    return await response.json();
+
+}
+
 }

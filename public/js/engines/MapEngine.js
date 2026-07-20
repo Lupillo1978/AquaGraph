@@ -1,5 +1,8 @@
 
 import EventTypes from "../core/EventTypes.js";
+
+import FeederMapManager from "./map/FeederMapManager.js";
+
 export default class MapEngine {
 
     constructor(container, eventBus) {
@@ -35,6 +38,8 @@ export default class MapEngine {
         this.selectedFeederMarker = null;
 
         this.feederMarkers = new Map();
+
+        this.feederMapManager = null;
 
     }
 
@@ -73,6 +78,8 @@ export default class MapEngine {
        this.map.addLayer(this.layers.ponds);
 
        this.map.addLayer(this.layers.feeders);
+
+       this.feederMapManager = new FeederMapManager(this.layers.feeders);
 
     }
 
@@ -332,6 +339,26 @@ this.eventBus.on(
                 );
 
             }
+
+        );
+
+    }
+
+);
+
+// ==================================================
+// Eliminar alimentador del mapa
+// ==================================================
+
+this.eventBus.on(
+
+    EventTypes.FEEDER_DELETED,
+
+    (feederId) => {
+
+        this.removeFeederFromMap(
+
+            feederId
 
         );
 
@@ -611,13 +638,13 @@ renderFeeder(feeder) {
 
     );
 
-    this.feederMarkers.set(
+    this.feederMapManager.add(
 
-      feeder.id,
+    feeder,
 
-      marker
+    marker
 
-    );
+);
 
     console.log(
 
@@ -680,6 +707,70 @@ selectFeeder(feeder) {
     );
 
     this.selectedFeederMarker = marker;
+
+}
+
+removeFeederFromMap(feederId) {
+
+    this.layers.feeders.eachLayer(
+
+        (layer) => {
+
+            if (
+
+                layer.feeder &&
+
+                layer.feeder.id === feederId
+
+            ) {
+
+                this.layers.feeders.removeLayer(
+
+                    layer
+
+                );
+
+            }
+
+        }
+
+    );
+
+}
+
+removeFeederFromMap(feederId) {
+
+    const marker = this.feederMarkers.get(
+
+        feederId
+
+    );
+
+    if (!marker) {
+
+        return;
+
+    }
+
+    this.layers.feeders.removeLayer(
+
+        marker
+
+    );
+
+    this.feederMarkers.delete(
+
+        feederId
+
+    );
+
+    console.log(
+
+        "Marcador eliminado:",
+
+        feederId
+
+    );
 
 }
 

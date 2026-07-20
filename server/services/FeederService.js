@@ -84,6 +84,32 @@ class FeederService {
 
 }
 
+delete(id) {
+
+    const feeders = FeederRepository.getAll();
+
+    const index = feeders.findIndex(
+
+        feeder => feeder.id === id
+
+    );
+
+    if (index === -1) {
+
+        throw new Error(
+
+            "Alimentador no encontrado."
+
+        );
+
+    }
+
+    feeders.splice(index, 1);
+
+    FeederRepository.saveAll(feeders);
+
+}
+
 }
 
 module.exports = FeederService;
