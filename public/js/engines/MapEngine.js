@@ -356,7 +356,7 @@ this.eventBus.on(
 
     (feederId) => {
 
-        this.removeFeederFromMap(
+        this.feederMapManager.remove(
 
             feederId
 

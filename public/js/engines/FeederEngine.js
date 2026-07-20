@@ -634,22 +634,47 @@ this.eventBus.emit(
 
     );
 
-    // Notificar al resto de la aplicación
-    this.eventBus.emit(
+ // Obtener el estanque al que pertenecía
+const pond = this.selectedPond;
 
-        EventTypes.FEEDER_DELETED,
+if (pond) {
 
-        feederId
+    // Actualizar la lista de alimentadores
+    pond.feeders = this.feeders.filter(
+
+        feeder => feeder.pondId === pond.id
+
+    );
+
+}
+
+// Notificar al resto de la aplicación
+this.eventBus.emit(
+
+    EventTypes.FEEDER_DELETED,
+
+    feederId
+
+);
+
+// Regresar el panel al estanque
+if (pond) {
+
+    this.infoPanel.showPond(
+
+        pond
 
     );
 
-    console.log(
+}
 
-        "Alimentador eliminado:",
+console.log(
 
-        feederId
+    "Alimentador eliminado:",
 
-    );
+    feederId
+
+);
 
 }
 
