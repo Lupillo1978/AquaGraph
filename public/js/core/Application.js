@@ -8,6 +8,8 @@ import StatusBar from "../components/StatusBar.js";
 import MapEngine from "../engines/MapEngine.js";
 import PondEngine from "../engines/PondEngine.js";
 import FeederEngine from "../engines/FeederEngine.js";
+import DietEngine from "../engines/DietEngine.js";
+
 
 export default class Application{
 
@@ -49,6 +51,12 @@ export default class Application{
 
         );
 
+        this.dietEngine = new DietEngine(
+
+         this.infoPanel
+
+        );
+
 
     }
 
@@ -69,6 +77,26 @@ export default class Application{
     this.pondEngine.initialize();
 
     this.feederEngine.initialize();
+
+    document
+
+    .getElementById(
+
+        "btnDiets"
+
+    )
+
+    .addEventListener(
+
+        "click",
+
+        () => {
+
+            this.dietEngine.showEditor();
+
+        }
+
+    );
 
 }
 

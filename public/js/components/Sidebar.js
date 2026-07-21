@@ -22,6 +22,12 @@ export default class Sidebar{
 
             </button>
 
+            <button id="btnDiets" class="btn btn-outline-light w-100 mb-2">
+
+              Dietas
+
+            </button>
+
             <button class="btn btn-outline-light w-100 mb-2">
 
                 Alimentadores
