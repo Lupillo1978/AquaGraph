@@ -157,4 +157,17 @@ export default class InfoPanel {
       console.log("InfoPanel recibió alimentador:",feeder);
       this.container.innerHTML =  this.feederView.render(feeder);
     }
+
+   hide() {
+
+       this.container.classList.add("d-none");
+
+    }
+
+   show() {
+
+       this.container.classList.remove("d-none");
+
+    }
+
 }

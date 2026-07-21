@@ -246,3 +246,21 @@ AD&M MARKERS
     font-weight:bold;
 
 }
+
+/*=========================================
+WORKSPACE
+=========================================*/
+
+#workspace{
+
+    width:100%;
+
+    height:100%;
+
+    overflow:auto;
+
+    background:#202124;
+
+    padding:20px;
+
+}

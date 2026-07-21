@@ -4,23 +4,25 @@ import DietItemRow from "../views/DietItemRow.js";
 
 export default class DietEngine {
 
-    constructor(infoPanel) {
+    constructor(workspaceManager) {
 
-        this.infoPanel = infoPanel;
+    this.workspaceManager = workspaceManager;
 
-        this.view = new DietEditorView();
+    this.view = new DietEditorView();
 
-        this.items = [];
+    this.items = [];
 
-    }
+}
 
     showEditor() {
 
-        this.infoPanel.container.innerHTML =
+      this.workspaceManager.showWorkspace();
 
-            this.view.render();
+      const workspace = document.getElementById("workspace");
 
-        this.registerEvents();
+      workspace.innerHTML = this.view.render();
+
+      this.registerEvents();
 
     }
 
