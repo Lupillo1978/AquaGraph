@@ -26,15 +26,29 @@ export default class DietEditorView {
 
         <div class="col-auto">
 
-            <button
+            <div class="d-flex justify-content-end gap-2">
 
-                id="btnSaveDiet"
+    <button
 
-                class="btn btn-success">
+        id="btnCancelDiet"
 
-                Guardar Dieta
+        class="btn btn-secondary">
 
-            </button>
+        Cancelar
+
+    </button>
+
+    <button
+
+        id="btnSaveDiet"
+
+        class="btn btn-success">
+
+        Guardar Dieta
+
+    </button>
+
+</div>
 
         </div>
 

@@ -1,6 +1,6 @@
 import DietManagerView from "../views/DietManagerView.js";
 
-import DietEditorEngine from "./DietEditorEngine.js";
+import DietEngine from "./DietEngine.js";
 
 export default class DietManagerEngine {
 
@@ -10,7 +10,13 @@ export default class DietManagerEngine {
 
         this.view = new DietManagerView();
 
-         this.editor = new DietEditorEngine(workspaceManager);
+        this.dietEngine = new DietEngine(
+
+          workspaceManager,
+
+          this
+
+        );
 
     }
 
@@ -24,32 +30,31 @@ export default class DietManagerEngine {
 
         );
 
-          this.registerEvents();
+        this.registerEvents();
 
     }
 
-
     registerEvents() {
 
-     document
+        document
 
-        .getElementById(
+            .getElementById(
 
-            "btnNewDiet"
+                "btnNewDiet"
 
-        )
+            )
 
-        .addEventListener(
+            .addEventListener(
 
-            "click",
+                "click",
 
-            () => {
+                () => {
 
-                this.editor.show();
+                    this.dietEngine.showEditor();
 
-            }
+                }
 
-        );
+            );
 
     }
 

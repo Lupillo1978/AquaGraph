@@ -6,17 +6,19 @@ import DietChart from "./DietChart.js";
 
 export default class DietEngine {
 
-    constructor(workspaceManager) {
+    constructor(workspaceManager, manager = null) {
 
-    this.workspaceManager = workspaceManager;
+       this.workspaceManager = workspaceManager;
 
-    this.view = new DietEditorView();
+       this.manager = manager;
 
-    this.chart = new DietChart();
+       this.view = new DietEditorView();
 
-    this.items = [];
+       this.chart = new DietChart();
 
-}
+       this.items = [];
+
+    }
 
     showEditor() {
 
@@ -38,6 +40,34 @@ export default class DietEngine {
 
         document
 
+    .getElementById(
+
+        "btnSaveDiet"
+
+    )
+
+    .addEventListener(
+
+        "click",
+
+        () => {
+
+            const diet = this.buildDiet();
+
+            console.log(
+
+                "DIETA",
+
+                diet
+
+            );
+
+        }
+
+    );
+
+        document
+
             .getElementById(
 
                 "btnAddDietItem"
@@ -52,6 +82,29 @@ export default class DietEngine {
 
             );
 
+      const btnCancel = document.getElementById("btnCancelDiet");
+
+console.log("Botón Cancelar:", btnCancel);
+
+btnCancel.addEventListener("click", () => {
+
+    console.log("CLICK en Cancelar");
+
+    console.log("Manager:", this.manager);
+
+    if (this.manager) {
+
+        console.log("Abriendo administrador...");
+
+        this.manager.show();
+
+    } else {
+
+        console.log("Manager es NULL");
+
+    }
+
+});
     }
 
     addItem() {
@@ -69,6 +122,8 @@ export default class DietEngine {
         });
 
         this.renderItems();
+
+        this.updateSummary();
 
     }
 
@@ -149,5 +204,66 @@ calculateShots(item) {
 
 }
     
+updateSummary() {
+
+    let totalPercentage = 0;
+
+    let totalShots = 0;
+
+    this.items.forEach(item => {
+
+        totalPercentage += Number(item.percentage);
+
+        totalShots += this.calculateShots(item);
+
+    });
+
+    document.getElementById(
+
+        "dietPercentage"
+
+    ).textContent =
+
+        totalPercentage + " %";
+
+    const shots = document.getElementById(
+
+        "dietShots"
+
+    );
+
+    if (shots) {
+
+        shots.textContent = totalShots;
+
+    }
+
+}
+
+buildDiet() {
+
+    return {
+
+        name: document
+
+            .getElementById(
+
+                "dietName"
+
+            ).value.trim(),
+
+        description: document
+
+            .getElementById(
+
+                "dietDescription"
+
+            ).value.trim(),
+
+        blocks: this.items
+
+    };
+
+}
 
 }
