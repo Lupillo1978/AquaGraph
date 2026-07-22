@@ -2,13 +2,19 @@ export default class Diet {
 
     constructor(data = {}) {
 
-        this.id = data.id ?? "";
+        this.id = data.id || crypto.randomUUID();
 
-        this.name = data.name ?? "";
+        this.name = data.name || "";
 
-        this.description = data.description ?? "";
+        this.description = data.description || "";
 
-        this.items = data.items ?? [];
+        this.blocks = data.blocks || [];
+
+        this.active = data.active ?? true;
+
+        this.createdAt = data.createdAt || new Date().toISOString();
+
+        this.updatedAt = data.updatedAt || new Date().toISOString();
 
     }
 

@@ -1,40 +1,46 @@
+import DietService from "../services/DietService.js";
+
 export default class DietController {
+
+    constructor() {
+
+        this.service = new DietService();
+
+    }
 
     async getAll() {
 
-        const response = await fetch(
+        return await this.service.getAll();
 
-            "/api/diets"
+    }
 
-        );
+    async getById(id) {
 
-        return await response.json();
+        return await this.service.getById(id);
 
     }
 
     async create(diet) {
 
-        const response = await fetch(
+        return await this.service.create(diet);
 
-            "/api/diets",
+    }
 
-            {
+    async update(id, diet) {
 
-                method: "POST",
+        return await this.service.update(
 
-                headers: {
+            id,
 
-                    "Content-Type":"application/json"
-
-                },
-
-                body: JSON.stringify(diet)
-
-            }
+            diet
 
         );
 
-        return await response.json();
+    }
+
+    async delete(id) {
+
+        return await this.service.delete(id);
 
     }
 

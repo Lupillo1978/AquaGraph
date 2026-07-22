@@ -10,6 +10,7 @@ import PondEngine from "../engines/PondEngine.js";
 import FeederEngine from "../engines/FeederEngine.js";
 import DietEngine from "../engines/DietEngine.js";
 import WorkspaceManager from "./WorkspaceManager.js";
+import DietManagerEngine from "../engines/DietManagerEngine.js";
 
 
 export default class Application{
@@ -28,6 +29,12 @@ export default class Application{
 
         this.workspaceManager = new WorkspaceManager(
         this.infoPanel
+        );
+
+        this.dietManager = new DietManagerEngine(
+
+         this.workspaceManager
+
         );
 
         this.statusBar=new StatusBar();
@@ -82,6 +89,26 @@ export default class Application{
     this.pondEngine.initialize();
 
     this.feederEngine.initialize();
+
+    document
+
+    .getElementById(
+
+        "btnDietManager"
+
+    )
+
+    .addEventListener(
+
+        "click",
+
+        () => {
+
+            this.dietManager.show();
+
+        }
+
+    );
 
     document
 

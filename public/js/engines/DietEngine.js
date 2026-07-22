@@ -2,6 +2,8 @@ import DietEditorView from "../views/DietEditorView.js";
 
 import DietItemRow from "../views/DietItemRow.js";
 
+import DietChart from "./DietChart.js";
+
 export default class DietEngine {
 
     constructor(workspaceManager) {
@@ -10,19 +12,25 @@ export default class DietEngine {
 
     this.view = new DietEditorView();
 
+    this.chart = new DietChart();
+
     this.items = [];
 
 }
 
     showEditor() {
 
-      this.workspaceManager.showWorkspace();
+        this.workspaceManager.showWorkspace();
 
-      const workspace = document.getElementById("workspace");
+        this.workspaceManager.render(
 
-      workspace.innerHTML = this.view.render();
+         this.view.render()
 
-      this.registerEvents();
+        );
+
+        this.chart.initialize();
+
+        this.registerEvents();
 
     }
 

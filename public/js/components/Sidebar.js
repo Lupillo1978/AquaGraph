@@ -34,9 +34,13 @@ export default class Sidebar{
 
             </button>
 
-            <button class="btn btn-outline-light w-100 mb-2">
+            <button
 
-                Programación
+               id="btnDietManager"
+
+               class="btn btn-outline-light w-100 mb-2">
+
+               Alimentación
 
             </button>
 
