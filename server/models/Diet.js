@@ -8,7 +8,9 @@ class Diet {
 
         this.description = data.description ?? "";
 
-        this.items = data.items ?? [];
+        this.blocks = data.blocks ?? [];
+
+        this.active = data.active ?? true;
 
         this.createdAt = data.createdAt ?? new Date().toISOString();
 

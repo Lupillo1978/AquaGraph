@@ -30,7 +30,7 @@ class DietService {
 
             description: data.description,
 
-            items: data.items
+            blocks: data.blocks
 
         });
 

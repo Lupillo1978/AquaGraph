@@ -264,3 +264,186 @@ WORKSPACE
     padding:20px;
 
 }
+
+/*==================================================
+EDITOR DE DIETAS
+==================================================*/
+
+#dietItems td{
+
+    vertical-align:middle;
+
+}
+
+#dietItems input{
+
+    text-align:center;
+
+    font-weight:600;
+
+}
+
+#dietItems input[type="number"]{
+
+    min-width:80px;
+
+}
+
+#dietItems input[type="time"]{
+
+    min-width:105px;
+
+}
+
+.table-dark{
+
+    --bs-table-bg:#303134;
+
+    --bs-table-striped-bg:#35363A;
+
+    --bs-table-hover-bg:#3B3D40;
+
+}
+
+.table-dark thead th{
+
+    color:#FFFFFF;
+
+    font-weight:700;
+
+    border-bottom:2px solid #5F6368;
+
+}
+
+.table-dark tbody td{
+
+    color:#F1F3F4;
+
+}
+
+.card{
+
+    border:1px solid #5F6368;
+
+}
+
+.card-header{
+
+    color:#FFFFFF;
+
+    font-size:17px;
+
+}
+
+.form-control{
+
+    background:#202124;
+
+    color:#FFFFFF;
+
+    border:1px solid #5F6368;
+
+}
+
+.form-control:focus{
+
+    background:#202124;
+
+    color:#FFFFFF;
+
+    border-color:#2196F3;
+
+    box-shadow:0 0 0 .15rem rgba(33,150,243,.30);
+
+}
+
+/*==================================================
+AD&M AQUACONTROL THEME
+==================================================*/
+
+body{
+
+    color:#F1F3F4;
+
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+
+    color:#FFFFFF;
+
+    font-weight:600;
+
+}
+
+label{
+
+    color:#E8EAED;
+
+    font-weight:600;
+
+}
+
+small{
+
+    color:#BDC1C6 !important;
+
+}
+
+p{
+
+    color:#E8EAED;
+
+}
+
+span{
+
+    color:#F1F3F4;
+
+}
+
+.form-control{
+
+    background:#202124 !important;
+
+    color:#FFFFFF !important;
+
+    border:1px solid #5F6368 !important;
+
+}
+
+.form-control::placeholder{
+
+    color:#9AA0A6;
+
+}
+
+.form-control:focus{
+
+    background:#202124 !important;
+
+    color:#FFFFFF !important;
+
+}
+
+textarea{
+
+    color:#FFFFFF !important;
+
+}
+
+input{
+
+    color:#FFFFFF !important;
+
+}
+
+select{
+
+    color:#FFFFFF !important;
+
+}

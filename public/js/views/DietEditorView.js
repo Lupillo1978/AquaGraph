@@ -132,29 +132,50 @@ export default class DietEditorView {
 
                 <div class="card-body p-0">
 
-                    <table class="table table-dark table-hover mb-0">
+                    <table class="table table-dark table-hover align-middle" 
+                            style="table-layout:fixed;">
 
                         <thead>
 
-                            <tr>
+<tr>
 
-                                <th>Inicio</th>
+    <th style="width:110px;">Inicio</th>
 
-                                <th>Fin</th>
+    <th style="width:110px;">Fin</th>
 
-                                <th>%</th>
+    <th style="width:90px;" class="text-center">
 
-                                <th>Intervalo</th>
+        %
 
-                                <th>Disparos</th>
+    </th>
 
-                                <th>Estado</th>
+    <th style="width:110px;" class="text-center">
 
-                                <th></th>
+        Intervalo
 
-                            </tr>
+    </th>
 
-                        </thead>
+    <th style="width:90px;" class="text-center">
+
+        Disparos
+
+    </th>
+
+    <th style="width:80px;" class="text-center">
+
+        Estado
+
+    </th>
+
+    <th style="width:70px;" class="text-center">
+
+        Acción
+
+    </th>
+
+</tr>
+
+</thead>
 
                         <tbody id="dietItems">
 

@@ -2,6 +2,8 @@ import DietManagerView from "../views/DietManagerView.js";
 
 import DietEngine from "./DietEngine.js";
 
+import DietController from "../controllers/DietController.js";
+
 export default class DietManagerEngine {
 
     constructor(workspaceManager) {
@@ -10,52 +12,130 @@ export default class DietManagerEngine {
 
         this.view = new DietManagerView();
 
+        this.controller = new DietController();
+
         this.dietEngine = new DietEngine(
 
-          workspaceManager,
+            workspaceManager,
 
-          this
+            this
 
         );
 
     }
 
-    show() {
+    async show() {
 
-        this.workspaceManager.showWorkspace();
+    this.workspaceManager.showWorkspace();
 
-        this.workspaceManager.render(
+    const response = await this.controller.getAll();
 
-            this.view.render()
+    console.log(
 
-        );
+        "Dietas recibidas:",
 
-        this.registerEvents();
+        response
 
-    }
+    );
+
+    const diets = response.success
+
+        ? response.data
+
+        : [];
+
+    this.workspaceManager.render(
+
+        this.view.render(
+
+            diets
+
+        )
+
+    );
+
+    this.registerEvents();
+
+}
 
     registerEvents() {
 
-        document
+    document
 
-            .getElementById(
+        .getElementById(
 
-                "btnNewDiet"
+            "btnNewDiet"
 
-            )
+        )
 
-            .addEventListener(
+        .addEventListener(
+
+            "click",
+
+            () => {
+
+                this.dietEngine.showEditor();
+
+            }
+
+        );
+
+
+
+    document
+
+        .querySelectorAll(
+
+            ".diet-row"
+
+        )
+
+        .forEach(row => {
+
+            row.addEventListener(
 
                 "click",
 
                 () => {
 
-                    this.dietEngine.showEditor();
+                    document
+
+                        .querySelectorAll(
+
+                            ".diet-row"
+
+                        )
+
+                        .forEach(r =>
+
+                            r.classList.remove(
+
+                                "table-active"
+
+                            )
+
+                        );
+
+                    row.classList.add(
+
+                        "table-active"
+
+                    );
+
+                    console.log(
+
+                        "Dieta seleccionada:",
+
+                        row.dataset.id
+
+                    );
 
                 }
 
             );
 
-    }
+        });
+
+}
 
 }

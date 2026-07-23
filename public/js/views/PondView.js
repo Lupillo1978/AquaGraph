@@ -130,33 +130,55 @@ ${
 
             <hr class="mt-4">
 
-            <h6 class="text-secondary">
+<h6>
 
-                Próximamente
+    Operaciones
 
-            </h6>
+</h6>
 
-            <ul class="list-group">
+<div class="list-group">
 
-                <li class="list-group-item">
+    <button
 
-                    📡 Sensores
+        id="btnOpenFeeding"
 
-                </li>
+        class="list-group-item list-group-item-action">
 
-                <li class="list-group-item">
+        🍤 Alimentación
 
-                    ⏰ Programación
+    </button>
 
-                </li>
+    <button
 
-                <li class="list-group-item">
+        class="list-group-item list-group-item-action"
 
-                    📊 Estadísticas
+        disabled>
 
-                </li>
+        📡 Sensores
 
-            </ul>
+    </button>
+
+    <button
+
+        class="list-group-item list-group-item-action"
+
+        disabled>
+
+        ⏰ Programación
+
+    </button>
+
+    <button
+
+        class="list-group-item list-group-item-action"
+
+        disabled>
+
+        📊 Estadísticas
+
+    </button>
+
+</div>
 
         </div>
 

@@ -22,13 +22,15 @@ export default class DietChart {
 
             data: {
 
-                labels: [
+                labels: Array.from(
 
-                    "00","02","04","06","08","10",
+                 { length: 24 },
 
-                    "12","14","16","18","20","22","24"
+                 (_, h) =>
 
-                ],
+                  h.toString().padStart(2,"0")+":00"
+
+                ),
 
                 datasets: [
 
@@ -36,13 +38,7 @@ export default class DietChart {
 
                         label: "Distribución de alimento",
 
-                        data: [
-
-                            0,0,0,0,0,0,
-
-                            0,0,0,0,0,0,0
-
-                        ],
+                        data: new Array(24).fill(0),
 
                         tension:0.35,
 
@@ -108,4 +104,52 @@ export default class DietChart {
 
     }
 
+
+    update(schedule) {
+
+    if (!this.chart) {
+
+        return;
+
+    }
+
+    const data = new Array(24).fill(0);
+
+    schedule.forEach(event => {
+
+        const hour = Math.floor(
+
+            event.minute / 60
+
+        );
+
+        data[hour] += Number(
+
+            event.percentage
+
+        );
+
+    });
+
+    this.chart.data.datasets[0].data = data;
+
+    /*-----------------------------------
+      Escala automática
+    -----------------------------------*/
+
+    const max = Math.max(...data);
+
+    this.chart.options.scales.y.max =
+
+        Math.max(
+
+            10,
+
+            Math.ceil(max / 5) * 5
+
+        );
+
+    this.chart.update();
+
+}
 }

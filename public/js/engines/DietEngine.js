@@ -4,6 +4,8 @@ import DietItemRow from "../views/DietItemRow.js";
 
 import DietChart from "./DietChart.js";
 
+import DietController from "../controllers/DietController.js";
+
 export default class DietEngine {
 
     constructor(workspaceManager, manager = null) {
@@ -18,6 +20,7 @@ export default class DietEngine {
 
        this.items = [];
 
+       this.controller = new DietController();
     }
 
     showEditor() {
@@ -38,74 +41,121 @@ export default class DietEngine {
 
     registerEvents() {
 
-        document
+    // ==========================
+    // Guardar Dieta
+    // ==========================
 
-    .getElementById(
+    document
 
-        "btnSaveDiet"
+        .getElementById(
 
-    )
+            "btnSaveDiet"
 
-    .addEventListener(
+        )
 
-        "click",
+        .addEventListener(
 
-        () => {
+            "click",
 
-            const diet = this.buildDiet();
+            async () => {
 
-            console.log(
+                const diet = this.buildDiet();
 
-                "DIETA",
+                console.log(
 
-                diet
+                    "Enviando dieta...",
 
-            );
+                    diet
 
-        }
+                );
 
-    );
+                try {
 
-        document
+                    const response = await this.controller.create(
 
-            .getElementById(
+                        diet
 
-                "btnAddDietItem"
+                    );
 
-            )
+                    console.log(
 
-            .addEventListener(
+                        "Respuesta:",
 
-                "click",
+                        response
 
-                () => this.addItem()
+                    );
 
-            );
+                    if (response.success) {
 
-      const btnCancel = document.getElementById("btnCancelDiet");
+                        this.manager.show();
 
-console.log("Botón Cancelar:", btnCancel);
+                    }
 
-btnCancel.addEventListener("click", () => {
+                }
 
-    console.log("CLICK en Cancelar");
+                catch (error) {
 
-    console.log("Manager:", this.manager);
+                    console.error(error);
 
-    if (this.manager) {
+                }
 
-        console.log("Abriendo administrador...");
+            }
 
-        this.manager.show();
+        );
 
-    } else {
 
-        console.log("Manager es NULL");
 
-    }
+    // ==========================
+    // Agregar Bloque
+    // ==========================
 
-});
-    }
+    document
+
+        .getElementById(
+
+            "btnAddDietItem"
+
+        )
+
+        .addEventListener(
+
+            "click",
+
+            () => this.addItem()
+
+        );
+
+
+
+    // ==========================
+    // Cancelar
+    // ==========================
+
+    document
+
+        .getElementById(
+
+            "btnCancelDiet"
+
+        )
+
+        .addEventListener(
+
+            "click",
+
+            () => {
+
+                if (this.manager) {
+
+                    this.manager.show();
+
+                }
+
+            }
+
+        );
+
+}
 
     addItem() {
 
@@ -156,6 +206,116 @@ btnCancel.addEventListener("click", () => {
 
     );
 
+    this.registerItemEvents();
+
+}
+
+registerItemEvents() {
+
+    document
+
+        .querySelectorAll(
+
+            "#dietItems tr"
+
+        )
+
+        .forEach(
+
+            row => {
+
+                const index = Number(
+
+                    row.dataset.index
+
+                );
+
+                const item = this.items[index];
+
+                row
+
+                    .querySelector(".diet-start")
+
+                    .addEventListener(
+
+                        "change",
+
+                        e => {
+
+                            item.start = e.target.value;
+
+                            this.updateSummary();
+
+                        }
+
+                    );
+
+                row
+
+                    .querySelector(".diet-end")
+
+                    .addEventListener(
+
+                        "change",
+
+                        e => {
+
+                            item.end = e.target.value;
+
+                            this.updateSummary();
+
+                        }
+
+                    );
+
+                row
+
+                    .querySelector(".diet-percentage")
+
+                    .addEventListener(
+
+                        "input",
+
+                        e => {
+
+                            item.percentage = Number(
+
+                                e.target.value
+
+                            );
+
+                            this.updateSummary();
+
+                        }
+
+                    );
+
+                row
+
+                    .querySelector(".diet-interval")
+
+                    .addEventListener(
+
+                        "input",
+
+                        e => {
+
+                            item.interval = Number(
+
+                                e.target.value
+
+                            );
+
+                            this.updateSummary();
+
+                        }
+
+                    );
+
+            }
+
+        );
+
 }
 
 calculateShots(item) {
@@ -203,18 +363,100 @@ calculateShots(item) {
     );
 
 }
-    
+
+buildDailySchedule() {
+
+    const schedule = [];
+
+    this.items.forEach(item => {
+
+        const shots = this.calculateShots(item);
+
+        if (shots <= 0) {
+
+            return;
+
+        }
+
+        const foodPerShot =
+
+            Number(item.percentage) / shots;
+
+        let current = this.timeToMinutes(item.start);
+
+        const end = this.timeToMinutes(item.end);
+
+        while (current < end) {
+
+            schedule.push({
+
+                minute: current,
+
+                percentage: foodPerShot
+
+            });
+
+            current += Number(item.interval);
+
+        }
+
+    });
+
+    return schedule.sort(
+
+        (a, b) => a.minute - b.minute
+
+    );
+
+}
+
+timeToMinutes(time) {
+
+    const parts = time.split(":");
+
+    return Number(parts[0]) * 60 +
+
+           Number(parts[1]);
+
+}
+
 updateSummary() {
 
     let totalPercentage = 0;
 
     let totalShots = 0;
 
-    this.items.forEach(item => {
+    const rows = document.querySelectorAll(
+
+        "#dietItems tr"
+
+    );
+
+    this.items.forEach((item, index) => {
+
+        const shots = this.calculateShots(item);
 
         totalPercentage += Number(item.percentage);
 
-        totalShots += this.calculateShots(item);
+        totalShots += shots;
+
+        const row = rows[index];
+
+        if (!row) return;
+
+        row.querySelector(".diet-shots").textContent = shots;
+
+        const status = row.querySelector(".diet-status");
+
+        if (Number(item.percentage) > 0) {
+
+            status.textContent = "🟢";
+
+        } else {
+
+            status.textContent = "⚪";
+
+        }
 
     });
 
@@ -222,22 +464,25 @@ updateSummary() {
 
         "dietPercentage"
 
-    ).textContent =
+    ).textContent = totalPercentage + " %";
 
-        totalPercentage + " %";
-
-    const shots = document.getElementById(
+    const totalShotsLabel = document.getElementById(
 
         "dietShots"
 
     );
 
-    if (shots) {
+    if (totalShotsLabel) {
 
-        shots.textContent = totalShots;
+        totalShotsLabel.textContent = totalShots;
 
     }
 
+   const schedule = this.buildDailySchedule();
+
+console.log("Schedule:", schedule);
+
+this.chart.update(schedule);
 }
 
 buildDiet() {
