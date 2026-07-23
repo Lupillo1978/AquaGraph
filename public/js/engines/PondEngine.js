@@ -91,15 +91,21 @@ export default class PondEngine {
 
     this.eventBus.on(
 
-        EventTypes.POND_SELECTED,
+    EventTypes.POND_SELECTED,
 
-        (pond) => {
+    (pond) => {
 
-            this.infoPanel.showPond(pond);
+         console.log("POND_SELECTED", pond);
 
-        }
+        this.infoPanel.showPond(pond);
 
-    );
+         console.log("Registrando eventos del panel");
+
+        this.registerPondPanelEvents(pond);
+
+    }
+
+);
 
 }
     
@@ -228,6 +234,29 @@ export default class PondEngine {
         this.currentGeometry = null;
 
     }
+
+
+    registerPondPanelEvents(pond) {
+
+    console.log("Entré a registerPondPanelEvents");
+
+    const btnOpenFeeding = document.getElementById("btnOpenFeeding");
+
+    console.log("Botón:", btnOpenFeeding);
+
+    if (btnOpenFeeding) {
+
+        btnOpenFeeding.addEventListener("click", () => {
+
+            console.log("CLICK Alimentación");
+
+            this.infoPanel.showFeedingPanel(pond);
+
+        });
+
+    }
+
+}
 
     async loadPonds() {
 
