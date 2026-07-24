@@ -10,9 +10,8 @@ export default class PondEngine {
         this.eventBus = eventBus;
         this.controller = new PondController();
         this.geometryService = new GeometryService();
-
         this.currentGeometry = null;
-
+        this.selectedPond = null;
     }
 
     initialize() {
@@ -61,6 +60,22 @@ export default class PondEngine {
 
                     break;
 
+                case "btnOpenFeeding":
+
+                    if (!this.selectedPond) {
+
+                     return;
+
+                    }
+
+                  this.infoPanel.showFeedingPanel(
+
+                    this.selectedPond
+
+                   );
+
+                break;
+
             }
 
         });
@@ -95,13 +110,8 @@ export default class PondEngine {
 
     (pond) => {
 
-         console.log("POND_SELECTED", pond);
-
+        this.selectedPond = pond;
         this.infoPanel.showPond(pond);
-
-         console.log("Registrando eventos del panel");
-
-        this.registerPondPanelEvents(pond);
 
     }
 
@@ -236,27 +246,7 @@ export default class PondEngine {
     }
 
 
-    registerPondPanelEvents(pond) {
-
-    console.log("Entré a registerPondPanelEvents");
-
-    const btnOpenFeeding = document.getElementById("btnOpenFeeding");
-
-    console.log("Botón:", btnOpenFeeding);
-
-    if (btnOpenFeeding) {
-
-        btnOpenFeeding.addEventListener("click", () => {
-
-            console.log("CLICK Alimentación");
-
-            this.infoPanel.showFeedingPanel(pond);
-
-        });
-
-    }
-
-}
+    
 
     async loadPonds() {
 

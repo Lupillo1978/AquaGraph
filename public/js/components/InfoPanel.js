@@ -1,6 +1,8 @@
 import PondView from "../views/PondView.js";
 import FeederView from "../views/FeederView.js";
 import FeedingPanelView from "../views/FeedingPanelView.js";
+import FeedingPanelEngine from "../engines/FeedingPanelEngine.js";
+
 
 export default class InfoPanel {
 
@@ -9,6 +11,7 @@ export default class InfoPanel {
         this.pondView = new PondView();
         this.feederView = new FeederView();
         this.feedingPanelView = new FeedingPanelView();
+        this.feedingPanelEngine = new FeedingPanelEngine(this);
 
     }
 
@@ -170,6 +173,12 @@ export default class InfoPanel {
             pond
 
         );
+
+    this.feedingPanelEngine.initialize(
+
+        pond
+
+    );
 
 }
 

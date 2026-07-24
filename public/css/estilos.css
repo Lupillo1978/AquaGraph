@@ -447,3 +447,45 @@ select{
     color:#FFFFFF !important;
 
 }
+
+/*=========================================
+SELECTORES DEL PANEL DE ALIMENTACIÓN
+=========================================*/
+
+.form-select{
+
+    background:#303134;
+
+    color:#ffffff;
+
+    border:1px solid #555;
+
+}
+
+.form-select:focus{
+
+    background:#303134;
+
+    color:#ffffff;
+
+    border-color:#4CAF50;
+
+    box-shadow:0 0 0 .2rem rgba(76,175,80,.25);
+
+}
+
+.form-select option{
+
+    background:#303134;
+
+    color:#ffffff;
+
+}
+
+.col{
+    color: white;
+}
+
+.card-body{
+    color: white;
+}
