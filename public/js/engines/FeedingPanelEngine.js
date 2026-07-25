@@ -1,4 +1,5 @@
 import DietController from "../controllers/DietController.js";
+import FeedingCalculator from "../services/FeedingCalculator.js";
 
 export default class FeedingPanelEngine {
 
@@ -7,6 +8,8 @@ export default class FeedingPanelEngine {
         this.infoPanel = infoPanel;
 
         this.controller = new DietController();
+
+         this.calculator = new FeedingCalculator();
 
     }
 
@@ -82,6 +85,47 @@ export default class FeedingPanelEngine {
         diet
 
     );
+    
+    const gramsPerSecond = Number(
+
+    document.getElementById(
+
+        "gramsPerSecond"
+
+    ).value
+
+);
+
+const program =
+
+    this.calculator.buildFeedingProgram(
+
+        this.pond,
+
+        diet,
+
+        Number(
+
+            document.getElementById(
+
+                "dailyFood"
+
+            ).value
+
+        ),
+
+        gramsPerSecond
+
+    );
+
+console.log(
+
+    "Programa generado:",
+
+    program
+
+);
+
 
 };
 
@@ -101,7 +145,11 @@ export default class FeedingPanelEngine {
 
         );
 
-        const grams = kg * 1000;
+        const grams = this.calculator.calculateDailyFood(
+
+                             kg
+
+                        );
 
         console.log(
 
@@ -121,21 +169,15 @@ export default class FeedingPanelEngine {
 
     const feeders = this.pond.feeders || [];
 
-    if (feeders.length === 0) {
-
-        console.warn(
-
-            "El estanque no tiene alimentadores."
-
-        );
-
-        return 0;
-
-    }
-
     const gramsPerFeeder =
 
-        totalGrams / feeders.length;
+        this.calculator.calculateFoodPerFeeder(
+
+            totalGrams,
+
+            feeders
+
+        );
 
     console.log(
 
