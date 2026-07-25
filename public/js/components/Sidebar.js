@@ -1,8 +1,8 @@
-export default class Sidebar{
+export default class Sidebar {
 
-    render(){
+    render() {
 
-        document.getElementById("sidebar").innerHTML=`
+        document.getElementById("sidebar").innerHTML = `
 
         <div class="p-3">
 

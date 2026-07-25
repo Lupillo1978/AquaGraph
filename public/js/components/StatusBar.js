@@ -1,8 +1,8 @@
-export default class StatusBar{
+export default class StatusBar {
 
-    render(){
+    render() {
 
-        document.getElementById("statusBar").innerHTML=`
+        document.getElementById("statusBar").innerHTML = `
 
         <div class="d-flex justify-content-around align-items-center h-100">
 

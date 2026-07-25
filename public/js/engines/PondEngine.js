@@ -64,17 +64,17 @@ export default class PondEngine {
 
                     if (!this.selectedPond) {
 
-                     return;
+                        return;
 
                     }
 
-                  this.infoPanel.showFeedingPanel(
+                    this.infoPanel.showFeedingPanel(
 
-                    this.selectedPond
+                        this.selectedPond
 
-                   );
+                    );
 
-                break;
+                    break;
 
             }
 
@@ -84,41 +84,41 @@ export default class PondEngine {
 
     registerGeometryEvents() {
 
-    this.eventBus.on(
+        this.eventBus.on(
 
-        EventTypes.POND_GEOMETRY_CREATED,
+            EventTypes.POND_GEOMETRY_CREATED,
 
-        (geometry) => {
+            (geometry) => {
 
-            this.currentGeometry = geometry;
+                this.currentGeometry = geometry;
 
-            const area = this.geometryService.calculateArea(geometry);
+                const area = this.geometryService.calculateArea(geometry);
 
-            console.log("Superficie:", area.toFixed(2), "ha");
+                console.log("Superficie:", area.toFixed(2), "ha");
 
-            this.openPondForm();
+                this.openPondForm();
 
-            this.fillGeometryData(area);
+                this.fillGeometryData(area);
 
-        }
+            }
 
-    );
+        );
 
-    this.eventBus.on(
+        this.eventBus.on(
 
-    EventTypes.POND_SELECTED,
+            EventTypes.POND_SELECTED,
 
-    (pond) => {
+            (pond) => {
 
-        this.selectedPond = pond;
-        this.infoPanel.showPond(pond);
+                this.selectedPond = pond;
+                this.infoPanel.showPond(pond);
+
+            }
+
+        );
 
     }
 
-);
-
-}
-    
 
     startCreateWorkflow() {
 
@@ -148,7 +148,7 @@ export default class PondEngine {
 
     fillGeometryData(area) {
 
-       document.getElementById("pondArea").value = area.toFixed(2);
+        document.getElementById("pondArea").value = area.toFixed(2);
 
     }
 
@@ -156,19 +156,19 @@ export default class PondEngine {
 
         const pond = {
 
-             name: document.getElementById("pondName").value.trim(),
+            name: document.getElementById("pondName").value.trim(),
 
-    description: document.getElementById("pondDescription").value.trim(),
+            description: document.getElementById("pondDescription").value.trim(),
 
-    geometry: this.currentGeometry,
+            geometry: this.currentGeometry,
 
-    metrics: {
+            metrics: {
 
-        area: Number(
-            document.getElementById("pondArea").value
-        )
+                area: Number(
+                    document.getElementById("pondArea").value
+                )
 
-    }
+            }
 
 
         };
@@ -199,10 +199,10 @@ export default class PondEngine {
 
         }
 
-       console.log("✅ Estanque creado", response.data);
+        console.log("✅ Estanque creado", response.data);
 
-       // Mostrar el estanque permanente en el mapa
-       this.eventBus.emit(
+        // Mostrar el estanque permanente en el mapa
+        this.eventBus.emit(
 
             EventTypes.MAP_ADD_POND,
 
@@ -210,10 +210,10 @@ export default class PondEngine {
 
         );
 
-       // Limpiar el dibujo temporal
-       this.eventBus.emit(
+        // Limpiar el dibujo temporal
+        this.eventBus.emit(
 
-           EventTypes.MAP_CLEAR_TEMPORARY
+            EventTypes.MAP_CLEAR_TEMPORARY
 
         );
 
@@ -246,34 +246,34 @@ export default class PondEngine {
     }
 
 
-    
+
 
     async loadPonds() {
 
-       const response = await this.controller.getAll();
+        const response = await this.controller.getAll();
 
-           if (!response.success) {
+        if (!response.success) {
 
-             return;
+            return;
 
-            }
+        }
 
-         console.log("Estanques cargados");
+        console.log("Estanques cargados");
 
-         console.table(response.data);
+        console.table(response.data);
 
-         response.data.forEach(pond => {
+        response.data.forEach(pond => {
 
-        this.eventBus.emit(
+            this.eventBus.emit(
 
-            EventTypes.MAP_ADD_POND,
+                EventTypes.MAP_ADD_POND,
 
-            pond
+                pond
 
-          );
+            );
 
         });
 
-}
+    }
 
 }

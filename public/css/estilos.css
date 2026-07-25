@@ -1,118 +1,118 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html,
-body{
+body {
 
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
 
-    overflow:hidden;
+    overflow: hidden;
 
-    background:#202124;
+    background: #202124;
 
-    font-family:Segoe UI,Arial,sans-serif;
+    font-family: Segoe UI, Arial, sans-serif;
 
-    color:white;
-
-}
-
-.app-container{
-
-    display:flex;
-
-    flex-direction:column;
-
-    width:100vw;
-
-    height:100vh;
+    color: white;
 
 }
 
-header{
+.app-container {
 
-    height:60px;
+    display: flex;
 
-    background:#1a1a1a;
+    flex-direction: column;
 
-    border-bottom:1px solid #444;
+    width: 100vw;
 
-}
-
-.main-container{
-
-    flex:1;
-
-    display:flex;
+    height: 100vh;
 
 }
 
-#sidebar{
+header {
 
-    width:260px;
+    height: 60px;
 
-    background:#262626;
+    background: #1a1a1a;
 
-    border-right:1px solid #444;
-
-}
-
-#content{
-
-    flex:1;
-
-    position:relative;
+    border-bottom: 1px solid #444;
 
 }
 
-#map{
+.main-container {
 
-    width:100%;
+    flex: 1;
 
-    height:100%;
-
-}
-
-#infoPanel{
-
-    width:320px;
-
-    background:#2c2c2c;
-
-    border-left:1px solid #444;
+    display: flex;
 
 }
 
-footer{
+#sidebar {
 
-    height:32px;
+    width: 260px;
 
-    background:#1a1a1a;
+    background: #262626;
 
-    border-top:1px solid #444;
-
-}
-
-.card{
-
-    background:#303134;
+    border-right: 1px solid #444;
 
 }
 
-.card-header{
+#content {
 
-    background:#2b2b2b;
+    flex: 1;
 
-    font-weight:600;
+    position: relative;
 
 }
 
-.card-footer{
+#map {
 
-    background:#2b2b2b;
+    width: 100%;
+
+    height: 100%;
+
+}
+
+#infoPanel {
+
+    width: 320px;
+
+    background: #2c2c2c;
+
+    border-left: 1px solid #444;
+
+}
+
+footer {
+
+    height: 32px;
+
+    background: #1a1a1a;
+
+    border-top: 1px solid #444;
+
+}
+
+.card {
+
+    background: #303134;
+
+}
+
+.card-header {
+
+    background: #2b2b2b;
+
+    font-weight: 600;
+
+}
+
+.card-footer {
+
+    background: #2b2b2b;
 
 }
 
@@ -120,43 +120,43 @@ footer{
    FEEDERS
 =========================================== */
 
-.feeder-marker{
+.feeder-marker {
 
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    align-items:center;
+    align-items: center;
 
-    justify-content:center;
+    justify-content: center;
 
-    pointer-events:none;
-
-}
-
-.feeder-symbol{
-
-    font-size:22px;
-
-    line-height:20px;
+    pointer-events: none;
 
 }
 
-.feeder-label{
+.feeder-symbol {
 
-    font-size:11px;
+    font-size: 22px;
 
-    font-weight:bold;
+    line-height: 20px;
 
-    color:#ffffff;
+}
 
-    background:#1e88e5;
+.feeder-label {
 
-    border-radius:4px;
+    font-size: 11px;
 
-    padding:1px 4px;
+    font-weight: bold;
 
-    margin-top:2px;
+    color: #ffffff;
+
+    background: #1e88e5;
+
+    border-radius: 4px;
+
+    padding: 1px 4px;
+
+    margin-top: 2px;
 
 }
 
@@ -164,86 +164,87 @@ footer{
    ESTADOS DEL ALIMENTADOR
 =========================================== */
 
-.feeder-icon.selected .feeder-label{
+.feeder-icon.selected .feeder-label {
 
-    background:#fbc02d;
+    background: #fbc02d;
 
-    color:#000000;
+    color: #000000;
 
-    border:2px solid #ffeb3b;
+    border: 2px solid #ffeb3b;
 
-    box-shadow:0 0 10px rgba(255,215,0,.7);
+    box-shadow: 0 0 10px rgba(255, 215, 0, .7);
+
+}
+
+.feeder-icon.selected .feeder-symbol {
+
+    transform: scale(1.20);
 
 }
 
-.feeder-icon.selected .feeder-symbol{
-
-    transform:scale(1.20);
-
-}
 /*==================================================
 AD&M MARKERS
 ==================================================*/
 
-.adm-marker{
+.adm-marker {
 
-    background:transparent;
+    background: transparent;
 
-    border:none;
-
-}
-
-.adm-marker-container{
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    user-select:none;
+    border: none;
 
 }
 
-.adm-marker-status{
+.adm-marker-container {
 
-    width:14px;
+    display: flex;
 
-    height:14px;
+    flex-direction: column;
 
-    border-radius:50%;
+    align-items: center;
 
-    border:2px solid white;
-
-    margin-bottom:2px;
-
-    box-shadow:0 0 4px rgba(0,0,0,.4);
+    user-select: none;
 
 }
 
-.adm-marker-icon{
+.adm-marker-status {
 
-    font-size:20px;
+    width: 14px;
 
-    line-height:18px;
+    height: 14px;
+
+    border-radius: 50%;
+
+    border: 2px solid white;
+
+    margin-bottom: 2px;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, .4);
 
 }
 
-.adm-marker-label{
+.adm-marker-icon {
 
-    margin-top:2px;
+    font-size: 20px;
 
-    padding:1px 6px;
+    line-height: 18px;
 
-    border-radius:4px;
+}
 
-    background:#1976D2;
+.adm-marker-label {
 
-    color:white;
+    margin-top: 2px;
 
-    font-size:11px;
+    padding: 1px 6px;
 
-    font-weight:bold;
+    border-radius: 4px;
+
+    background: #1976D2;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: bold;
 
 }
 
@@ -251,17 +252,17 @@ AD&M MARKERS
 WORKSPACE
 =========================================*/
 
-#workspace{
+#workspace {
 
-    width:100%;
+    width: 100%;
 
-    height:100%;
+    height: 100%;
 
-    overflow:auto;
+    overflow: auto;
 
-    background:#202124;
+    background: #202124;
 
-    padding:20px;
+    padding: 20px;
 
 }
 
@@ -269,91 +270,91 @@ WORKSPACE
 EDITOR DE DIETAS
 ==================================================*/
 
-#dietItems td{
+#dietItems td {
 
-    vertical-align:middle;
-
-}
-
-#dietItems input{
-
-    text-align:center;
-
-    font-weight:600;
+    vertical-align: middle;
 
 }
 
-#dietItems input[type="number"]{
+#dietItems input {
 
-    min-width:80px;
+    text-align: center;
 
-}
-
-#dietItems input[type="time"]{
-
-    min-width:105px;
+    font-weight: 600;
 
 }
 
-.table-dark{
+#dietItems input[type="number"] {
 
-    --bs-table-bg:#303134;
-
-    --bs-table-striped-bg:#35363A;
-
-    --bs-table-hover-bg:#3B3D40;
+    min-width: 80px;
 
 }
 
-.table-dark thead th{
+#dietItems input[type="time"] {
 
-    color:#FFFFFF;
-
-    font-weight:700;
-
-    border-bottom:2px solid #5F6368;
+    min-width: 105px;
 
 }
 
-.table-dark tbody td{
+.table-dark {
 
-    color:#F1F3F4;
+    --bs-table-bg: #303134;
 
-}
+    --bs-table-striped-bg: #35363A;
 
-.card{
-
-    border:1px solid #5F6368;
+    --bs-table-hover-bg: #3B3D40;
 
 }
 
-.card-header{
+.table-dark thead th {
 
-    color:#FFFFFF;
+    color: #FFFFFF;
 
-    font-size:17px;
+    font-weight: 700;
 
-}
-
-.form-control{
-
-    background:#202124;
-
-    color:#FFFFFF;
-
-    border:1px solid #5F6368;
+    border-bottom: 2px solid #5F6368;
 
 }
 
-.form-control:focus{
+.table-dark tbody td {
 
-    background:#202124;
+    color: #F1F3F4;
 
-    color:#FFFFFF;
+}
 
-    border-color:#2196F3;
+.card {
 
-    box-shadow:0 0 0 .15rem rgba(33,150,243,.30);
+    border: 1px solid #5F6368;
+
+}
+
+.card-header {
+
+    color: #FFFFFF;
+
+    font-size: 17px;
+
+}
+
+.form-control {
+
+    background: #202124;
+
+    color: #FFFFFF;
+
+    border: 1px solid #5F6368;
+
+}
+
+.form-control:focus {
+
+    background: #202124;
+
+    color: #FFFFFF;
+
+    border-color: #2196F3;
+
+    box-shadow: 0 0 0 .15rem rgba(33, 150, 243, .30);
 
 }
 
@@ -361,9 +362,9 @@ EDITOR DE DIETAS
 AD&M AQUACONTROL THEME
 ==================================================*/
 
-body{
+body {
 
-    color:#F1F3F4;
+    color: #F1F3F4;
 
 }
 
@@ -372,79 +373,79 @@ h2,
 h3,
 h4,
 h5,
-h6{
+h6 {
 
-    color:#FFFFFF;
+    color: #FFFFFF;
 
-    font-weight:600;
-
-}
-
-label{
-
-    color:#E8EAED;
-
-    font-weight:600;
+    font-weight: 600;
 
 }
 
-small{
+label {
 
-    color:#BDC1C6 !important;
+    color: #E8EAED;
 
-}
-
-p{
-
-    color:#E8EAED;
+    font-weight: 600;
 
 }
 
-span{
+small {
 
-    color:#F1F3F4;
-
-}
-
-.form-control{
-
-    background:#202124 !important;
-
-    color:#FFFFFF !important;
-
-    border:1px solid #5F6368 !important;
+    color: #BDC1C6 !important;
 
 }
 
-.form-control::placeholder{
+p {
 
-    color:#9AA0A6;
-
-}
-
-.form-control:focus{
-
-    background:#202124 !important;
-
-    color:#FFFFFF !important;
+    color: #E8EAED;
 
 }
 
-textarea{
+span {
 
-    color:#FFFFFF !important;
-
-}
-
-input{
-
-    color:#FFFFFF !important;
+    color: #F1F3F4;
 
 }
 
-select{
+.form-control {
 
-    color:#FFFFFF !important;
+    background: #202124 !important;
+
+    color: #FFFFFF !important;
+
+    border: 1px solid #5F6368 !important;
+
+}
+
+.form-control::placeholder {
+
+    color: #9AA0A6;
+
+}
+
+.form-control:focus {
+
+    background: #202124 !important;
+
+    color: #FFFFFF !important;
+
+}
+
+textarea {
+
+    color: #FFFFFF !important;
+
+}
+
+input {
+
+    color: #FFFFFF !important;
+
+}
+
+select {
+
+    color: #FFFFFF !important;
 
 }
 
@@ -452,40 +453,40 @@ select{
 SELECTORES DEL PANEL DE ALIMENTACIÓN
 =========================================*/
 
-.form-select{
+.form-select {
 
-    background:#303134;
+    background: #303134;
 
-    color:#ffffff;
+    color: #ffffff;
 
-    border:1px solid #555;
-
-}
-
-.form-select:focus{
-
-    background:#303134;
-
-    color:#ffffff;
-
-    border-color:#4CAF50;
-
-    box-shadow:0 0 0 .2rem rgba(76,175,80,.25);
+    border: 1px solid #555;
 
 }
 
-.form-select option{
+.form-select:focus {
 
-    background:#303134;
+    background: #303134;
 
-    color:#ffffff;
+    color: #ffffff;
+
+    border-color: #4CAF50;
+
+    box-shadow: 0 0 0 .2rem rgba(76, 175, 80, .25);
 
 }
 
-.col{
+.form-select option {
+
+    background: #303134;
+
+    color: #ffffff;
+
+}
+
+.col {
     color: white;
 }
 
-.card-body{
+.card-body {
     color: white;
 }

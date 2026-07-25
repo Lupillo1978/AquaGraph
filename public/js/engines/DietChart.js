@@ -24,11 +24,11 @@ export default class DietChart {
 
                 labels: Array.from(
 
-                 { length: 24 },
+                    { length: 24 },
 
-                 (_, h) =>
+                    (_, h) =>
 
-                  h.toString().padStart(2,"0")+":00"
+                        h.toString().padStart(2, "0") + ":00"
 
                 ),
 
@@ -40,9 +40,9 @@ export default class DietChart {
 
                         data: new Array(24).fill(0),
 
-                        tension:0.35,
+                        tension: 0.35,
 
-                        fill:true
+                        fill: true
 
                     }
 
@@ -52,45 +52,45 @@ export default class DietChart {
 
             options: {
 
-                responsive:true,
+                responsive: true,
 
-                maintainAspectRatio:false,
+                maintainAspectRatio: false,
 
-                plugins:{
+                plugins: {
 
-                    legend:{
+                    legend: {
 
-                        display:false
+                        display: false
 
                     }
 
                 },
 
-                scales:{
+                scales: {
 
-                    x:{
+                    x: {
 
-                        title:{
+                        title: {
 
-                            display:true,
+                            display: true,
 
-                            text:"Hora"
+                            text: "Hora"
 
                         }
 
                     },
 
-                    y:{
+                    y: {
 
-                        beginAtZero:true,
+                        beginAtZero: true,
 
-                        max:100,
+                        max: 100,
 
-                        title:{
+                        title: {
 
-                            display:true,
+                            display: true,
 
-                            text:"%"
+                            text: "%"
 
                         }
 
@@ -107,49 +107,49 @@ export default class DietChart {
 
     update(schedule) {
 
-    if (!this.chart) {
+        if (!this.chart) {
 
-        return;
+            return;
+
+        }
+
+        const data = new Array(24).fill(0);
+
+        schedule.forEach(event => {
+
+            const hour = Math.floor(
+
+                event.minute / 60
+
+            );
+
+            data[hour] += Number(
+
+                event.percentage
+
+            );
+
+        });
+
+        this.chart.data.datasets[0].data = data;
+
+        /*-----------------------------------
+          Escala automática
+        -----------------------------------*/
+
+        const max = Math.max(...data);
+
+        this.chart.options.scales.y.max =
+
+            Math.max(
+
+                10,
+
+                Math.ceil(max / 5) * 5
+
+            );
+
+        this.chart.update();
 
     }
-
-    const data = new Array(24).fill(0);
-
-    schedule.forEach(event => {
-
-        const hour = Math.floor(
-
-            event.minute / 60
-
-        );
-
-        data[hour] += Number(
-
-            event.percentage
-
-        );
-
-    });
-
-    this.chart.data.datasets[0].data = data;
-
-    /*-----------------------------------
-      Escala automática
-    -----------------------------------*/
-
-    const max = Math.max(...data);
-
-    this.chart.options.scales.y.max =
-
-        Math.max(
-
-            10,
-
-            Math.ceil(max / 5) * 5
-
-        );
-
-    this.chart.update();
-
-}
 }

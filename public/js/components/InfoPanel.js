@@ -21,7 +21,7 @@ export default class InfoPanel {
     }
 
     // ESTANQUES
-    
+
     showCreatePondStep1() {
         this.container.innerHTML = `
             <div class="p-3">                
@@ -160,37 +160,37 @@ export default class InfoPanel {
     }
 
     showFeeder(feeder) {
-      console.log("InfoPanel recibió alimentador:",feeder);
-      this.container.innerHTML =  this.feederView.render(feeder);
+        console.log("InfoPanel recibió alimentador:", feeder);
+        this.container.innerHTML = this.feederView.render(feeder);
     }
 
     showFeedingPanel(pond) {
 
-    this.container.innerHTML =
+        this.container.innerHTML =
 
-        this.feedingPanelView.render(
+            this.feedingPanelView.render(
+
+                pond
+
+            );
+
+        this.feedingPanelEngine.initialize(
 
             pond
 
         );
 
-    this.feedingPanelEngine.initialize(
+    }
 
-        pond
+    hide() {
 
-    );
-
-}
-
-   hide() {
-
-       this.container.classList.add("d-none");
+        this.container.classList.add("d-none");
 
     }
 
-   show() {
+    show() {
 
-       this.container.classList.remove("d-none");
+        this.container.classList.remove("d-none");
 
     }
 

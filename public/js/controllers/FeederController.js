@@ -36,46 +36,46 @@ export default class FeederController {
 
     async update(id, feeder) {
 
-    const response = await fetch(
+        const response = await fetch(
 
-        `/api/feeders/${id}`,
+            `/api/feeders/${id}`,
 
-        {
+            {
 
-            method: "PUT",
+                method: "PUT",
 
-            headers: {
+                headers: {
 
-                "Content-Type": "application/json"
+                    "Content-Type": "application/json"
 
-            },
+                },
 
-            body: JSON.stringify(feeder)
+                body: JSON.stringify(feeder)
 
-        }
+            }
 
-    );
+        );
 
-    return await response.json();
+        return await response.json();
 
-}
+    }
 
-async delete(id) {
+    async delete(id) {
 
-    const response = await fetch(
+        const response = await fetch(
 
-        `/api/feeders/${id}`,
+            `/api/feeders/${id}`,
 
-        {
+            {
 
-            method: "DELETE"
+                method: "DELETE"
 
-        }
+            }
 
-    );
+        );
 
-    return await response.json();
+        return await response.json();
 
-}
+    }
 
 }

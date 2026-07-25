@@ -26,116 +26,116 @@ export default class DietManagerEngine {
 
     async show() {
 
-    this.workspaceManager.showWorkspace();
+        this.workspaceManager.showWorkspace();
 
-    const response = await this.controller.getAll();
+        const response = await this.controller.getAll();
 
-    console.log(
+        console.log(
 
-        "Dietas recibidas:",
+            "Dietas recibidas:",
 
-        response
-
-    );
-
-    const diets = response.success
-
-        ? response.data
-
-        : [];
-
-    this.workspaceManager.render(
-
-        this.view.render(
-
-            diets
-
-        )
-
-    );
-
-    this.registerEvents();
-
-}
-
-    registerEvents() {
-
-    document
-
-        .getElementById(
-
-            "btnNewDiet"
-
-        )
-
-        .addEventListener(
-
-            "click",
-
-            () => {
-
-                this.dietEngine.showEditor();
-
-            }
+            response
 
         );
 
+        const diets = response.success
 
+            ? response.data
 
-    document
+            : [];
 
-        .querySelectorAll(
+        this.workspaceManager.render(
 
-            ".diet-row"
+            this.view.render(
 
-        )
+                diets
 
-        .forEach(row => {
+            )
 
-            row.addEventListener(
+        );
+
+        this.registerEvents();
+
+    }
+
+    registerEvents() {
+
+        document
+
+            .getElementById(
+
+                "btnNewDiet"
+
+            )
+
+            .addEventListener(
 
                 "click",
 
                 () => {
 
-                    document
-
-                        .querySelectorAll(
-
-                            ".diet-row"
-
-                        )
-
-                        .forEach(r =>
-
-                            r.classList.remove(
-
-                                "table-active"
-
-                            )
-
-                        );
-
-                    row.classList.add(
-
-                        "table-active"
-
-                    );
-
-                    console.log(
-
-                        "Dieta seleccionada:",
-
-                        row.dataset.id
-
-                    );
+                    this.dietEngine.showEditor();
 
                 }
 
             );
 
-        });
 
-}
+
+        document
+
+            .querySelectorAll(
+
+                ".diet-row"
+
+            )
+
+            .forEach(row => {
+
+                row.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        document
+
+                            .querySelectorAll(
+
+                                ".diet-row"
+
+                            )
+
+                            .forEach(r =>
+
+                                r.classList.remove(
+
+                                    "table-active"
+
+                                )
+
+                            );
+
+                        row.classList.add(
+
+                            "table-active"
+
+                        );
+
+                        console.log(
+
+                            "Dieta seleccionada:",
+
+                            row.dataset.id
+
+                        );
+
+                    }
+
+                );
+
+            });
+
+    }
 
 }

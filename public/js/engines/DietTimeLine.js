@@ -42,7 +42,7 @@ export default class DietTimeline {
 
         return timeline.sort(
 
-            (a,b)=>a.minute-b.minute
+            (a, b) => a.minute - b.minute
 
         );
 

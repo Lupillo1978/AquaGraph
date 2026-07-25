@@ -40,9 +40,9 @@ export default class BaseMarker {
 
             `,
 
-            iconSize: [42,52],
+            iconSize: [42, 52],
 
-            iconAnchor: [21,26]
+            iconAnchor: [21, 26]
 
         });
 

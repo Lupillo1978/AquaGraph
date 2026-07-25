@@ -25,242 +25,242 @@ export default class FeedingCalculator {
         gramsPerSecond
     ) {
 
-       console.log("=== GENERANDO PROGRAMACIÓN ===");
+        console.log("=== GENERANDO PROGRAMACIÓN ===");
 
-       console.log("Estanque:", pond.name);
+        console.log("Estanque:", pond.name);
 
-       console.log("Dieta:", diet.name);
+        console.log("Dieta:", diet.name);
 
-       console.log("Kg por día:", dailyKg);
+        console.log("Kg por día:", dailyKg);
 
-       console.log("Gramos/segundo:", gramsPerSecond);
+        console.log("Gramos/segundo:", gramsPerSecond);
 
-      const totalGrams =
+        const totalGrams =
 
-    this.calculateDailyFood(
+            this.calculateDailyFood(
 
-        dailyKg
-
-    );
-
-const gramsPerFeeder =
-
-    this.calculateFoodPerFeeder(
-
-        totalGrams,
-
-        pond.feeders
-
-    );
-
-    const feeders =
-
-    pond.feeders.map(feeder => ({
-
-        feederId: feeder.id,
-
-        nodeId: feeder.nodeId,
-
-        dailyFoodGrams: gramsPerFeeder,
-
-        schedule: diet.blocks.map(block => {
-
-    const durationMinutes =
-
-        this.calculateDurationMinutes(
-
-            block.start,
-
-            block.end
-
-        );
-
-    const shots =
-
-        this.calculateShots(
-
-            durationMinutes,
-
-            block.interval
-
-        );
-
-    const blockGrams =
-
-        this.calculateBlockGrams(
-
-            gramsPerFeeder,
-
-            block.percentage
-
-        );
-
-        const gramsPerShot =
-
-             this.calculateGramsPerShot(
-
-               blockGrams,
-
-               shots
+                dailyKg
 
             );
 
-        const secondsPerShot =
+        const gramsPerFeeder =
 
-             this.calculateSecondsPerShot(
+            this.calculateFoodPerFeeder(
 
-              gramsPerShot,
+                totalGrams,
 
-              gramsPerSecond
+                pond.feeders
 
             );
 
-    return {
+        const feeders =
 
-        start: block.start,
+            pond.feeders.map(feeder => ({
 
-        end: block.end,
+                feederId: feeder.id,
 
-        percentage: block.percentage,
+                nodeId: feeder.nodeId,
 
-        interval: block.interval,
+                dailyFoodGrams: gramsPerFeeder,
 
-        durationMinutes,
+                schedule: diet.blocks.map(block => {
 
-        shots,
+                    const durationMinutes =
 
-        blockGrams,
+                        this.calculateDurationMinutes(
 
-        gramsPerShot,
+                            block.start,
 
-        secondsPerShot
+                            block.end
 
-    };
+                        );
 
-})
+                    const shots =
 
-           }));
+                        this.calculateShots(
+
+                            durationMinutes,
+
+                            block.interval
+
+                        );
+
+                    const blockGrams =
+
+                        this.calculateBlockGrams(
+
+                            gramsPerFeeder,
+
+                            block.percentage
+
+                        );
+
+                    const gramsPerShot =
+
+                        this.calculateGramsPerShot(
+
+                            blockGrams,
+
+                            shots
+
+                        );
+
+                    const secondsPerShot =
+
+                        this.calculateSecondsPerShot(
+
+                            gramsPerShot,
+
+                            gramsPerSecond
+
+                        );
+
+                    return {
+
+                        start: block.start,
+
+                        end: block.end,
+
+                        percentage: block.percentage,
+
+                        interval: block.interval,
+
+                        durationMinutes,
+
+                        shots,
+
+                        blockGrams,
+
+                        gramsPerShot,
+
+                        secondsPerShot
+
+                    };
+
+                })
+
+            }));
 
 
 
-           const executionProgram =
+        const executionProgram =
 
-    feeders.map(feeder => ({
+            feeders.map(feeder => ({
 
-        nodeId: feeder.nodeId,
+                nodeId: feeder.nodeId,
 
-        schedule: feeder.schedule.map(block => ({
+                schedule: feeder.schedule.map(block => ({
 
-            start: block.start,
+                    start: block.start,
 
-            interval: block.interval,
+                    interval: block.interval,
 
-            shots: block.shots,
+                    shots: block.shots,
 
-            seconds: block.secondsPerShot
+                    seconds: block.secondsPerShot
 
-        }))
+                }))
 
-    }));
+            }));
 
 
 
-return {
+        return {
 
-    pondId: pond.id,
+            pondId: pond.id,
 
-    dietId: diet.id,
+            dietId: diet.id,
 
-    dailyFoodKg: dailyKg,
+            dailyFoodKg: dailyKg,
 
-    gramsPerSecond,
+            gramsPerSecond,
 
-    feeders,
+            feeders,
 
-    executionProgram
+            executionProgram
 
-};
+        };
 
-    } 
+    }
 
 
     calculateDurationMinutes(start, end) {
 
-    const [h1, m1] = start.split(":").map(Number);
+        const [h1, m1] = start.split(":").map(Number);
 
-    const [h2, m2] = end.split(":").map(Number);
+        const [h2, m2] = end.split(":").map(Number);
 
-    const startMinutes = h1 * 60 + m1;
+        const startMinutes = h1 * 60 + m1;
 
-    const endMinutes = h2 * 60 + m2;
+        const endMinutes = h2 * 60 + m2;
 
-    return endMinutes - startMinutes;
-
-}
-
-calculateShots(durationMinutes, interval) {
-
-    if (interval <= 0) {
-
-        return 0;
+        return endMinutes - startMinutes;
 
     }
 
-    return Math.floor(
+    calculateShots(durationMinutes, interval) {
 
-        durationMinutes / interval
+        if (interval <= 0) {
 
-    );
+            return 0;
 
-}
+        }
 
-calculateBlockGrams(
-    feederGrams,
-    percentage
-) {
+        return Math.floor(
 
-    return (
+            durationMinutes / interval
 
-        feederGrams * percentage
-
-    ) / 100;
-
-}
-
-calculateGramsPerShot(
-    blockGrams,
-    shots
-) {
-
-    if (shots <= 0) {
-
-        return 0;
+        );
 
     }
 
-    return blockGrams / shots;
+    calculateBlockGrams(
+        feederGrams,
+        percentage
+    ) {
 
-}
+        return (
 
-calculateSecondsPerShot(
-    gramsPerShot,
-    gramsPerSecond
-) {
+            feederGrams * percentage
 
-    if (gramsPerSecond <= 0) {
-
-        return 0;
+        ) / 100;
 
     }
 
-    return Number(
+    calculateGramsPerShot(
+        blockGrams,
+        shots
+    ) {
 
-        (gramsPerShot / gramsPerSecond)
+        if (shots <= 0) {
 
-        .toFixed(2)
+            return 0;
 
-    );
+        }
 
-}
+        return blockGrams / shots;
+
+    }
+
+    calculateSecondsPerShot(
+        gramsPerShot,
+        gramsPerSecond
+    ) {
+
+        if (gramsPerSecond <= 0) {
+
+            return 0;
+
+        }
+
+        return Number(
+
+            (gramsPerShot / gramsPerSecond)
+
+                .toFixed(2)
+
+        );
+
+    }
 
 }

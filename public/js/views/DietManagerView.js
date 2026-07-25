@@ -90,9 +90,9 @@ export default class DietManagerView {
 
     renderRows(diets) {
 
-    if (!diets.length) {
+        if (!diets.length) {
 
-        return `
+            return `
 
 <tr>
 
@@ -106,59 +106,59 @@ export default class DietManagerView {
 
 `;
 
-    }
+        }
 
-    return diets.map(diet => {
+        return diets.map(diet => {
 
-        const blocks = diet.blocks ?? [];
+            const blocks = diet.blocks ?? [];
 
-        const totalShots = blocks.reduce((total, block) => {
+            const totalShots = blocks.reduce((total, block) => {
 
-            const start = block.start.split(":");
+                const start = block.start.split(":");
 
-            const end = block.end.split(":");
+                const end = block.end.split(":");
 
-            const startMinutes = Number(start[0]) * 60 + Number(start[1]);
+                const startMinutes = Number(start[0]) * 60 + Number(start[1]);
 
-            const endMinutes = Number(end[0]) * 60 + Number(end[1]);
+                const endMinutes = Number(end[0]) * 60 + Number(end[1]);
 
-            const duration = endMinutes - startMinutes;
+                const duration = endMinutes - startMinutes;
 
-            if (duration <= 0 || block.interval <= 0) {
+                if (duration <= 0 || block.interval <= 0) {
 
-                return total;
+                    return total;
 
-            }
+                }
 
-            return total + Math.floor(duration / block.interval);
+                return total + Math.floor(duration / block.interval);
 
-        }, 0);
+            }, 0);
 
-        let totalMinutes = 0;
+            let totalMinutes = 0;
 
-        blocks.forEach(block => {
+            blocks.forEach(block => {
 
-            const start = block.start.split(":");
+                const start = block.start.split(":");
 
-            const end = block.end.split(":");
+                const end = block.end.split(":");
 
-            totalMinutes +=
+                totalMinutes +=
 
-                (Number(end[0]) * 60 + Number(end[1])) -
+                    (Number(end[0]) * 60 + Number(end[1])) -
 
-                (Number(start[0]) * 60 + Number(start[1]));
+                    (Number(start[0]) * 60 + Number(start[1]));
 
-        });
+            });
 
-        const hours = Math.floor(totalMinutes / 60);
+            const hours = Math.floor(totalMinutes / 60);
 
-        const minutes = totalMinutes % 60;
+            const minutes = totalMinutes % 60;
 
-        const durationText =
+            const durationText =
 
-            hours + " h " + minutes + " min";
+                hours + " h " + minutes + " min";
 
-        return `
+            return `
 
 <tr
  class="diet-row"
@@ -184,8 +184,8 @@ export default class DietManagerView {
 
 `;
 
-    }).join("");
+        }).join("");
 
-}
+    }
 
 }

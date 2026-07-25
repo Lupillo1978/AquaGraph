@@ -10,7 +10,7 @@ export default class DietItemRow {
 
     render() {
 
-    return `
+        return `
 
 <tr data-index="${this.index}">
 
@@ -80,6 +80,6 @@ export default class DietItemRow {
 
 `;
 
-}
+    }
 
 }

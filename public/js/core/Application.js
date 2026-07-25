@@ -13,59 +13,59 @@ import WorkspaceManager from "./WorkspaceManager.js";
 import DietManagerEngine from "../engines/DietManagerEngine.js";
 
 
-export default class Application{
+export default class Application {
 
-    constructor(){
+    constructor() {
 
-        this.eventBus=new EventBus();
+        this.eventBus = new EventBus();
 
-        this.state=new StateManager();
+        this.state = new StateManager();
 
-        this.header=new Header();
+        this.header = new Header();
 
-        this.sidebar=new Sidebar();
+        this.sidebar = new Sidebar();
 
-        this.infoPanel=new InfoPanel();
+        this.infoPanel = new InfoPanel();
 
         this.workspaceManager = new WorkspaceManager(
-        this.infoPanel
+            this.infoPanel
         );
 
         this.dietManager = new DietManagerEngine(
 
-         this.workspaceManager
+            this.workspaceManager
 
         );
 
-        this.statusBar=new StatusBar();
+        this.statusBar = new StatusBar();
 
-        this.map=new MapEngine(
-            
+        this.map = new MapEngine(
+
             "map",
-        
+
             this.eventBus
-        
+
         );
 
         this.pondEngine = new PondEngine(
-            
+
             this.infoPanel,
-        
+
             this.eventBus
-        
+
         );
-        
+
         this.feederEngine = new FeederEngine(
 
-           this.infoPanel,
+            this.infoPanel,
 
-           this.eventBus
+            this.eventBus
 
         );
 
         this.dietEngine = new DietEngine(
 
-         this.workspaceManager
+            this.workspaceManager
 
         );
 
@@ -74,62 +74,62 @@ export default class Application{
 
     async start() {
 
-    Logger.success("Iniciando AD&M AquaControl");
+        Logger.success("Iniciando AD&M AquaControl");
 
-    this.header.render();
+        this.header.render();
 
-    this.sidebar.render();
+        this.sidebar.render();
 
-    this.infoPanel.render();
+        this.infoPanel.render();
 
-    this.statusBar.render();
+        this.statusBar.render();
 
-    this.map.initialize();
+        this.map.initialize();
 
-    this.pondEngine.initialize();
+        this.pondEngine.initialize();
 
-    this.feederEngine.initialize();
+        this.feederEngine.initialize();
 
-    document
+        document
 
-    .getElementById(
+            .getElementById(
 
-        "btnDietManager"
+                "btnDietManager"
 
-    )
+            )
 
-    .addEventListener(
+            .addEventListener(
 
-        "click",
+                "click",
 
-        () => {
+                () => {
 
-            this.dietManager.show();
+                    this.dietManager.show();
 
-        }
+                }
 
-    );
+            );
 
-    document
+        document
 
-    .getElementById(
+            .getElementById(
 
-        "btnDiets"
+                "btnDiets"
 
-    )
+            )
 
-    .addEventListener(
+            .addEventListener(
 
-        "click",
+                "click",
 
-        () => {
+                () => {
 
-            this.dietEngine.showEditor();
+                    this.dietEngine.showEditor();
 
-        }
+                }
 
-    );
+            );
 
-}
+    }
 
 }

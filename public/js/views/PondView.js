@@ -34,9 +34,9 @@ export default class PondView {
 
         `;
 
-    }
+        }
 
-    return `
+        return `
 
         <div class="p-3">
 
@@ -66,12 +66,11 @@ export default class PondView {
 
 <h5>Alimentadores</h5>
 
-${
-    pond.feeders && pond.feeders.length > 0
+${pond.feeders && pond.feeders.length > 0
 
-    ?
+                ?
 
-    `
+                `
 
         <div class="list-group mb-3">
 
@@ -105,9 +104,9 @@ ${
 
     `
 
-    :
+                :
 
-    `
+                `
 
         <div class="text-secondary mb-3">
 
@@ -117,7 +116,7 @@ ${
 
     `
 
-}
+            }
 
                 <button
                    id="btnAddFeeder"

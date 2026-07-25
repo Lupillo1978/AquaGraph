@@ -22,7 +22,7 @@ export default class MapEngine {
         };
 
         this.drawControl = null;
-        
+
         this.drawTools = {
             polygon: null
         };
@@ -48,7 +48,7 @@ export default class MapEngine {
         this.createMap();
 
         this.createLayers();
-        
+
         this.createBaseMap();
 
         this.createDrawControls();
@@ -67,19 +67,19 @@ export default class MapEngine {
 
     createLayers() {
 
-       this.layers.temporary = new L.FeatureGroup();
+        this.layers.temporary = new L.FeatureGroup();
 
-       this.layers.ponds = new L.FeatureGroup();
+        this.layers.ponds = new L.FeatureGroup();
 
-       this.layers.feeders = new L.FeatureGroup();
+        this.layers.feeders = new L.FeatureGroup();
 
-       this.map.addLayer(this.layers.temporary);
+        this.map.addLayer(this.layers.temporary);
 
-       this.map.addLayer(this.layers.ponds);
+        this.map.addLayer(this.layers.ponds);
 
-       this.map.addLayer(this.layers.feeders);
+        this.map.addLayer(this.layers.feeders);
 
-       this.feederMapManager = new FeederMapManager(this.layers.feeders);
+        this.feederMapManager = new FeederMapManager(this.layers.feeders);
 
     }
 
@@ -101,33 +101,33 @@ export default class MapEngine {
 
     getDefaultPondStyle() {
 
-     return {
+        return {
 
-        color: "#00ff88",
+            color: "#00ff88",
 
-        weight: 2,
+            weight: 2,
 
-        fillColor: "#00cc66",
+            fillColor: "#00cc66",
 
-        fillOpacity: 0.35
+            fillOpacity: 0.35
 
-     };
+        };
 
     }
 
     getSelectedPondStyle() {
 
-     return {
+        return {
 
-        color: "#FFD700",
+            color: "#FFD700",
 
-        weight: 3,
+            weight: 3,
 
-        fillColor: "#FFD700",
+            fillColor: "#FFD700",
 
-        fillOpacity: 0.50
+            fillOpacity: 0.50
 
-     };
+        };
 
     }
 
@@ -160,181 +160,119 @@ export default class MapEngine {
         this.map.addControl(this.drawControl);
 
         this.drawTools.polygon = new L.Draw.Polygon(this.map);
-        
+
 
     }
 
-registerEvents() {
+    registerEvents() {
 
-    // ==================================================
-    // Cuando termina de dibujarse un estanque
-    // ==================================================
+        // ==================================================
+        // Cuando termina de dibujarse un estanque
+        // ==================================================
 
-    this.map.on(L.Draw.Event.CREATED, (event) => {
+        this.map.on(L.Draw.Event.CREATED, (event) => {
 
-        const layer = event.layer;
+            const layer = event.layer;
 
-        this.layers.temporary.addLayer(layer);
+            this.layers.temporary.addLayer(layer);
 
-        const geoJson = layer.toGeoJSON();
+            const geoJson = layer.toGeoJSON();
 
-        console.log(geoJson);
+            console.log(geoJson);
 
-        this.eventBus.emit(
+            this.eventBus.emit(
 
-            EventTypes.POND_GEOMETRY_CREATED,
+                EventTypes.POND_GEOMETRY_CREATED,
 
-            geoJson
-
-        );
-
-    });
-
-    // ==================================================
-    // Click sobre el mapa
-    // ==================================================
-
-    this.map.on("click", (event) => {
-
-        if (this.mode !== "PLACE_FEEDER") {
-
-            return;
-
-        }
-
-        this.placeTemporaryFeeder(event.latlng);
-
-    });
-
-    // ==================================================
-    // Dibujar polígono
-    // ==================================================
-
-    this.eventBus.on(
-
-        EventTypes.MAP_DRAW_POLYGON,
-
-        () => {
-
-            this.startPolygonDrawing();
-
-        }
-
-    );
-
-    // ==================================================
-    // Agregar estanque al mapa
-    // ==================================================
-
-    this.eventBus.on(
-
-        EventTypes.MAP_ADD_POND,
-
-        (pond) => {
-
-            this.addPondToMap(pond);
-
-        }
-
-    );
-
-    // ==================================================
-    // Limpiar capas temporales
-    // ==================================================
-
-    this.eventBus.on(
-
-        EventTypes.MAP_CLEAR_TEMPORARY,
-
-        () => {
-
-            this.layers.temporary.clearLayers();
-
-        }
-
-    );
-
-    // ==================================================
-    // Entrar en modo colocar alimentador
-    // ==================================================
-
-    this.eventBus.on(
-
-        EventTypes.MAP_PLACE_FEEDER,
-
-        (pond) => {
-
-            this.mode = "PLACE_FEEDER";
-
-            this.activePond = pond;
-
-            console.log(
-
-                "Modo colocar alimentador:",
-
-                pond.name
+                geoJson
 
             );
 
-        }
+        });
 
-    );
+        // ==================================================
+        // Click sobre el mapa
+        // ==================================================
 
-    this.eventBus.on(
+        this.map.on("click", (event) => {
 
-    EventTypes.FEEDER_CREATED,
+            if (this.mode !== "PLACE_FEEDER") {
 
-    (feeder) => {
+                return;
 
-        this.renderFeeder(feeder);
+            }
 
-    }
+            this.placeTemporaryFeeder(event.latlng);
 
-);
+        });
 
-// ==================================================
-// Actualizar alimentador
-// ==================================================
+        // ==================================================
+        // Dibujar polígono
+        // ==================================================
 
-this.eventBus.on(
+        this.eventBus.on(
 
-    EventTypes.FEEDER_UPDATED,
+            EventTypes.MAP_DRAW_POLYGON,
 
-    (feeder) => {
+            () => {
 
-        this.layers.feeders.eachLayer(
+                this.startPolygonDrawing();
 
-            marker => {
+            }
 
-                if (marker.feederId !== feeder.id) {
+        );
 
-                    return;
+        // ==================================================
+        // Agregar estanque al mapa
+        // ==================================================
 
-                }
+        this.eventBus.on(
 
-                marker.feeder = feeder;
+            EventTypes.MAP_ADD_POND,
 
-                marker.setIcon(
+            (pond) => {
 
-                    this.createFeederIcon(
+                this.addPondToMap(pond);
 
-                        feeder.name
+            }
 
-                    )
+        );
 
-                );
+        // ==================================================
+        // Limpiar capas temporales
+        // ==================================================
 
-                marker.setTooltipContent(
+        this.eventBus.on(
 
-                    feeder.name
+            EventTypes.MAP_CLEAR_TEMPORARY,
 
-                );
+            () => {
+
+                this.layers.temporary.clearLayers();
+
+            }
+
+        );
+
+        // ==================================================
+        // Entrar en modo colocar alimentador
+        // ==================================================
+
+        this.eventBus.on(
+
+            EventTypes.MAP_PLACE_FEEDER,
+
+            (pond) => {
+
+                this.mode = "PLACE_FEEDER";
+
+                this.activePond = pond;
 
                 console.log(
 
-                    "✅ Marcador actualizado:",
+                    "Modo colocar alimentador:",
 
-                    feeder.name
+                    pond.name
 
                 );
 
@@ -342,144 +280,206 @@ this.eventBus.on(
 
         );
 
-    }
+        this.eventBus.on(
 
-);
+            EventTypes.FEEDER_CREATED,
 
-// ==================================================
-// Eliminar alimentador del mapa
-// ==================================================
+            (feeder) => {
 
-this.eventBus.on(
+                this.renderFeeder(feeder);
 
-    EventTypes.FEEDER_DELETED,
+            }
 
-    (feederId) => {
+        );
 
-        this.feederMapManager.remove(
+        // ==================================================
+        // Actualizar alimentador
+        // ==================================================
 
-            feederId
+        this.eventBus.on(
+
+            EventTypes.FEEDER_UPDATED,
+
+            (feeder) => {
+
+                this.layers.feeders.eachLayer(
+
+                    marker => {
+
+                        if (marker.feederId !== feeder.id) {
+
+                            return;
+
+                        }
+
+                        marker.feeder = feeder;
+
+                        marker.setIcon(
+
+                            this.createFeederIcon(
+
+                                feeder.name
+
+                            )
+
+                        );
+
+                        marker.setTooltipContent(
+
+                            feeder.name
+
+                        );
+
+                        console.log(
+
+                            "✅ Marcador actualizado:",
+
+                            feeder.name
+
+                        );
+
+                    }
+
+                );
+
+            }
+
+        );
+
+        // ==================================================
+        // Eliminar alimentador del mapa
+        // ==================================================
+
+        this.eventBus.on(
+
+            EventTypes.FEEDER_DELETED,
+
+            (feederId) => {
+
+                this.feederMapManager.remove(
+
+                    feederId
+
+                );
+
+            }
+
+        );
+
+        // ==================================================
+        // Alimentador seleccionado
+        // ==================================================
+
+        this.eventBus.on(
+
+            EventTypes.FEEDER_SELECTED,
+
+            (feeder) => {
+
+                this.selectFeeder(feeder);
+
+            }
 
         );
 
     }
 
-);
-
-// ==================================================
-// Alimentador seleccionado
-// ==================================================
-
-this.eventBus.on(
-
-    EventTypes.FEEDER_SELECTED,
-
-    (feeder) => {
-
-        this.selectFeeder(feeder);
-
-    }
-
-);
-
-}
-
     startPolygonDrawing() {
-             
-      this.drawTools.polygon.enable();
+
+        this.drawTools.polygon.enable();
 
     }
 
     addPondToMap(pond) {
 
-            // Verificar si ya existe
-             let exists = false;
+        // Verificar si ya existe
+        let exists = false;
 
-             this.layers.ponds.eachLayer(layer => {
+        this.layers.ponds.eachLayer(layer => {
 
-                if (layer.pondId === pond.id) {
+            if (layer.pondId === pond.id) {
 
-                 exists = true;
+                exists = true;
 
-                }
+            }
 
-              });
+        });
 
-              if (exists) {
+        if (exists) {
 
-               return;
+            return;
 
-              }
+        }
 
-             const layer = L.geoJSON(pond.geometry, {
+        const layer = L.geoJSON(pond.geometry, {
 
-             style: this.getDefaultPondStyle()
+            style: this.getDefaultPondStyle()
 
-              });
+        });
 
-             layer.pondId = pond.id;
+        layer.pondId = pond.id;
 
-             layer.bindTooltip(pond.name);
+        layer.bindTooltip(pond.name);
 
-            // Guardar la información completa del estanque
-            layer.pond = pond;
+        // Guardar la información completa del estanque
+        layer.pond = pond;
 
-            // Evento de selección
-            layer.on("click", () => {
+        // Evento de selección
+        layer.on("click", () => {
 
             this.selectPond(layer);
-            
+
             this.eventBus.emit(
 
-            EventTypes.POND_SELECTED,
+                EventTypes.POND_SELECTED,
 
-            pond
+                pond
 
             );
 
-            });
+        });
 
-          layer.addTo(this.layers.ponds);
+        layer.addTo(this.layers.ponds);
+
+    }
+
+    selectPond(layer) {
+
+        // Si había un estanque seleccionado,
+        // restaurar su estilo original.
+        if (this.selectedPondLayer) {
+
+            this.selectedPondLayer.setStyle(
+                this.getDefaultPondStyle()
+            );
 
         }
- 
-        selectPond(layer) {
 
-    // Si había un estanque seleccionado,
-    // restaurar su estilo original.
-    if (this.selectedPondLayer) {
+        // Guardar la nueva selección.
+        this.selectedPondLayer = layer;
 
+        // Aplicar el estilo de seleccionado.
         this.selectedPondLayer.setStyle(
-            this.getDefaultPondStyle()
+            this.getSelectedPondStyle()
         );
 
     }
 
-    // Guardar la nueva selección.
-    this.selectedPondLayer = layer;
+    createFeederIcon(label = "F", state = "NORMAL") {
 
-    // Aplicar el estilo de seleccionado.
-    this.selectedPondLayer.setStyle(
-        this.getSelectedPondStyle()
-    );
+        const classes = {
 
-}
+            NORMAL: "",
 
-createFeederIcon(label = "F", state = "NORMAL") {
+            SELECTED: "selected"
 
-    const classes = {
+        };
 
-        NORMAL: "",
+        return L.divIcon({
 
-        SELECTED: "selected"
+            className: `feeder-icon ${classes[state] || ""}`,
 
-    };
-
-    return L.divIcon({
-
-        className: `feeder-icon ${classes[state] || ""}`,
-
-        html: `
+            html: `
 
             <div class="feeder-marker">
 
@@ -495,283 +495,283 @@ createFeederIcon(label = "F", state = "NORMAL") {
 
         `,
 
-        iconSize: [40, 40],
+            iconSize: [40, 40],
 
-        iconAnchor: [20, 20]
+            iconAnchor: [20, 20]
 
-    });
-
-}
-
-isPointInsideActivePond(latlng) {
-
-    if (!this.activePond) {
-
-        return false;
+        });
 
     }
 
-    const point = turf.point([
+    isPointInsideActivePond(latlng) {
 
-        latlng.lng,
+        if (!this.activePond) {
 
-        latlng.lat
-
-    ]);
-
-    return turf.booleanPointInPolygon(
-
-        point,
-
-        this.activePond.geometry
-
-    );
-
-}
-
-
-placeTemporaryFeeder(latlng) {
-
-    if (!this.isPointInsideActivePond(latlng)) {
-
-        alert("El alimentador debe colocarse dentro del estanque.");
-
-        return;
-
-    }
-
-    if (this.temporaryFeeder) {
-
-        this.layers.temporary.removeLayer(this.temporaryFeeder);
-
-    }
-
-    this.temporaryFeeder = L.marker(
-
-        latlng,
-
-        {
-
-            icon: this.createFeederIcon("NEW")
+            return false;
 
         }
 
-    );
+        const point = turf.point([
 
-    this.layers.temporary.addLayer(this.temporaryFeeder);
+            latlng.lng,
 
-    this.mode = "NORMAL";
+            latlng.lat
 
-    console.log(
+        ]);
 
-        "Alimentador temporal:",
+        return turf.booleanPointInPolygon(
 
-        latlng
+            point,
 
-    );
-
-   this.eventBus.emit(
-
-    EventTypes.FEEDER_POSITION_SELECTED,
-
-    {
-
-        pond: this.activePond,
-
-        latlng: latlng
-
-    }
-
-);
-
-}
-
-renderFeeder(feeder) {
-
-    // Eliminar el marcador temporal
-
-    if (this.temporaryFeeder) {
-
-        this.layers.temporary.removeLayer(
-            this.temporaryFeeder
-        );
-
-        this.temporaryFeeder = null;
-
-    }
-
-    const marker = L.marker(
-
-        [
-
-            feeder.position.lat,
-
-            feeder.position.lng
-
-        ],
-
-        {
-
-            icon: this.createFeederIcon(
-
-                feeder.name
-
-            )
-
-        }
-
-    );
-
-    marker.feederId = feeder.id;
-
-    marker.feeder = feeder;
-
-    marker.bindTooltip(
-
-        feeder.name
-
-    );
-
-    marker.addTo(
-
-        this.layers.feeders
-
-    );
-
-    this.feederMapManager.add(
-
-    feeder,
-
-    marker
-
-);
-
-    console.log(
-
-        "Alimentador agregado al mapa:",
-
-        feeder.name
-
-    );
-
-}
-
-selectFeeder(feeder) {
-
-    // Restaurar el alimentador anteriormente seleccionado
-
-    if (this.selectedFeederMarker) {
-
-        const previous = this.selectedFeederMarker.feeder;
-
-        this.selectedFeederMarker.setIcon(
-
-            this.createFeederIcon(
-
-                previous.name,
-
-                "NORMAL"
-
-            )
+            this.activePond.geometry
 
         );
 
     }
 
-    // Buscar el nuevo marcador
 
-    const marker = this.feederMarkers.get(
+    placeTemporaryFeeder(latlng) {
 
-        feeder.id
+        if (!this.isPointInsideActivePond(latlng)) {
 
-    );
+            alert("El alimentador debe colocarse dentro del estanque.");
 
-    if (!marker) {
+            return;
 
-        return;
+        }
 
-    }
+        if (this.temporaryFeeder) {
 
-    // Aplicar estado seleccionado
+            this.layers.temporary.removeLayer(this.temporaryFeeder);
 
-    marker.setIcon(
+        }
 
-        this.createFeederIcon(
+        this.temporaryFeeder = L.marker(
 
-            feeder.name,
+            latlng,
 
-            "SELECTED"
+            {
 
-        )
-
-    );
-
-    this.selectedFeederMarker = marker;
-
-}
-
-removeFeederFromMap(feederId) {
-
-    this.layers.feeders.eachLayer(
-
-        (layer) => {
-
-            if (
-
-                layer.feeder &&
-
-                layer.feeder.id === feederId
-
-            ) {
-
-                this.layers.feeders.removeLayer(
-
-                    layer
-
-                );
+                icon: this.createFeederIcon("NEW")
 
             }
 
-        }
+        );
 
-    );
+        this.layers.temporary.addLayer(this.temporaryFeeder);
 
-}
+        this.mode = "NORMAL";
 
-removeFeederFromMap(feederId) {
+        console.log(
 
-    const marker = this.feederMarkers.get(
+            "Alimentador temporal:",
 
-        feederId
+            latlng
 
-    );
+        );
 
-    if (!marker) {
+        this.eventBus.emit(
 
-        return;
+            EventTypes.FEEDER_POSITION_SELECTED,
+
+            {
+
+                pond: this.activePond,
+
+                latlng: latlng
+
+            }
+
+        );
 
     }
 
-    this.layers.feeders.removeLayer(
+    renderFeeder(feeder) {
 
-        marker
+        // Eliminar el marcador temporal
 
-    );
+        if (this.temporaryFeeder) {
 
-    this.feederMarkers.delete(
+            this.layers.temporary.removeLayer(
+                this.temporaryFeeder
+            );
 
-        feederId
+            this.temporaryFeeder = null;
 
-    );
+        }
 
-    console.log(
+        const marker = L.marker(
 
-        "Marcador eliminado:",
+            [
 
-        feederId
+                feeder.position.lat,
 
-    );
+                feeder.position.lng
 
-}
+            ],
+
+            {
+
+                icon: this.createFeederIcon(
+
+                    feeder.name
+
+                )
+
+            }
+
+        );
+
+        marker.feederId = feeder.id;
+
+        marker.feeder = feeder;
+
+        marker.bindTooltip(
+
+            feeder.name
+
+        );
+
+        marker.addTo(
+
+            this.layers.feeders
+
+        );
+
+        this.feederMapManager.add(
+
+            feeder,
+
+            marker
+
+        );
+
+        console.log(
+
+            "Alimentador agregado al mapa:",
+
+            feeder.name
+
+        );
+
+    }
+
+    selectFeeder(feeder) {
+
+        // Restaurar el alimentador anteriormente seleccionado
+
+        if (this.selectedFeederMarker) {
+
+            const previous = this.selectedFeederMarker.feeder;
+
+            this.selectedFeederMarker.setIcon(
+
+                this.createFeederIcon(
+
+                    previous.name,
+
+                    "NORMAL"
+
+                )
+
+            );
+
+        }
+
+        // Buscar el nuevo marcador
+
+        const marker = this.feederMarkers.get(
+
+            feeder.id
+
+        );
+
+        if (!marker) {
+
+            return;
+
+        }
+
+        // Aplicar estado seleccionado
+
+        marker.setIcon(
+
+            this.createFeederIcon(
+
+                feeder.name,
+
+                "SELECTED"
+
+            )
+
+        );
+
+        this.selectedFeederMarker = marker;
+
+    }
+
+    removeFeederFromMap(feederId) {
+
+        this.layers.feeders.eachLayer(
+
+            (layer) => {
+
+                if (
+
+                    layer.feeder &&
+
+                    layer.feeder.id === feederId
+
+                ) {
+
+                    this.layers.feeders.removeLayer(
+
+                        layer
+
+                    );
+
+                }
+
+            }
+
+        );
+
+    }
+
+    removeFeederFromMap(feederId) {
+
+        const marker = this.feederMarkers.get(
+
+            feederId
+
+        );
+
+        if (!marker) {
+
+            return;
+
+        }
+
+        this.layers.feeders.removeLayer(
+
+            marker
+
+        );
+
+        this.feederMarkers.delete(
+
+            feederId
+
+        );
+
+        console.log(
+
+            "Marcador eliminado:",
+
+            feederId
+
+        );
+
+    }
 
 }

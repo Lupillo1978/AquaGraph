@@ -16,9 +16,9 @@ export default class FeederEngine {
 
         this.selection = new FeederSelection(
 
-        this.infoPanel,
+            this.infoPanel,
 
-        this.eventBus
+            this.eventBus
 
         );
 
@@ -30,119 +30,119 @@ export default class FeederEngine {
 
     }
 
-    
+
     async initialize() {
 
-              this.selection.initialize();
+        this.selection.initialize();
 
-              this.registerEvents();
+        this.registerEvents();
 
-              await this.loadFeeders();
+        await this.loadFeeders();
 
-            }
-       
+    }
+
 
 
 
 
     async loadFeeders() {
 
-    const response = await this.controller.getAll();
+        const response = await this.controller.getAll();
 
-    if (!response.success) {
+        if (!response.success) {
 
-        return;
+            return;
 
-    }
+        }
 
-    this.feeders = response.data;
+        this.feeders = response.data;
 
-    console.log(
+        console.log(
 
-        "Alimentadores cargados:",
+            "Alimentadores cargados:",
 
-        this.feeders
-
-    );
-
-    this.feeders.forEach(feeder => {
-
-        this.eventBus.emit(
-
-            EventTypes.FEEDER_CREATED,
-
-            feeder
+            this.feeders
 
         );
 
-    });
+        this.feeders.forEach(feeder => {
 
-}
+            this.eventBus.emit(
+
+                EventTypes.FEEDER_CREATED,
+
+                feeder
+
+            );
+
+        });
+
+    }
 
     registerEvents() {
 
         // Estanque seleccionado
-this.eventBus.on(
+        this.eventBus.on(
 
-    EventTypes.POND_SELECTED,
+            EventTypes.POND_SELECTED,
 
-    (pond) => {
+            (pond) => {
 
-        this.selectedPond = pond;
+                this.selectedPond = pond;
 
-        // Obtener únicamente los alimentadores
-        // pertenecientes a este estanque.
-        pond.feeders = this.feeders.filter(
+                // Obtener únicamente los alimentadores
+                // pertenecientes a este estanque.
+                pond.feeders = this.feeders.filter(
 
-            feeder => feeder.pondId === pond.id
+                    feeder => feeder.pondId === pond.id
+
+                );
+
+                console.log(
+
+                    "Alimentadores del estanque:",
+
+                    pond.feeders
+
+                );
+
+                // Actualizar nuevamente el panel
+                this.infoPanel.showPond(pond);
+
+            }
+
+
 
         );
-
-        console.log(
-
-            "Alimentadores del estanque:",
-
-            pond.feeders
-
-        );
-
-        // Actualizar nuevamente el panel
-        this.infoPanel.showPond(pond);
-
-    }
-
-   
-
-);
 
 
 
         // Posición seleccionada en el mapa
         this.eventBus.on(
 
-    EventTypes.FEEDER_POSITION_SELECTED,
+            EventTypes.FEEDER_POSITION_SELECTED,
 
-    ({ pond, latlng }) => {
+            ({ pond, latlng }) => {
 
-        this.selectedPond = pond;
+                this.selectedPond = pond;
 
-        this.currentPosition = {
+                this.currentPosition = {
 
-            lat: latlng.lat,
+                    lat: latlng.lat,
 
-            lng: latlng.lng
+                    lng: latlng.lng
 
-        };
+                };
 
-        this.infoPanel.showCreateFeederForm(
+                this.infoPanel.showCreateFeederForm(
 
-            pond
+                    pond
+
+                );
+
+            }
 
         );
-
-    }
-
-);
 
         // Botón Agregar Alimentador
         document.addEventListener("click", (event) => {
@@ -176,15 +176,15 @@ this.eventBus.on(
 
         document.addEventListener("click", async (event) => {
 
-              if (event.target.id !== "btnDeleteFeeder") {
+            if (event.target.id !== "btnDeleteFeeder") {
 
-               return;
+                return;
 
-              }
+            }
 
             const feederId = event.target.dataset.feederId;
 
-              await this.deleteFeeder(feederId);
+            await this.deleteFeeder(feederId);
 
         });
 
@@ -194,80 +194,80 @@ this.eventBus.on(
 
         document.addEventListener("click", (event) => {
 
-           const feederItem = event.target.closest(".feeder-item");
+            const feederItem = event.target.closest(".feeder-item");
 
-               if (!feederItem) {
+            if (!feederItem) {
 
                 return;
 
-             }
+            }
 
-           const feederId = feederItem.dataset.feederId;
+            const feederId = feederItem.dataset.feederId;
 
-           const feeder = this.feeders.find(
+            const feeder = this.feeders.find(
 
-              item => item.id === feederId
+                item => item.id === feederId
 
             );
 
-           if (!feeder) {
+            if (!feeder) {
 
-              return;
+                return;
 
             }
 
-    console.log(
+            console.log(
 
-        "Alimentador seleccionado:",
+                "Alimentador seleccionado:",
 
-        feeder
+                feeder
 
-    );
+            );
 
-    this.eventBus.emit(
+            this.eventBus.emit(
 
-        EventTypes.FEEDER_SELECTED,
+                EventTypes.FEEDER_SELECTED,
 
-        feeder
+                feeder
 
-    );
+            );
 
-});
+        });
 
 
-// ==================================================
-// Editar alimentador
-// ==================================================
+        // ==================================================
+        // Editar alimentador
+        // ==================================================
 
-document.addEventListener("click", (event) => {
+        document.addEventListener("click", (event) => {
 
-    if (event.target.id !== "btnEditFeeder") {
+            if (event.target.id !== "btnEditFeeder") {
 
-        return;
+                return;
 
-    }
+            }
 
-    const feederId = event.target.dataset.feederId;
+            const feederId = event.target.dataset.feederId;
 
-    const feeder = this.feeders.find(
+            const feeder = this.feeders.find(
 
-        item => item.id === feederId
+                item => item.id === feederId
 
-    );
+            );
 
-    if (!feeder) {
+            if (!feeder) {
 
-        return;
+                return;
 
-    }
+            }
 
-    this.openEditFeeder(
+            this.openEditFeeder(
 
-        feeder
+                feeder
 
-    );
+            );
 
-});
+        });
 
 
         // Botón Cancelar
@@ -348,9 +348,9 @@ document.addEventListener("click", (event) => {
 
         if (this.editingFeeder) {
 
-    return await this.updateFeeder();
+            return await this.updateFeeder();
 
-}
+        }
 
         const feeder = {
 
@@ -445,130 +445,130 @@ document.addEventListener("click", (event) => {
 
     async updateFeeder() {
 
-    const feeder = {
+        const feeder = {
 
-        ...this.editingFeeder,
+            ...this.editingFeeder,
 
-        name: document.getElementById(
+            name: document.getElementById(
 
-            "feederName"
+                "feederName"
 
-        ).value.trim(),
+            ).value.trim(),
 
-        nodeId: document.getElementById(
+            nodeId: document.getElementById(
 
-            "feederNode"
+                "feederNode"
 
-        ).value.trim(),
+            ).value.trim(),
 
-        settings: {
+            settings: {
 
-            radius: Number(
+                radius: Number(
 
-                document.getElementById(
+                    document.getElementById(
 
-                    "feederRadius"
+                        "feederRadius"
 
-                ).value
+                    ).value
 
-            ),
+                ),
 
-            orientation: Number(
+                orientation: Number(
 
-                document.getElementById(
+                    document.getElementById(
 
-                    "feederOrientation"
+                        "feederOrientation"
 
-                ).value
+                    ).value
 
-            )
+                )
+
+            }
+
+        };
+
+        console.log(
+
+            "Enviando actualización:",
+
+            feeder
+
+        );
+
+        const response = await this.controller.update(
+
+            feeder.id,
+
+            feeder
+
+        );
+
+        if (!response.success) {
+
+            alert(response.message);
+
+            return;
 
         }
 
-    };
+        // Actualizar el arreglo local
 
-    console.log(
+        const index = this.feeders.findIndex(
 
-        "Enviando actualización:",
+            item => item.id === response.data.id
 
-        feeder
+        );
 
-    );
+        if (index !== -1) {
 
-   const response = await this.controller.update(
+            this.feeders[index] = response.data;
 
-    feeder.id,
+        }
 
-    feeder
+        console.log(
 
-);
+            "✅ Alimentador actualizado:",
 
-if (!response.success) {
+            response.data
 
-    alert(response.message);
+        );
 
-    return;
+        this.eventBus.emit(
 
-}
+            EventTypes.FEEDER_UPDATED,
 
-// Actualizar el arreglo local
+            response.data
 
-const index = this.feeders.findIndex(
+        );
 
-    item => item.id === response.data.id
-
-);
-
-if (index !== -1) {
-
-    this.feeders[index] = response.data;
-
-}
-
-console.log(
-
-    "✅ Alimentador actualizado:",
-
-    response.data
-
-);
-
-this.eventBus.emit(
-
-    EventTypes.FEEDER_UPDATED,
-
-    response.data
-
-);
-
-}
+    }
 
 
     openEditFeeder(feeder) {
 
 
-    this.selectedPond = {
+        this.selectedPond = {
 
-        id: feeder.pondId,
+            id: feeder.pondId,
 
-        name: feeder.pondId
+            name: feeder.pondId
 
-    };
+        };
 
-    this.currentPosition = feeder.position;
+        this.currentPosition = feeder.position;
 
-    this.editingFeeder = feeder;
+        this.editingFeeder = feeder;
 
-    this.infoPanel.showCreateFeederForm(
+        this.infoPanel.showCreateFeederForm(
 
-        this.selectedPond,
+            this.selectedPond,
 
-        feeder
+            feeder
 
-    );
+        );
 
-   
-}
+
+    }
 
 
     cancelCreateFeeder() {
@@ -601,82 +601,82 @@ this.eventBus.emit(
 
     async deleteFeeder(feederId) {
 
-    const confirmed = confirm(
+        const confirmed = confirm(
 
-        "¿Desea eliminar este alimentador?"
+            "¿Desea eliminar este alimentador?"
 
-    );
+        );
 
-    if (!confirmed) {
+        if (!confirmed) {
 
-        return;
+            return;
+
+        }
+
+        const response = await this.controller.delete(
+
+            feederId
+
+        );
+
+        if (!response.success) {
+
+            alert(response.message);
+
+            return;
+
+        }
+
+        // Eliminar del arreglo local
+        this.feeders = this.feeders.filter(
+
+            feeder => feeder.id !== feederId
+
+        );
+
+        // Obtener el estanque al que pertenecía
+        const pond = this.selectedPond;
+
+        if (pond) {
+
+            // Actualizar la lista de alimentadores
+            pond.feeders = this.feeders.filter(
+
+                feeder => feeder.pondId === pond.id
+
+            );
+
+        }
+
+        // Notificar al resto de la aplicación
+        this.eventBus.emit(
+
+            EventTypes.FEEDER_DELETED,
+
+            feederId
+
+        );
+
+        // Regresar el panel al estanque
+        if (pond) {
+
+            this.infoPanel.showPond(
+
+                pond
+
+            );
+
+        }
+
+        console.log(
+
+            "Alimentador eliminado:",
+
+            feederId
+
+        );
 
     }
-
-    const response = await this.controller.delete(
-
-        feederId
-
-    );
-
-    if (!response.success) {
-
-        alert(response.message);
-
-        return;
-
-    }
-
-    // Eliminar del arreglo local
-    this.feeders = this.feeders.filter(
-
-        feeder => feeder.id !== feederId
-
-    );
-
- // Obtener el estanque al que pertenecía
-const pond = this.selectedPond;
-
-if (pond) {
-
-    // Actualizar la lista de alimentadores
-    pond.feeders = this.feeders.filter(
-
-        feeder => feeder.pondId === pond.id
-
-    );
-
-}
-
-// Notificar al resto de la aplicación
-this.eventBus.emit(
-
-    EventTypes.FEEDER_DELETED,
-
-    feederId
-
-);
-
-// Regresar el panel al estanque
-if (pond) {
-
-    this.infoPanel.showPond(
-
-        pond
-
-    );
-
-}
-
-console.log(
-
-    "Alimentador eliminado:",
-
-    feederId
-
-);
-
-}
 
 
 }
