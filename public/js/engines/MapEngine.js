@@ -61,7 +61,7 @@ export default class MapEngine {
 
         this.map = L.map(this.container);
 
-        this.map.setView([26.000776, -109.387543], 15);
+        this.map.setView([26.002440, -109.389203], 16);
 
     }
 
