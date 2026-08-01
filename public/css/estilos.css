@@ -20,7 +20,12 @@ body {
 
 }
 
+body {
+    overflow: auto;
+}
+
 .app-container {
+    background-color: #1976D2;
 
     display: flex;
 
@@ -28,18 +33,23 @@ body {
 
     width: 100vw;
 
-    height: 100vh;
+    min-height: 100vh;
 
 }
 
 header {
-
     height: 60px;
-
-    background: #1a1a1a;
-
+    background: linear-gradient(90deg, #1a1a1a 0%, #232323 100%);
     border-bottom: 1px solid #444;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    padding: 0 0.75rem;
+}
 
+.header-clock {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #e0f2fe;
+    white-space: nowrap;
 }
 
 .main-container {
@@ -47,17 +57,33 @@ header {
     flex: 1;
 
     display: flex;
+    min-height: 0;
 
 }
 
 #sidebar {
-
     width: 260px;
-
+    min-width: 220px;
     background: #262626;
-
     border-right: 1px solid #444;
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.03);
+}
 
+#sidebar .btn {
+    justify-content: flex-start;
+    padding: 0.7rem 0.9rem;
+}
+
+#sidebar .text-muted {
+    color: #9aa0a6 !important;
+}
+
+.sidebar-menu {
+    display: block;
+}
+
+.sidebar-collapsed .sidebar-menu {
+    display: none;
 }
 
 #content {
@@ -65,6 +91,8 @@ header {
     flex: 1;
 
     position: relative;
+    min-width: 0;
+    overflow: auto;
 
 }
 
@@ -77,23 +105,22 @@ header {
 }
 
 #infoPanel {
-
     width: 320px;
-
+    max-width: 100%;
+    min-width: 280px;
     background: #2c2c2c;
-
     border-left: 1px solid #444;
-
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.03);
 }
 
 footer {
-
     height: 32px;
-
     background: #1a1a1a;
-
     border-top: 1px solid #444;
-
+    font-size: 0.9rem;
+    color: #cfd8dc;
 }
 
 .card {
@@ -103,17 +130,14 @@ footer {
 }
 
 .card-header {
-
     background: #2b2b2b;
-
     font-weight: 600;
-
+    padding: 0.85rem 1rem;
 }
 
 .card-footer {
-
     background: #2b2b2b;
-
+    padding: 0.8rem 1rem;
 }
 
 /* ===========================================
@@ -253,109 +277,318 @@ WORKSPACE
 =========================================*/
 
 #workspace {
-
     width: 100%;
-
     height: 100%;
-
     overflow: auto;
-
-    background: #202124;
-
+    background: linear-gradient(180deg, #202124 0%, #1d1f22 100%);
     padding: 20px;
+    scrollbar-width: thin;
+}
 
+@media (max-width: 1200px) {
+    #infoPanel {
+        width: 280px;
+        min-width: 240px;
+    }
+}
+
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    #sidebar {
+        width: 100%;
+        min-width: 0;
+        max-height: 320px;
+        overflow-y: auto;
+        border-right: none;
+        border-bottom: 1px solid #444;
+    }
+
+    .sidebar-collapsed {
+        max-height: 70px !important;
+    }
+
+    #infoPanel {
+        width: 100%;
+        min-width: 0;
+        border-left: none;
+        border-top: 1px solid #444;
+    }
+}
+
+@media (max-width: 640px) {
+    header {
+        height: auto;
+        padding: 0.75rem;
+    }
+
+    .header-clock {
+        font-size: 0.85rem;
+    }
+
+    #workspace {
+        padding: 12px;
+    }
+
+    .diet-table-wrapper {
+        max-height: 320px;
+    }
+
+    #dietItems .form-control,
+    #dietItems .form-select {
+        min-width: 80px;
+        font-size: 0.9rem;
+    }
 }
 
 /*==================================================
 EDITOR DE DIETAS
 ==================================================*/
 
+.diet-editor-shell {
+    padding: 0.2rem 0.1rem 0.5rem;
+}
+
+.diet-editor-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #2d4a64 0%, #1f3b54 100%);
+    border: 1px solid #4d6f8a;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.diet-editor-hero h2 {
+    color: #f8fbff;
+    font-size: 1.35rem;
+    margin-bottom: 0.2rem;
+}
+
+.diet-editor-hero p {
+    color: #b7d6ea;
+    font-size: 0.95rem;
+}
+
+.diet-editor-badge {
+    background: rgba(255, 255, 255, 0.14);
+    color: #e8f7ff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.diet-info-card {
+    border: 1px solid #4e748f;
+    background: linear-gradient(135deg, #303134 0%, #2a2b2f 100%);
+}
+
+.diet-blocks-card,
+.diet-chart-card,
+.diet-summary-card {
+    border: 1px solid #4e748f;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.diet-chart-card .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 360px;
+    background: linear-gradient(180deg, #23252b 0%, #2a2d33 100%);
+}
+
+.diet-chart-shell {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.35rem;
+    border-radius: 0.9rem;
+    background: radial-gradient(circle at top, #2d4658 0%, #202428 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    min-height: 320px;
+}
+
+.diet-chart-shell canvas {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+}
+
+.diet-summary-card {
+    background: linear-gradient(135deg, #2f3640 0%, #2a2f38 100%);
+}
+
+.diet-summary-pill {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.9rem;
+    padding: 0.9rem 0.75rem;
+    min-height: 92px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.diet-summary-pill strong {
+    color: #f9fbfd;
+    font-size: 1.05rem;
+}
+
+.diet-summary-pill span {
+    color: #86d8ff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 0.2rem;
+}
+
+#dietItems {
+    display: table-row-group;
+    max-width: 100%;
+}
+
 #dietItems td {
-
     vertical-align: middle;
+    white-space: normal;
+}
 
+.diet-table-wrapper {
+    max-height: 560px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.diet-editor-table {
+    table-layout: fixed;
+    min-width: 720px;
+}
+
+#dietItems tr.diet-row:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+#dietItems tr.diet-row:hover {
+    background-color: rgba(134, 216, 255, 0.12);
+}
+
+#dietItems th {
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+}
+
+#dietItems td {
+    padding: 0.85rem 0.7rem;
 }
 
 #dietItems input {
-
     text-align: center;
-
     font-weight: 600;
+    width: 100%;
+    min-width: 0;
+    padding: 0.65rem 0.7rem;
+    border-radius: 0.7rem;
+    background: #17181b;
+    border: 1px solid #4b5563;
+}
 
+#dietItems input:focus {
+    border-color: #86d8ff;
+    box-shadow: 0 0 0 0.2rem rgba(134, 216, 255, 0.18);
 }
 
 #dietItems input[type="number"] {
-
     min-width: 80px;
-
 }
 
 #dietItems input[type="time"] {
-
     min-width: 105px;
+}
 
+#dietItems .form-control,
+#dietItems .form-select {
+    min-width: 90px;
+}
+
+#dietItems .btnDeleteDietItem {
+    min-width: 42px;
+}
+
+.form-panel {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    padding-right: 6px;
 }
 
 .table-dark {
-
     --bs-table-bg: #303134;
-
     --bs-table-striped-bg: #35363A;
-
     --bs-table-hover-bg: #3B3D40;
-
 }
 
 .table-dark thead th {
-
     color: #FFFFFF;
-
     font-weight: 700;
-
     border-bottom: 2px solid #5F6368;
-
+    padding: 0.8rem 0.65rem;
 }
 
 .table-dark tbody td {
-
+    padding: 0.7rem 0.65rem;
     color: #F1F3F4;
-
 }
 
 .card {
-
     border: 1px solid #5F6368;
-
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .card-header {
-
     color: #FFFFFF;
-
     font-size: 17px;
-
 }
 
-.form-control {
-
+.form-control,
+.form-select {
     background: #202124;
-
     color: #FFFFFF;
-
     border: 1px solid #5F6368;
-
+    border-radius: 0.45rem;
 }
 
-.form-control:focus {
+@media (max-width: 640px) {
+    .diet-editor-hero {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
+    .diet-table-wrapper {
+        max-height: 380px;
+    }
+
+    .diet-chart-card .card-body {
+        min-height: 280px;
+    }
+
+    .diet-chart-shell {
+        min-height: 240px;
+    }
+}
+
+.form-control:focus,
+.form-select:focus {
     background: #202124;
-
+    border-color: #4fc3f7;
     color: #FFFFFF;
-
-    border-color: #2196F3;
-
-    box-shadow: 0 0 0 .15rem rgba(33, 150, 243, .30);
-
+    box-shadow: 0 0 0 0.2rem rgba(79, 195, 247, 0.25);
 }
 
 /*==================================================
@@ -407,28 +640,24 @@ span {
 
 }
 
-.form-control {
-
+.form-control,
+.form-select {
     background: #202124 !important;
-
     color: #FFFFFF !important;
-
     border: 1px solid #5F6368 !important;
-
+    border-radius: 0.45rem;
 }
 
 .form-control::placeholder {
-
     color: #9AA0A6;
-
 }
 
-.form-control:focus {
-
+.form-control:focus,
+.form-select:focus {
     background: #202124 !important;
-
     color: #FFFFFF !important;
-
+    border-color: #4fc3f7 !important;
+    box-shadow: 0 0 0 0.2rem rgba(79, 195, 247, 0.25) !important;
 }
 
 textarea {
@@ -454,25 +683,16 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
 =========================================*/
 
 .form-select {
-
     background: #303134;
-
     color: #ffffff;
-
     border: 1px solid #555;
-
 }
 
 .form-select:focus {
-
     background: #303134;
-
     color: #ffffff;
-
-    border-color: #4CAF50;
-
-    box-shadow: 0 0 0 .2rem rgba(76, 175, 80, .25);
-
+    border-color: #4fc3f7;
+    box-shadow: 0 0 0 .2rem rgba(79, 195, 247, .25);
 }
 
 .form-select option {
@@ -489,4 +709,19 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
 
 .card-body {
     color: white;
+    padding: 1rem;
+}
+
+.btn {
+    border-radius: 0.45rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-sm {
+    padding: 0.35rem 0.7rem;
 }

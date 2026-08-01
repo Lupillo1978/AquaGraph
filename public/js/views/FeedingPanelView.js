@@ -14,7 +14,7 @@ export default class FeedingPanelView {
 
     <hr>
 
-    <div class="card mb-3">
+    <div class="card mb-3 shadow-sm">
 
         <div class="card-body">
 
@@ -113,6 +113,24 @@ export default class FeedingPanelView {
             Enviar Ración
 
         </button>
+
+    </div>
+
+    <hr>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <strong>Estado de envío</strong>
+
+            <div id="feedingStatus" class="mt-2 text-muted small">
+
+                Esperando envío...
+
+            </div>
+
+        </div>
 
     </div>
 

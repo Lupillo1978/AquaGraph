@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const SerialService = require('../utils/SerialService');
+const HeltecBridgeService = require('../services/HeltecBridgeService');
+
+const ackEvents = [];
 
 router.get('/ports', async (req, res) => {
     try {
@@ -54,6 +57,27 @@ router.post('/send', async (req, res) => {
         console.error(`[Bridge] send failed: ${err.message || err}`);
         res.status(500).json({ success: false, error: err.message });
     }
+});
+
+router.post('/send-program', async (req, res) => {
+    try {
+        const result = await HeltecBridgeService.sendFeedingProgram(req.body);
+        res.json(result);
+    } catch (err) {
+        console.error(`[Bridge] send-program failed: ${err.message || err}`);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/ack', (req, res) => {
+    const event = req.body;
+    ackEvents.push(event);
+    console.log(`[Bridge] ack received: ${JSON.stringify(event)}`);
+    res.json({ success: true });
+});
+
+router.get('/acks', (req, res) => {
+    res.json({ success: true, data: ackEvents });
 });
 
 module.exports = router;

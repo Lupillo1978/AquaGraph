@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "ADM_AquaCOntrol_Node",
+			"path": "../../../PlatformIO/Projects/ADM_AquaCOntrol_Node"
+		}
+	],
+	"settings": {}
+}

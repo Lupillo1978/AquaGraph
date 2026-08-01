@@ -4,57 +4,51 @@ export default class DietEditorView {
 
         return `
 
-<div class="container-fluid">
+<div class="container-fluid diet-editor-shell">
 
-    <div class="row mb-3">
+    <div class="row mb-4 align-items-start">
 
-        <div class="col">
+        <div class="col-lg-8">
 
-            <h2>
+            <div class="diet-editor-hero">
 
-                Editor de Dietas
+                <div>
 
-            </h2>
+                    <h2 class="mb-1">Editor de Dietas</h2>
 
-            <small class="text-secondary">
+                    <p class="mb-0">Diseñe una distribución diaria más clara, ordenada y visualmente cómoda.</p>
 
-                Diseñe la distribución diaria del alimento
+                </div>
 
-            </small>
+                <span class="diet-editor-badge">Planificación</span>
+
+            </div>
 
         </div>
 
-        <div class="col-auto">
+        <div class="col-lg-4">
 
-            <div class="d-flex justify-content-end gap-2">
+            <div class="d-flex justify-content-lg-end gap-2 mt-3 mt-lg-0">
 
-    <button
+                <button id="btnCancelDiet" class="btn btn-outline-light btn-sm">
 
-        id="btnCancelDiet"
+                    Cancelar
 
-        class="btn btn-secondary">
+                </button>
 
-        Cancelar
+                <button id="btnSaveDiet" class="btn btn-success btn-sm">
 
-    </button>
+                    Guardar Dieta
 
-    <button
+                </button>
 
-        id="btnSaveDiet"
-
-        class="btn btn-success">
-
-        Guardar Dieta
-
-    </button>
-
-</div>
+            </div>
 
         </div>
 
     </div>
 
-    <div class="card mb-3">
+    <div class="card mb-3 diet-info-card">
 
         <div class="card-header">
 
@@ -64,37 +58,21 @@ export default class DietEditorView {
 
         <div class="card-body">
 
-            <div class="row">
+            <div class="row g-3">
 
                 <div class="col-md-5">
 
-                    <label class="form-label">
+                    <label class="form-label">Nombre</label>
 
-                        Nombre
-
-                    </label>
-
-                    <input
-
-                        id="dietName"
-
-                        class="form-control">
+                    <input id="dietName" class="form-control">
 
                 </div>
 
                 <div class="col-md-7">
 
-                    <label class="form-label">
+                    <label class="form-label">Descripción</label>
 
-                        Descripción
-
-                    </label>
-
-                    <input
-
-                        id="dietDescription"
-
-                        class="form-control">
+                    <input id="dietDescription" class="form-control">
 
                 </div>
 
@@ -104,25 +82,17 @@ export default class DietEditorView {
 
     </div>
 
-    <div class="row">
+    <div class="row g-3">
 
-        <div class="col-lg-7">
+        <div class="col-xl-8">
 
-            <div class="card h-100">
+            <div class="card h-100 diet-blocks-card">
 
-                <div class="card-header d-flex justify-content-between">
+                <div class="card-header d-flex justify-content-between align-items-center">
 
-                    <span>
+                    <span>Bloques de Alimentación</span>
 
-                        Bloques de Alimentación
-
-                    </span>
-
-                    <button
-
-                        id="btnAddDietItem"
-
-                        class="btn btn-primary btn-sm">
+                    <button id="btnAddDietItem" class="btn btn-primary btn-sm">
 
                         + Agregar Bloque
 
@@ -132,56 +102,37 @@ export default class DietEditorView {
 
                 <div class="card-body p-0">
 
-                    <table class="table table-dark table-hover align-middle" 
-                            style="table-layout:fixed;">
+                    <div class="diet-table-wrapper">
 
-                        <thead>
+                        <table class="table table-dark table-hover align-middle diet-editor-table" style="margin-bottom: 0;">
 
-<tr>
+                            <thead>
 
-    <th style="width:110px;">Inicio</th>
+                                <tr>
 
-    <th style="width:110px;">Fin</th>
+                                    <th style="width:125px;">Inicio</th>
 
-    <th style="width:90px;" class="text-center">
+                                    <th style="width:125px;">Fin</th>
 
-        %
+                                    <th style="width:90px;" class="text-center">%</th>
 
-    </th>
+                                    <th style="width:125px;" class="text-center">Intervalo</th>
 
-    <th style="width:110px;" class="text-center">
+                                    <th style="width:95px;" class="text-center">Disparos</th>
 
-        Intervalo
+                                    <th style="width:85px;" class="text-center">Estado</th>
 
-    </th>
+                                    <th style="width:75px;" class="text-center">Acción</th>
 
-    <th style="width:90px;" class="text-center">
+                                </tr>
 
-        Disparos
+                            </thead>
 
-    </th>
+                            <tbody id="dietItems"></tbody>
 
-    <th style="width:80px;" class="text-center">
+                        </table>
 
-        Estado
-
-    </th>
-
-    <th style="width:70px;" class="text-center">
-
-        Acción
-
-    </th>
-
-</tr>
-
-</thead>
-
-                        <tbody id="dietItems">
-
-                        </tbody>
-
-                    </table>
+                    </div>
 
                 </div>
 
@@ -189,27 +140,17 @@ export default class DietEditorView {
 
         </div>
 
-        <div class="col-lg-5">
+        <div class="col-xl-4">
 
-            <div class="card h-100">
+            <div class="card h-100 diet-chart-card">
 
-                <div class="card-header">
+                <div class="card-header">Curva de Alimentación</div>
 
-                    Curva de Alimentación
+                <div class="card-body p-3">
 
-                </div>
+                    <div class="diet-chart-shell">
 
-                <div class="card-body d-flex justify-content-center align-items-center">
-
-                    <div class="text-center text-secondary">
-
-                       <canvas
-
-                          id="dietChart"
-
-                          height="260">
-
-                        </canvas>
+                        <canvas id="dietChart" height="320"></canvas>
 
                     </div>
 
@@ -221,63 +162,45 @@ export default class DietEditorView {
 
     </div>
 
-    <div class="card mt-3">
+    <div class="card mt-3 diet-summary-card">
 
         <div class="card-body">
 
-            <div class="row text-center">
+            <div class="row g-3 text-center">
 
-                <div class="col">
+                <div class="col-12 col-sm-4">
 
-                    <strong>
+                    <div class="diet-summary-pill">
 
-                        Total %
+                        <strong>Total %</strong>
 
-                    </strong>
+                        <span id="dietPercentage">0 %</span>
 
-                    <br>
-
-                    <span id="dietPercentage">
-
-                        0 %
-
-                    </span>
+                    </div>
 
                 </div>
 
-                <div class="col">
+                <div class="col-12 col-sm-4">
 
-                    <strong>
+                    <div class="diet-summary-pill">
 
-                        Disparos
+                        <strong>Disparos</strong>
 
-                    </strong>
+                        <span id="dietShots">0</span>
 
-                    <br>
-
-                    <span id="dietShots">
-
-                        0
-
-                    </span>
+                    </div>
 
                 </div>
 
-                <div class="col">
+                <div class="col-12 col-sm-4">
 
-                    <strong>
+                    <div class="diet-summary-pill">
 
-                        Duración
+                        <strong>Duración</strong>
 
-                    </strong>
+                        <span id="dietDuration">0 min</span>
 
-                    <br>
-
-                    <span id="dietDuration">
-
-                        0 min
-
-                    </span>
+                    </div>
 
                 </div>
 

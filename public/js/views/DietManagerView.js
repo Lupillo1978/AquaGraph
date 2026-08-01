@@ -4,9 +4,9 @@ export default class DietManagerView {
 
         return `
 
-<div class="container-fluid">
+<div class="container-fluid py-3">
 
-    <div class="row mb-3">
+    <div class="row mb-3 align-items-center">
 
         <div class="col">
 
@@ -30,7 +30,7 @@ export default class DietManagerView {
 
                 id="btnNewDiet"
 
-                class="btn btn-success">
+                class="btn btn-success btn-sm">
 
                 Nueva Dieta
 

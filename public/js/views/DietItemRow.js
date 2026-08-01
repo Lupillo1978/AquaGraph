@@ -12,63 +12,64 @@ export default class DietItemRow {
 
         return `
 
-<tr data-index="${this.index}">
+<tr data-index="${this.index}" class="diet-row">
 
-    <td>
+    <td class="py-3">
 
         <input
             type="time"
-            class="form-control diet-start"
+            class="form-control form-control-sm diet-start"
             value="${this.item.start}">
 
     </td>
 
-    <td>
+    <td class="py-3">
 
         <input
             type="time"
-            class="form-control diet-end"
+            class="form-control form-control-sm diet-end"
             value="${this.item.end}">
 
     </td>
 
-    <td>
+    <td class="py-3">
 
         <input
             type="number"
-            class="form-control diet-percentage"
+            class="form-control form-control-sm diet-percentage"
             min="0"
             max="100"
             value="${this.item.percentage}">
 
     </td>
 
-    <td>
+    <td class="py-3">
 
         <input
             type="number"
-            class="form-control diet-interval"
+            class="form-control form-control-sm diet-interval"
             min="1"
             value="${this.item.interval}">
 
     </td>
 
-    <td class="diet-shots text-center">
+    <td class="diet-shots text-center py-3">
 
         -
 
     </td>
 
-    <td class="diet-status text-center">
+    <td class="diet-status text-center py-3">
 
         ⚪
 
     </td>
 
-    <td>
+    <td class="py-3">
 
         <button
-            class="btn btn-danger btnDeleteDietItem">
+            class="btn btn-outline-danger btn-sm btnDeleteDietItem"
+            title="Eliminar bloque ${this.index + 1}">
 
             🗑
 

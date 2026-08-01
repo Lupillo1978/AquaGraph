@@ -16,6 +16,7 @@ export default class FeedingPanelEngine {
     async initialize(pond) {
 
         this.pond = pond;
+        this.statusElement = document.getElementById('feedingStatus');
 
         console.log(
             "Inicializando alimentación para:",
@@ -30,7 +31,7 @@ export default class FeedingPanelEngine {
 
         if (btn) {
 
-            btn.onclick = () => {
+            btn.onclick = async () => {
 
                 const totalGrams = this.calculateDailyFood();
 
@@ -126,6 +127,41 @@ export default class FeedingPanelEngine {
 
                 );
 
+                try {
+
+                    this.setStatus('Enviando programa al Heltec...');
+
+                    const response = await fetch('/api/bridge/send-program', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(program)
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.error || 'No se pudo enviar la ración');
+                    }
+
+                    const acksResponse = await fetch('/api/bridge/acks');
+                    const acksResult = await acksResponse.json();
+                    const lastAck = acksResult.data && acksResult.data.length
+                        ? acksResult.data[acksResult.data.length - 1]
+                        : null;
+
+                    if (lastAck) {
+                        this.setStatus(`Confirmado: ${lastAck.nodeId || 'Heltec'} - ${lastAck.status || 'OK'}`);
+                    } else {
+                        this.setStatus('Programa enviado. Esperando confirmación...');
+                    }
+
+                } catch (error) {
+                    console.error('Error enviando ración:', error);
+                    this.setStatus(error.message || 'Error enviando la ración');
+                    alert(error.message || 'Error enviando la ración');
+                }
 
             };
 
@@ -259,6 +295,12 @@ export default class FeedingPanelEngine {
 
         );
 
+    }
+
+    setStatus(message) {
+        if (this.statusElement) {
+            this.statusElement.textContent = message;
+        }
     }
 
     fillDietList(diets) {
