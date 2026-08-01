@@ -7,6 +7,7 @@ const pondRoutes = require("./ponds");
 const feederRoutes = require("./feeders");
 
 const dietsRoutes = require("./diets");
+const bridgeRoutes = require("./bridge");
 
 router.get("/health", (req, res) => {
 
@@ -26,5 +27,7 @@ router.use("/ponds", pondRoutes);
 router.use("/feeders", feederRoutes);
 
 router.use("/diets", dietsRoutes);
+
+router.use("/bridge", bridgeRoutes);
 
 module.exports = router;
