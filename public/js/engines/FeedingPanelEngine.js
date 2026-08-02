@@ -1,6 +1,15 @@
 import DietController from "../controllers/DietController.js";
 import FeedingCalculator from "../services/FeedingCalculator.js";
 
+async function fetchJson(url, options = {}) {
+    const response = await fetch(url, options);
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(result.error || 'Request failed');
+    }
+    return result;
+}
+
 export default class FeedingPanelEngine {
 
     constructor(infoPanel) {
@@ -17,6 +26,9 @@ export default class FeedingPanelEngine {
 
         this.pond = pond;
         this.statusElement = document.getElementById('feedingStatus');
+        this.bridgeStatusElement = document.getElementById('bridgeStatus');
+        this.bridgeStatusBadge = document.getElementById('bridgeStatusBadge');
+        this.ackListElement = document.getElementById('ackList');
 
         console.log(
             "Inicializando alimentación para:",
@@ -24,6 +36,7 @@ export default class FeedingPanelEngine {
         );
 
         await this.loadDiets();
+        await this.refreshBridgeStatus();
 
         const btn = document.getElementById(
             "btnSendRation"
@@ -131,7 +144,7 @@ export default class FeedingPanelEngine {
 
                     this.setStatus('Enviando programa al Heltec...');
 
-                    const response = await fetch('/api/bridge/send-program', {
+                    const result = await fetchJson('/api/bridge/send-program', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -139,14 +152,14 @@ export default class FeedingPanelEngine {
                         body: JSON.stringify(program)
                     });
 
-                    const result = await response.json();
-
-                    if (!response.ok || !result.success) {
+                    if (!result.success) {
                         throw new Error(result.error || 'No se pudo enviar la ración');
                     }
 
-                    const acksResponse = await fetch('/api/bridge/acks');
-                    const acksResult = await acksResponse.json();
+                    await this.refreshBridgeStatus();
+                    await this.refreshAcks();
+
+                    const acksResult = await fetchJson('/api/bridge/acks');
                     const lastAck = acksResult.data && acksResult.data.length
                         ? acksResult.data[acksResult.data.length - 1]
                         : null;
@@ -167,6 +180,44 @@ export default class FeedingPanelEngine {
 
         }
 
+    }
+
+    async refreshBridgeStatus() {
+        try {
+            const result = await fetchJson('/api/bridge/status');
+            const connected = result && result.status && result.status.connected;
+            this.bridgeStatusElement.textContent = connected
+                ? `Conectado en ${result.status.path || 'puerto serial'}`
+                : 'El Heltec no está conectado aún.';
+            this.bridgeStatusBadge.className = `badge ${connected ? 'bg-success' : 'bg-secondary'}`;
+            this.bridgeStatusBadge.textContent = connected ? 'Conectado' : 'Desconectado';
+        } catch (error) {
+            this.bridgeStatusElement.textContent = 'No se pudo consultar el estado del puente.';
+            this.bridgeStatusBadge.className = 'badge bg-secondary';
+            this.bridgeStatusBadge.textContent = 'Desconocido';
+        }
+    }
+
+    async refreshAcks() {
+        try {
+            const result = await fetchJson('/api/bridge/acks');
+            const acks = result.data || [];
+            this.ackListElement.innerHTML = '';
+            if (!acks.length) {
+                const item = document.createElement('li');
+                item.textContent = 'Sin ACKs recibidos aún.';
+                this.ackListElement.appendChild(item);
+                return;
+            }
+
+            acks.slice(-5).reverse().forEach(ack => {
+                const item = document.createElement('li');
+                item.textContent = `${ack.nodeId || 'Nodo'} · ${ack.status || 'OK'} · ${ack.message || ''}`;
+                this.ackListElement.appendChild(item);
+            });
+        } catch (error) {
+            this.ackListElement.innerHTML = '<li>No se pudieron cargar los ACKs.</li>';
+        }
     }
 
     calculateDailyFood() {

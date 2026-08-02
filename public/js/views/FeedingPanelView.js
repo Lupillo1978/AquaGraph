@@ -118,6 +118,28 @@ export default class FeedingPanelView {
 
     <hr>
 
+    <div class="card shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+
+                <strong>Estado del Heltec</strong>
+
+                <span id="bridgeStatusBadge" class="badge bg-secondary">Desconocido</span>
+
+            </div>
+
+            <div id="bridgeStatus" class="text-muted small">
+
+                Verificando conexión...
+
+            </div>
+
+        </div>
+
+    </div>
+
     <div class="card shadow-sm">
 
         <div class="card-body">
@@ -129,6 +151,11 @@ export default class FeedingPanelView {
                 Esperando envío...
 
             </div>
+
+            <hr>
+
+            <div class="small text-muted">Últimos ACKs</div>
+            <ul id="ackList" class="mt-2 mb-0 ps-3 small text-muted"></ul>
 
         </div>
 

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const SerialService = require('../utils/SerialService');
+const HeltecBridgeService = require('../services/HeltecBridgeService');
+const { buildHeltecPayload, buildAckPayload } = require('../utils/HeltecProtocol');
 
 router.get('/ports', async (req, res) => {
     try {
@@ -93,6 +95,32 @@ router.post('/diet', async (req, res) => {
         res.json({ success: true, payload });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/send-program', async (req, res) => {
+    try {
+        const result = await HeltecBridgeService.sendFeedingProgram(req.body);
+        res.json({ success: true, data: result });
+    } catch (err) {
+        console.error('[Bridge] send-program failed:', err.message || err);
+        const status = err.code === 'HELTEC_DISCONNECTED' ? 503 : 500;
+        res.status(status).json({ success: false, error: err.message || 'Unable to send program' });
+    }
+});
+
+router.get('/acks', (req, res) => {
+    res.json({ success: true, data: HeltecBridgeService.getAcks() });
+});
+
+router.post('/ack', async (req, res) => {
+    const { requestId, nodeId, status, message } = req.body;
+    try {
+        const result = await HeltecBridgeService.sendAckToMaster(requestId, nodeId, status, message);
+        res.json({ success: true, data: result });
+    } catch (err) {
+        const status = err.code === 'HELTEC_DISCONNECTED' ? 503 : 500;
+        res.status(status).json({ success: false, error: err.message || 'Unable to send ACK' });
     }
 });
 
