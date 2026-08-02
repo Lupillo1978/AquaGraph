@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const SerialService = require('../utils/SerialService');
-const HeltecBridgeService = require('../services/HeltecBridgeService');
-
-const ackEvents = [];
 
 router.get('/ports', async (req, res) => {
     try {
@@ -59,25 +56,44 @@ router.post('/send', async (req, res) => {
     }
 });
 
-router.post('/send-program', async (req, res) => {
+router.post('/feed', async (req, res) => {
+    const { nodeId, pondId, dietId, gramsPerSecond, durationSeconds, amountGrams, mode = 'manual' } = req.body;
+
+    const payload = {
+        type: 'FEED_NOW',
+        nodeId: nodeId || 'A1-F01',
+        pondId: pondId || 'POND-01',
+        dietId: dietId || null,
+        gramsPerSecond: Number(gramsPerSecond || 0),
+        durationSeconds: Number(durationSeconds || 0),
+        amountGrams: Number(amountGrams || 0),
+        mode
+    };
+
     try {
-        const result = await HeltecBridgeService.sendFeedingProgram(req.body);
-        res.json(result);
+        await SerialService.send(payload);
+        res.json({ success: true, payload });
     } catch (err) {
-        console.error(`[Bridge] send-program failed: ${err.message || err}`);
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
-router.post('/ack', (req, res) => {
-    const event = req.body;
-    ackEvents.push(event);
-    console.log(`[Bridge] ack received: ${JSON.stringify(event)}`);
-    res.json({ success: true });
-});
+router.post('/diet', async (req, res) => {
+    const { nodeId, pondId, diet } = req.body;
 
-router.get('/acks', (req, res) => {
-    res.json({ success: true, data: ackEvents });
+    const payload = {
+        type: 'SET_DIET',
+        nodeId: nodeId || 'A1-F01',
+        pondId: pondId || 'POND-01',
+        diet: diet || null
+    };
+
+    try {
+        await SerialService.send(payload);
+        res.json({ success: true, payload });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 module.exports = router;
