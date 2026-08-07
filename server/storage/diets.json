@@ -44,5 +44,85 @@
         "active": true,
         "createdAt": "2026-07-23T04:55:13.919Z",
         "updatedAt": "2026-07-23T04:55:13.919Z"
+    },
+    {
+        "id": "DIET-0002",
+        "name": "prueba2",
+        "description": "2026",
+        "blocks": [
+            {
+                "start": "20:00",
+                "end": "21:00",
+                "percentage": 35,
+                "interval": 5
+            },
+            {
+                "start": "21:00",
+                "end": "22:00",
+                "percentage": 35,
+                "interval": 5
+            },
+            {
+                "start": "22:00",
+                "end": "23:00",
+                "percentage": 30,
+                "interval": 5
+            }
+        ],
+        "active": true,
+        "createdAt": "2026-08-05T03:47:16.613Z",
+        "updatedAt": "2026-08-05T03:47:16.613Z"
+    },
+    {
+        "id": "DIET-0003",
+        "name": "Prueba 3",
+        "description": "2026",
+        "blocks": [
+            {
+                "start": "09:00",
+                "end": "11:00",
+                "percentage": 12,
+                "interval": 5
+            },
+            {
+                "start": "11:00",
+                "end": "13:00",
+                "percentage": 13,
+                "interval": 5
+            },
+            {
+                "start": "13:00",
+                "end": "15:00",
+                "percentage": 15,
+                "interval": 5
+            },
+            {
+                "start": "15:00",
+                "end": "17:00",
+                "percentage": 20,
+                "interval": 5
+            },
+            {
+                "start": "17:00",
+                "end": "19:00",
+                "percentage": 15,
+                "interval": 5
+            },
+            {
+                "start": "19:00",
+                "end": "21:00",
+                "percentage": 13,
+                "interval": 5
+            },
+            {
+                "start": "21:00",
+                "end": "23:00",
+                "percentage": 12,
+                "interval": 5
+            }
+        ],
+        "active": true,
+        "createdAt": "2026-08-06T22:49:50.165Z",
+        "updatedAt": "2026-08-06T22:49:50.165Z"
     }
 ]

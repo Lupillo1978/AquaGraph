@@ -2,7 +2,7 @@ const EventEmitter = require("events");
 const { SerialPort } = require("serialport");
 
 class SerialService extends EventEmitter {
-    constructor() {
+constructor() {
         super();
         this.port = null;
         this.buffer = "";
@@ -11,6 +11,32 @@ class SerialService extends EventEmitter {
             baudRate: null,
             connected: false
         };
+        this.reconnectTimer = null;
+        this.reconnectDelayMs = 2000;
+        this.autoReconnect = true;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 0; // 0 = reintentos ilimitados
+    }
+
+    _scheduleReconnect() {
+        if (!this.autoReconnect) return;
+        if (!this.connection.path) return;
+        if (this.reconnectAttempts >= this.maxReconnectAttempts && this.maxReconnectAttempts > 0) {
+            console.warn(`[Serial] Se alcanzó el máximo de reintentos (${this.maxReconnectAttempts}).`);
+            return;
+        }
+        if (this.reconnectTimer) return; // ya hay un reintento programado
+
+        const target = this.connection.path;
+        const baud = this.connection.baudRate || 115200;
+        this.reconnectTimer = setTimeout(() => {
+            this.reconnectTimer = null;
+            this.reconnectAttempts++;
+            console.log(`[Serial] Reintentando reconexión (${this.reconnectAttempts}) a ${target}...`);
+            this.start(target, baud).catch(err => {
+                console.warn(`[Serial] Reintento falló: ${err && err.message ? err.message : err}`);
+            });
+        }, this.reconnectDelayMs);
     }
 
     async listPorts() {
@@ -30,22 +56,24 @@ class SerialService extends EventEmitter {
         };
     }
 
-    start(path, baudRate = 115200) {
+start(path, baudRate = 115200) {
         return new Promise((resolve, reject) => {
             if (this.port && this.port.isOpen) {
                 console.log(`[Serial] already connected on ${this.connection.path}`);
                 return resolve(this.port);
             }
 
+            this.autoReconnect = true; // reactiva la reconexión automática al conectar
             this.buffer = "";
             this.connection.path = path;
             this.connection.baudRate = baudRate;
             console.log(`[Serial] attempting to open ${path} at ${baudRate} bps`);
             this.port = new SerialPort({ path, baudRate, autoOpen: false });
 
-            this.port.on('open', () => {
+this.port.on('open', () => {
                 console.log(`[Serial] connection opened on ${path}`);
                 this.connection.connected = true;
+                this.reconnectAttempts = 0; // reset contador al reconectar con éxito
                 this.emit('open', { path, baudRate });
                 resolve(this.port);
             });
@@ -55,6 +83,7 @@ class SerialService extends EventEmitter {
                     console.error(`[Serial] open failed on ${path}: ${err.message || err}`);
                     this.emit('error', err);
                     this.connection.connected = false;
+                    this._scheduleReconnect();
                     return reject(err);
                 }
             });
@@ -82,15 +111,17 @@ class SerialService extends EventEmitter {
                 }
             });
 
-            this.port.on('close', () => {
+this.port.on('close', () => {
                 console.log('[Serial] connection closed');
                 this.connection.connected = false;
                 this.emit('close');
+                this._scheduleReconnect();
             });
             this.port.on('error', err => {
                 console.error(`[Serial] error: ${err.message || err}`);
                 this.connection.connected = false;
                 this.emit('error', err);
+                this._scheduleReconnect();
             });
         });
     }
@@ -112,8 +143,14 @@ class SerialService extends EventEmitter {
         });
     }
 
-    stop() {
+stop() {
         return new Promise((resolve, reject) => {
+            // Desactiva la reconexión automática durante una desconexión manual
+            this.autoReconnect = false;
+            if (this.reconnectTimer) {
+                clearTimeout(this.reconnectTimer);
+                this.reconnectTimer = null;
+            }
             if (!this.port) return resolve();
             if (!this.port.isOpen) return resolve();
             this.port.close(err => {

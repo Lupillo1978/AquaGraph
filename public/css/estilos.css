@@ -725,3 +725,21 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
 .btn-sm {
     padding: 0.35rem 0.7rem;
 }
+
+/*=========================================
+TEXTOS DE ESTADO (BLANCOS)
+=========================================*/
+
+.bridge-status-text,
+.feeding-status-text {
+    color: #FFFFFF !important;
+}
+
+#bridgeStatus,
+#feedingStatus {
+    color: #FFFFFF !important;
+}
+
+#ackList li {
+    color: #FFFFFF !important;
+}

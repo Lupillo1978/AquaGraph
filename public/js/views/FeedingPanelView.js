@@ -118,7 +118,7 @@ export default class FeedingPanelView {
 
     <hr>
 
-    <div class="card shadow-sm mb-3">
+<div class="card shadow-sm mb-3">
 
         <div class="card-body">
 
@@ -130,9 +130,45 @@ export default class FeedingPanelView {
 
             </div>
 
-            <div id="bridgeStatus" class="text-muted small">
+<div id="bridgeStatus" class="small bridge-status-text">
 
                 Verificando conexión...
+
+            </div>
+
+            <hr>
+
+            <label class="form-label small mb-1 bridge-status-text">Puerto serial</label>
+
+            <div class="input-group input-group-sm mb-2">
+
+                <select id="bridgePortSelect" class="form-select">
+
+                    <option value="">Cargando puertos...</option>
+
+                </select>
+
+                <button id="btnRefreshPorts" class="btn btn-outline-secondary" type="button" title="Actualizar puertos">
+
+                    ⟳
+
+                </button>
+
+            </div>
+
+            <div class="d-grid gap-2">
+
+                <button id="btnConnectBridge" class="btn btn-primary btn-sm">
+
+                    Conectar
+
+                </button>
+
+                <button id="btnDisconnectBridge" class="btn btn-outline-danger btn-sm">
+
+                    Desconectar
+
+                </button>
 
             </div>
 
@@ -146,7 +182,7 @@ export default class FeedingPanelView {
 
             <strong>Estado de envío</strong>
 
-            <div id="feedingStatus" class="mt-2 text-muted small">
+<div id="feedingStatus" class="mt-2 small feeding-status-text">
 
                 Esperando envío...
 
@@ -154,8 +190,8 @@ export default class FeedingPanelView {
 
             <hr>
 
-            <div class="small text-muted">Últimos ACKs</div>
-            <ul id="ackList" class="mt-2 mb-0 ps-3 small text-muted"></ul>
+            <div class="small feeding-status-text">Últimos ACKs</div>
+            <ul id="ackList" class="mt-2 mb-0 ps-3 small feeding-status-text"></ul>
 
         </div>
 

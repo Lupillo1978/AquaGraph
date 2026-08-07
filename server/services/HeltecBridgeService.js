@@ -1,5 +1,5 @@
 const SerialService = require('../utils/SerialService');
-const { buildHeltecPayload, buildAckPayload, buildAckEnvelope } = require('../utils/HeltecProtocol');
+const { buildFeedingProgramEnvelope, buildAckPayload, buildAckEnvelope } = require('../utils/HeltecProtocol');
 
 class HeltecBridgeService {
     constructor() {
@@ -56,10 +56,29 @@ class HeltecBridgeService {
             throw pendingError;
         }
 
-        this.lastProgram = program;
-        const payload = buildHeltecPayload(program);
-        await SerialService.send(payload);
-        return { success: true, payload };
+this.lastProgram = program;
+
+        // Genera UN payload compacto por nodo (cada uno cabe en un frame LoRa).
+        const payloads = buildFeedingProgramEnvelope(program);
+        if (!payloads.length) {
+            throw new Error('Program has no nodes to send');
+        }
+
+const sent = [];
+        // LoRa es broadcast sin confirmación a nivel de enlace. Para aumentar la
+        // probabilidad de que el esclavo reciba el programa y responda con ACK,
+        // se envía cada payload RETRANSMITIDO algunas veces con un pequeño retardo.
+        const retries = 2;
+        for (const payload of payloads) {
+            for (let attempt = 0; attempt < retries; attempt++) {
+                await SerialService.send(payload);
+                sent.push(payload);
+                // Pausa para evitar colisiones/overlap entre paquetes LoRa.
+                await new Promise(resolve => setTimeout(resolve, 250));
+            }
+        }
+
+        return { success: true, payloadCount: sent.length, payloads: sent };
     }
 
     async sendAckToMaster(requestId, nodeId, status, message = '') {

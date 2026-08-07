@@ -12,6 +12,7 @@
  *    2. Reenvía esos comandos por radio LoRa a los nodos esclavos.
  *    3. Escucha la red LoRa y captura las respuestas (ACK)
  *       que envían los nodos, mostrándolas por serial a la PC.
+ * 
  *
  *  IMPORTANTE:
  *    - El JSON de cada respuesta recibida se imprime en UNA LÍNEA APARTE
@@ -21,7 +22,22 @@
  */
 
 #include <Arduino.h>   // Funciones básicas del framework Arduino/ESP32
+#include <SPI.h>       // Comunicación SPI para el módulo SX1276
 #include <LoRa.h>      // Librería para comunicación por radio LoRa
+
+// ------------------------------------------------------------------
+// PINOUT HELTEC WIFI LoRa 32 (V2) - radio SX1276 integrada
+// La librería LoRa usa por defecto VSPI (SCK=18, MISO=19, MOSI=23,
+// SS=5), pero en la Heltec la radio está en otra asignación de pines.
+// Es OBLIGATORIO configurar SPI y los pines antes de LoRa.begin().
+// Si tu tarjeta es Heltec V3 (SX1262), este cableado NO aplica.
+// ------------------------------------------------------------------
+const int LORA_SCK  = 5;   // GPIO5  -> SCK
+const int LORA_MISO = 19;  // GPIO19 -> MISO
+const int LORA_MOSI = 27;  // GPIO27 -> MOSI
+const int LORA_SS   = 18;  // GPIO18 -> NSS/CS
+const int LORA_RST  = 14;  // GPIO14 -> RST
+const int LORA_DIO0 = 26;  // GPIO26 -> DIO0
 
 // Buffer global para acumular los caracteres que llegan por el puerto serial
 // hasta que se reciba un salto de línea ('\n').
@@ -56,13 +72,19 @@ String extractJsonValue(String msg, String key) {
 void setup() {
   // Inicia la comunicación serial con la PC a 115200 baudios
   Serial.begin(115200);
-  delay(1000);  // Pequeña espera para estabilizar la tarjeta
+delay(1000);  // Pequeña espera para estabilizar la tarjeta
 
   Serial.println("[MASTER] Starting...");
 
-  // Inicializa el módulo LoRa en la frecuencia de 915 MHz (banda para América)
+  // >>> CLAVE: Configurar SPI y pines del SX1276 ANTES de LoRa.begin() <<<
+  // Sin esto, la librería usa VSPI por defecto (SS=5) y el chip no se detecta.
+  SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_SS);
+  LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
+
+// Inicializa el módulo LoRa en la frecuencia de 915 MHz (banda para América)
   if (!LoRa.begin(915E6)) {
     Serial.println("[MASTER] LoRa init failed");
+    Serial.println("[MASTER] Verifica cableado SPI y pines (SCK, MISO, MOSI, NSS, RST, DIO0).");
     while (1) {}  // Si falla, se detiene el programa en un bucle infinito
   }
 
@@ -74,17 +96,47 @@ void setup() {
   Serial.println("[MASTER] LoRa ready");
 }
 
+//
+// LÍMITE APROXIMADO DE PAYLOAD PARA UN FRAME LoRa (SF7/BW125/CR4/5).
+// El SX1276 tiene un FIFO de 256 bytes; el payload útil máximo es ~222.
+// Si el mensaje supera este límite, se divide en fragmentos numerados.
+//
+#define LORA_MAX_PAYLOAD 222
+
 /**
  * Envía un mensaje (payload) por radio LoRa a todos los nodos esclavos.
  * Al ser una red tipo broadcast, todos los esclavos reciben el mensaje,
  * pero cada uno decide si es para él según el contenido del mismo.
  *
+ * Si el payload excede el límite de un frame LoRa, se divide en fragmentos
+ * con el esquema: "CH:<total>:<idx>:<data>" y se envían en secuencia con
+ * un pequeño retardo entre ellos. El esclavo los reensambla.
+ *
  * @param payload Cadena de texto (JSON) a transmitir por LoRa.
  */
 void forwardToNodes(String payload) {
-  LoRa.beginPacket();   // Inicia un paquete de transmisión
-  LoRa.print(payload);  // Escribe el contenido del mensaje en el paquete
-  LoRa.endPacket();     // Finaliza y envía el paquete por la radio
+  if (payload.length() <= LORA_MAX_PAYLOAD) {
+    LoRa.beginPacket();
+    LoRa.print(payload);
+    LoRa.endPacket();
+    return;
+  }
+
+  // ---- Segmentación / chunking ----
+  int total = (payload.length() + LORA_MAX_PAYLOAD - 1) / LORA_MAX_PAYLOAD;
+  for (int i = 0; i < total; i++) {
+    String chunk = payload.substring(i * LORA_MAX_PAYLOAD,
+                                     (i + 1) * LORA_MAX_PAYLOAD);
+    String frame = "CH:" + String(total) + ":" + String(i) + ":" + chunk;
+
+    LoRa.beginPacket();
+    LoRa.print(frame);
+    LoRa.endPacket();
+
+    Serial.println("[MASTER] Fragmento " + String(i + 1) + "/" + String(total) +
+                   " enviado (" + String(frame.length()) + " bytes)");
+    delay(150);  // Espacio entre fragmentos para evitar colisiones
+  }
 }
 
 /**
@@ -101,11 +153,19 @@ void loop() {
       if (incoming.length() > 0) {        // Solo procesa si el mensaje no está vacío
         Serial.println("[MASTER] From PC: " + incoming);
 
-        // Extrae el tipo de mensaje para registrarlo en consola
-        // (por ejemplo: PING, FEED_NOW, SET_DIET, FEEDING_PROGRAM)
+// Extrae el tipo de mensaje para registrarlo en consola
+        // (por ejemplo: PING, FEED_NOW, SET_DIET, FEEDING_PROGRAM,
+        //  o "FP" en el formato compacto con clave "t").
         String msgType = "";
         if (incoming.indexOf("\"type\":\"") >= 0) {
           int start = incoming.indexOf("\"type\":\"") + 8;  // Avanza tras "type":"
+          int end = incoming.indexOf('"', start);           // Busca la comilla de cierre
+          if (end > start) {
+            msgType = incoming.substring(start, end);
+          }
+        } else if (incoming.indexOf("\"t\":\"") >= 0) {
+          // Formato compacto: usa la clave "t" (ej: "FP").
+          int start = incoming.indexOf("\"t\":\"") + 5;     // Avanza tras "t":"
           int end = incoming.indexOf('"', start);           // Busca la comilla de cierre
           if (end > start) {
             msgType = incoming.substring(start, end);

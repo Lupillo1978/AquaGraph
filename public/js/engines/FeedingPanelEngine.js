@@ -24,19 +24,35 @@ export default class FeedingPanelEngine {
 
     async initialize(pond) {
 
-        this.pond = pond;
+this.pond = pond;
         this.statusElement = document.getElementById('feedingStatus');
         this.bridgeStatusElement = document.getElementById('bridgeStatus');
         this.bridgeStatusBadge = document.getElementById('bridgeStatusBadge');
         this.ackListElement = document.getElementById('ackList');
+        this.bridgePortSelect = document.getElementById('bridgePortSelect');
+        this.btnRefreshPorts = document.getElementById('btnRefreshPorts');
+        this.btnConnectBridge = document.getElementById('btnConnectBridge');
+        this.btnDisconnectBridge = document.getElementById('btnDisconnectBridge');
 
         console.log(
             "Inicializando alimentación para:",
             pond.name
         );
 
+this.bindBridgeEvents();
         await this.loadDiets();
+        await this.loadPorts();
         await this.refreshBridgeStatus();
+
+        // Polling periódico para mantener el estado del puente actualizado
+        // en tiempo real (clave si el servidor se reconecta automáticamente).
+        if (this._pollTimer) {
+            clearInterval(this._pollTimer);
+        }
+        this._pollTimer = setInterval(() => {
+            this.refreshBridgeStatus();
+            this.refreshAcks();
+        }, 3000);
 
         const btn = document.getElementById(
             "btnSendRation"
@@ -195,6 +211,83 @@ export default class FeedingPanelEngine {
             this.bridgeStatusElement.textContent = 'No se pudo consultar el estado del puente.';
             this.bridgeStatusBadge.className = 'badge bg-secondary';
             this.bridgeStatusBadge.textContent = 'Desconocido';
+        }
+    }
+
+bindBridgeEvents() {
+        if (this.btnRefreshPorts) {
+            this.btnRefreshPorts.onclick = () => this.loadPorts();
+        }
+        if (this.btnConnectBridge) {
+            this.btnConnectBridge.onclick = () => this.connect();
+        }
+        if (this.btnDisconnectBridge) {
+            this.btnDisconnectBridge.onclick = () => this.disconnect();
+        }
+    }
+
+    async loadPorts() {
+        if (!this.bridgePortSelect) return;
+        try {
+            const result = await fetchJson('/api/bridge/ports');
+            const ports = (result && result.ports) || [];
+            this.bridgePortSelect.innerHTML = '';
+            if (!ports.length) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No se encontraron puertos';
+                this.bridgePortSelect.appendChild(option);
+                return;
+            }
+            ports.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.path;
+                option.textContent = p.path + (p.manufacturer ? ` · ${p.manufacturer}` : '');
+                this.bridgePortSelect.appendChild(option);
+            });
+        } catch (error) {
+            this.bridgePortSelect.innerHTML = '<option value="">No se pudieron cargar puertos</option>';
+        }
+    }
+
+    async connect() {
+        const path = this.bridgePortSelect && this.bridgePortSelect.value;
+        if (!path) {
+            this.setStatus('Seleccione un puerto serial para conectar.');
+            return;
+        }
+        try {
+            this.setStatus(`Conectando al Heltec en ${path}...`);
+            const result = await fetchJson('/api/bridge/connect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ path, baudRate: 115200 })
+            });
+            if (!result.success) {
+                throw new Error(result.error || 'No se pudo conectar');
+            }
+            await this.refreshBridgeStatus();
+            this.setStatus('Heltec conectado.');
+        } catch (error) {
+            console.error('Error conectando:', error);
+            this.setStatus(error.message || 'Error conectando al Heltec');
+            this.refreshBridgeStatus();
+        }
+    }
+
+    async disconnect() {
+        try {
+            this.setStatus('Desconectando Heltec...');
+            const result = await fetchJson('/api/bridge/disconnect', { method: 'POST' });
+            if (!result.success) {
+                throw new Error(result.error || 'No se pudo desconectar');
+            }
+            await this.refreshBridgeStatus();
+            this.setStatus('Heltec desconectado.');
+        } catch (error) {
+            console.error('Error desconectando:', error);
+            this.setStatus(error.message || 'Error desconectando al Heltec');
+            this.refreshBridgeStatus();
         }
     }
 
