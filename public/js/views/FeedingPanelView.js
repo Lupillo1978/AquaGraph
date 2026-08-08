@@ -56,7 +56,7 @@ export default class FeedingPanelView {
 
     </div>
 
-    <div class="mb-3">
+<div class="mb-3">
 
         <label class="form-label">
 
@@ -64,19 +64,37 @@ export default class FeedingPanelView {
 
         </label>
 
-        <select
+        <div class="d-flex gap-2">
 
-            id="dietSelect"
+            <select
 
-            class="form-select">
+                id="dietSelect"
 
-            <option>
+                class="form-select">
 
-                Seleccionar dieta...
+                <option>
 
-            </option>
+                    Seleccionar dieta...
 
-        </select>
+                </option>
+
+            </select>
+
+            <button
+
+                id="btnViewDietChart"
+
+                type="button"
+
+                class="btn btn-info btn-sm flex-shrink-0"
+
+                title="Ver gráfico de la dieta seleccionada">
+
+                📊
+
+            </button>
+
+        </div>
 
     </div>
 

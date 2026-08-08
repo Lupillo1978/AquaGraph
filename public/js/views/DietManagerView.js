@@ -66,9 +66,12 @@ export default class DietManagerView {
 
                      <th>Estado</th>
 
+                     <th>Acción</th>
+
                     </tr>
 
                 </thead>
+
 
                 <tbody>
 
@@ -96,7 +99,8 @@ export default class DietManagerView {
 
 <tr>
 
-    <td colspan="5" class="text-center p-4">
+    <td colspan="6" class="text-center p-4">
+
 
         No existen dietas registradas.
 
@@ -180,7 +184,24 @@ export default class DietManagerView {
 
     </td>
 
+    <td class="text-center">
+
+        <button
+
+            type="button"
+
+            class="btn btn-info btn-sm diet-chart-btn"
+
+            data-id="${diet.id}">
+
+            📊 Ver Gráfico
+
+        </button>
+
+    </td>
+
 </tr>
+
 
 `;
 

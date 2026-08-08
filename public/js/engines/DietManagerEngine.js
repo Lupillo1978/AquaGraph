@@ -4,6 +4,8 @@ import DietEngine from "./DietEngine.js";
 
 import DietController from "../controllers/DietController.js";
 
+import DietChartModal from "../components/DietChartModal.js";
+
 export default class DietManagerEngine {
 
     constructor(workspaceManager) {
@@ -13,6 +15,10 @@ export default class DietManagerEngine {
         this.view = new DietManagerView();
 
         this.controller = new DietController();
+
+        this.dietChartModal = new DietChartModal();
+
+        this.diets = [];
 
         this.dietEngine = new DietEngine(
 
@@ -43,6 +49,8 @@ export default class DietManagerEngine {
             ? response.data
 
             : [];
+
+        this.diets = diets;
 
         this.workspaceManager.render(
 
@@ -129,6 +137,45 @@ export default class DietManagerEngine {
                             row.dataset.id
 
                         );
+
+                    }
+
+                );
+
+            });
+
+        // Botones "Ver Gráfico"
+        document
+
+            .querySelectorAll(
+
+                ".diet-chart-btn"
+
+            )
+
+            .forEach(btn => {
+
+                btn.addEventListener(
+
+                    "click",
+
+                    (e) => {
+
+                        e.stopPropagation();
+
+                        const id = btn.dataset.id;
+
+                        const diet = this.diets.find(
+
+                            d => d.id === id
+
+                        );
+
+                        if (diet) {
+
+                            this.dietChartModal.open(diet);
+
+                        }
 
                     }
 

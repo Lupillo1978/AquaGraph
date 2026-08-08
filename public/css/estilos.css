@@ -743,3 +743,105 @@ TEXTOS DE ESTADO (BLANCOS)
 #ackList li {
     color: #FFFFFF !important;
 }
+
+/*=========================================
+MODAL GRÁFICO DE DIETA
+=========================================*/
+
+.diet-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    padding: 1.5rem;
+}
+
+.diet-modal {
+    width: 70%;
+    max-width: 70%;
+    max-width: 1100px;
+    max-height: 90vh;
+    background: #2b2d33;
+    border: 1px solid #4e748f;
+    border-radius: 1rem;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.diet-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #2d4a64 0%, #1f3b54 100%);
+    border-bottom: 1px solid #4d6f8a;
+}
+
+.diet-modal-title {
+    margin: 0;
+    color: #f8fbff;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.diet-modal-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: linear-gradient(180deg, #23252b 0%, #2a2d33 100%);
+    min-height: 340px;
+}
+
+.diet-modal-chart-shell {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.9rem;
+    background: radial-gradient(circle at top, #2d4658 0%, #202428 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.diet-modal-chart-shell canvas {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+}
+
+.diet-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.9rem 1.25rem;
+    background: #26282e;
+    border-top: 1px solid #4d6f8a;
+}
+
+@media (max-width: 900px) {
+    .diet-modal {
+        width: 90%;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 640px) {
+    .diet-modal {
+        width: 95%;
+        max-width: 95%;
+    }
+
+    .diet-modal-body {
+        min-height: 260px;
+    }
+}

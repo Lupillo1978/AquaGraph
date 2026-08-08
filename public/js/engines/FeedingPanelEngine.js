@@ -1,5 +1,7 @@
 import DietController from "../controllers/DietController.js";
 import FeedingCalculator from "../services/FeedingCalculator.js";
+import DietChartModal from "../components/DietChartModal.js";
+
 
 async function fetchJson(url, options = {}) {
     const response = await fetch(url, options);
@@ -20,7 +22,10 @@ export default class FeedingPanelEngine {
 
         this.calculator = new FeedingCalculator();
 
+        this.dietChartModal = new DietChartModal();
+
     }
+
 
     async initialize(pond) {
 
@@ -191,6 +196,37 @@ this.bindBridgeEvents();
                     this.setStatus(error.message || 'Error enviando la ración');
                     alert(error.message || 'Error enviando la ración');
                 }
+
+            };
+
+        }
+
+        // Botón "Ver Gráfico" de la dieta seleccionada
+        const btnViewChart = document.getElementById(
+            "btnViewDietChart"
+        );
+
+        if (btnViewChart) {
+
+            btnViewChart.onclick = () => {
+
+                const selectedDietId = document.getElementById(
+                    "dietSelect"
+                ).value;
+
+                const diet = this.diets.find(
+                    d => d.id === selectedDietId
+                );
+
+                if (!diet) {
+
+                    alert("Seleccione una dieta para ver su gráfico.");
+
+                    return;
+
+                }
+
+                this.dietChartModal.open(diet);
 
             };
 

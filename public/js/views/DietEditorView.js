@@ -144,7 +144,7 @@ export default class DietEditorView {
 
             <div class="card h-100 diet-chart-card">
 
-                <div class="card-header">Curva de Alimentación</div>
+                <div class="card-header">Distribución de Alimentación por Bloque</div>
 
                 <div class="card-body p-3">
 

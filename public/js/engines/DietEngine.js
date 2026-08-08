@@ -386,13 +386,15 @@ export default class DietEngine {
 
             const end = this.timeToMinutes(item.end);
 
-            while (current < end) {
+while (current < end) {
 
                 schedule.push({
 
                     minute: current,
 
-                    percentage: foodPerShot
+                    percentage: foodPerShot,
+
+                    interval: Number(item.interval)
 
                 });
 

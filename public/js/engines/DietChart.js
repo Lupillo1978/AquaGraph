@@ -1,14 +1,16 @@
 export default class DietChart {
 
-    constructor() {
+    constructor(canvasId = "dietChart") {
 
         this.chart = null;
+
+        this.canvasId = canvasId;
 
     }
 
     initialize() {
 
-        const canvas = document.getElementById("dietChart");
+        const canvas = document.getElementById(this.canvasId);
 
         if (!canvas) {
 
@@ -16,9 +18,10 @@ export default class DietChart {
 
         }
 
+
         this.chart = new Chart(canvas, {
 
-            type: "line",
+            type: "bar",
 
             data: {
 
@@ -40,9 +43,19 @@ export default class DietChart {
 
                         data: new Array(24).fill(0),
 
-                        tension: 0.35,
+                        intervals: new Array(24).fill(null),
 
-                        fill: true
+                        backgroundColor: "rgba(40, 167, 69, 0.85)",
+
+                        hoverBackgroundColor: "rgba(40, 167, 69, 1)",
+
+                        borderColor: "rgba(40, 167, 69, 1)",
+
+                        borderWidth: 1,
+
+                        borderRadius: 4,
+
+                        maxBarThickness: 16
 
                     }
 
@@ -62,6 +75,52 @@ export default class DietChart {
 
                         display: false
 
+                    },
+
+                    tooltip: {
+
+                        backgroundColor: "rgba(20, 22, 26, 0.95)",
+
+                        titleColor: "#ffffff",
+
+                        bodyColor: "#dee2e6",
+
+                        borderColor: "rgba(40, 167, 69, 0.4)",
+
+                        borderWidth: 1,
+
+                        displayColors: false,
+
+                        callbacks: {
+
+                            label: function (context) {
+
+                                const lines = [];
+
+                                const value = context.parsed && context.parsed.y !== undefined
+                                    ? context.parsed.y
+                                    : (context.dataIndex !== undefined ? context.dataset.data[context.dataIndex] : 0);
+
+                                // Limitar a máximo 2 decimales
+                                const percent = parseFloat(Number(value).toFixed(2));
+
+                                lines.push("Porcentaje: " + percent + " %");
+
+                                const interval = context.dataset.intervals &&
+                                    context.dataset.intervals[context.dataIndex];
+
+                                if (interval && interval.length) {
+
+                                    lines.push("Intervalo: " + interval.join(", ") + " min");
+
+                                }
+
+                                return lines;
+
+                            }
+
+                        }
+
                     }
 
                 },
@@ -74,7 +133,27 @@ export default class DietChart {
 
                             display: true,
 
-                            text: "Hora"
+                            text: "Hora",
+
+                            color: "#adb5bd"
+
+                        },
+
+                        grid: {
+
+                            display: false
+
+                        },
+
+                        ticks: {
+
+                            color: "#adb5bd",
+
+                            maxRotation: 90,
+
+                            autoSkip: true,
+
+                            maxTicksLimit: 12
 
                         }
 
@@ -90,7 +169,27 @@ export default class DietChart {
 
                             display: true,
 
-                            text: "%"
+                            text: "%",
+
+                            color: "#adb5bd"
+
+                        },
+
+                        grid: {
+
+                            color: "rgba(255, 255, 255, 0.08)"
+
+                        },
+
+                        ticks: {
+
+                            color: "#adb5bd",
+
+                            callback: function (value) {
+
+                                return value + " %";
+
+                            }
 
                         }
 
@@ -113,7 +212,9 @@ export default class DietChart {
 
         }
 
-        const data = new Array(24).fill(0);
+const data = new Array(24).fill(0);
+
+        const intervals = new Array(24).fill(null);
 
         schedule.forEach(event => {
 
@@ -129,9 +230,28 @@ export default class DietChart {
 
             );
 
+            // Recopilar los intervalos presentes en esta hora
+            if (event.interval) {
+
+                if (!intervals[hour]) {
+
+                    intervals[hour] = [];
+
+                }
+
+                if (intervals[hour].indexOf(Number(event.interval)) === -1) {
+
+                    intervals[hour].push(Number(event.interval));
+
+                }
+
+            }
+
         });
 
         this.chart.data.datasets[0].data = data;
+
+        this.chart.data.datasets[0].intervals = intervals;
 
         /*-----------------------------------
           Escala automática
