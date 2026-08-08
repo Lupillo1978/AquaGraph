@@ -21,7 +21,7 @@ body {
 }
 
 body {
-    overflow: auto;
+    overflow: hidden;
 }
 
 .app-container {
@@ -33,7 +33,7 @@ body {
 
     width: 100vw;
 
-    min-height: 100vh;
+    height: 100vh;
 
 }
 
@@ -348,60 +348,108 @@ EDITOR DE DIETAS
 ==================================================*/
 
 .diet-editor-shell {
-    padding: 0.2rem 0.1rem 0.5rem;
-}
-
-.diet-editor-hero {
+    padding: 0.1rem 0.1rem 0;
+    height: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.1rem;
-    border-radius: 1rem;
+    flex-direction: column;
+}
+
+#workspace.diet-editor-mode {
+    overflow: hidden;
+}
+
+.diet-main-row {
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+}
+
+.diet-blocks-col {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.diet-blocks-col > .card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.diet-blocks-col .card-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.diet-editor-topbar {
+    border: 1px solid #4e748f;
     background: linear-gradient(135deg, #2d4a64 0%, #1f3b54 100%);
-    border: 1px solid #4d6f8a;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 
-.diet-editor-hero h2 {
+.diet-editor-topbar .card-body {
+    display: flex;
+    align-items: center;
+}
+
+.diet-topbar-inner {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.diet-topbar-title {
+    flex-shrink: 0;
+    padding-bottom: 0.25rem;
+}
+
+.diet-topbar-field {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.diet-topbar-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.diet-editor-title {
     color: #f8fbff;
-    font-size: 1.35rem;
-    margin-bottom: 0.2rem;
-}
-
-.diet-editor-hero p {
-    color: #b7d6ea;
-    font-size: 0.95rem;
-}
-
-.diet-editor-badge {
-    background: rgba(255, 255, 255, 0.14);
-    color: #e8f7ff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 0.45rem 0.7rem;
-    border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 1.1rem;
     font-weight: 700;
     white-space: nowrap;
 }
 
-.diet-info-card {
-    border: 1px solid #4e748f;
-    background: linear-gradient(135deg, #303134 0%, #2a2b2f 100%);
+.diet-label {
+    display: block;
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+    color: #b7d6ea;
+    font-weight: 600;
 }
 
 .diet-blocks-card,
 .diet-chart-card,
 .diet-summary-card {
     border: 1px solid #4e748f;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.diet-card-header {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.9rem;
 }
 
 .diet-chart-card .card-body {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 360px;
+    min-height: 0;
     background: linear-gradient(180deg, #23252b 0%, #2a2d33 100%);
 }
 
@@ -410,11 +458,11 @@ EDITOR DE DIETAS
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.35rem;
-    border-radius: 0.9rem;
+    padding: 0.25rem;
+    border-radius: 0.7rem;
     background: radial-gradient(circle at top, #2d4658 0%, #202428 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    min-height: 320px;
+    min-height: 0;
 }
 
 .diet-chart-shell canvas {
@@ -424,30 +472,35 @@ EDITOR DE DIETAS
 }
 
 .diet-summary-card {
+    flex-shrink: 0;
+    margin-top: auto;
     background: linear-gradient(135deg, #2f3640 0%, #2a2f38 100%);
 }
 
 .diet-summary-pill {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.9rem;
-    padding: 0.9rem 0.75rem;
-    min-height: 92px;
+    border-radius: 0.6rem;
+    padding: 0.35rem 0.6rem;
+    min-height: 0;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .diet-summary-pill strong {
     color: #f9fbfd;
-    font-size: 1.05rem;
+    font-size: 0.85rem;
 }
 
 .diet-summary-pill span {
     color: #86d8ff;
-    font-size: 1.15rem;
+    font-size: 0.95rem;
     font-weight: 700;
-    margin-top: 0.2rem;
+    margin-top: 0;
 }
 
 #dietItems {
@@ -461,7 +514,8 @@ EDITOR DE DIETAS
 }
 
 .diet-table-wrapper {
-    max-height: 560px;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     overflow-x: auto;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -481,12 +535,13 @@ EDITOR DE DIETAS
 }
 
 #dietItems th {
-    font-size: 0.85rem;
-    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    padding: 0.4rem 0.5rem;
 }
 
 #dietItems td {
-    padding: 0.85rem 0.7rem;
+    padding: 0.25rem 0.5rem;
 }
 
 #dietItems input {
@@ -494,10 +549,11 @@ EDITOR DE DIETAS
     font-weight: 600;
     width: 100%;
     min-width: 0;
-    padding: 0.65rem 0.7rem;
-    border-radius: 0.7rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: 0.5rem;
     background: #17181b;
     border: 1px solid #4b5563;
+    font-size: 0.85rem;
 }
 
 #dietItems input:focus {
@@ -565,9 +621,8 @@ EDITOR DE DIETAS
 }
 
 @media (max-width: 640px) {
-    .diet-editor-hero {
-        flex-direction: column;
-        align-items: flex-start;
+    .diet-editor-topbar .card-body {
+        align-items: stretch;
     }
 
     .diet-table-wrapper {

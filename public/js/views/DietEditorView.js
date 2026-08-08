@@ -6,73 +6,47 @@ export default class DietEditorView {
 
 <div class="container-fluid diet-editor-shell">
 
-    <div class="row mb-4 align-items-start">
+    <div class="card mb-2 diet-editor-topbar">
 
-        <div class="col-lg-8">
+        <div class="card-body py-2">
 
-            <div class="diet-editor-hero">
+<div class="diet-topbar-inner">
 
-                <div>
+                <div class="diet-topbar-title">
 
-                    <h2 class="mb-1">Editor de Dietas</h2>
-
-                    <p class="mb-0">Diseñe una distribución diaria más clara, ordenada y visualmente cómoda.</p>
+                    <h2 class="diet-editor-title mb-0">Editor de Dietas</h2>
 
                 </div>
 
-                <span class="diet-editor-badge">Planificación</span>
+                <div class="diet-topbar-field">
 
-            </div>
+                    <label class="form-label diet-label">Nombre</label>
 
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="d-flex justify-content-lg-end gap-2 mt-3 mt-lg-0">
-
-                <button id="btnCancelDiet" class="btn btn-outline-light btn-sm">
-
-                    Cancelar
-
-                </button>
-
-                <button id="btnSaveDiet" class="btn btn-success btn-sm">
-
-                    Guardar Dieta
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card mb-3 diet-info-card">
-
-        <div class="card-header">
-
-            Información General
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="row g-3">
-
-                <div class="col-md-5">
-
-                    <label class="form-label">Nombre</label>
-
-                    <input id="dietName" class="form-control">
+                    <input id="dietName" class="form-control form-control-sm">
 
                 </div>
 
-                <div class="col-md-7">
+                <div class="diet-topbar-field">
 
-                    <label class="form-label">Descripción</label>
+                    <label class="form-label diet-label">Descripción</label>
 
-                    <input id="dietDescription" class="form-control">
+                    <input id="dietDescription" class="form-control form-control-sm">
+
+                </div>
+
+                <div class="diet-topbar-actions">
+
+                    <button id="btnCancelDiet" class="btn btn-outline-light btn-sm">
+
+                        Cancelar
+
+                    </button>
+
+                    <button id="btnSaveDiet" class="btn btn-success btn-sm">
+
+                        Guardar
+
+                    </button>
 
                 </div>
 
@@ -82,13 +56,13 @@ export default class DietEditorView {
 
     </div>
 
-    <div class="row g-3">
+<div class="row g-2 diet-main-row">
 
-        <div class="col-xl-8">
+        <div class="col-xl-8 diet-blocks-col">
 
             <div class="card h-100 diet-blocks-card">
 
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center diet-card-header">
 
                     <span>Bloques de Alimentación</span>
 
@@ -144,9 +118,9 @@ export default class DietEditorView {
 
             <div class="card h-100 diet-chart-card">
 
-                <div class="card-header">Distribución de Alimentación por Bloque</div>
+                <div class="card-header diet-card-header">Distribución de Alimentación por Bloque</div>
 
-                <div class="card-body p-3">
+                <div class="card-body p-2">
 
                     <div class="diet-chart-shell">
 
@@ -162,11 +136,11 @@ export default class DietEditorView {
 
     </div>
 
-    <div class="card mt-3 diet-summary-card">
+    <div class="card mt-2 diet-summary-card">
 
-        <div class="card-body">
+        <div class="card-body py-2">
 
-            <div class="row g-3 text-center">
+            <div class="row g-2 text-center">
 
                 <div class="col-12 col-sm-4">
 

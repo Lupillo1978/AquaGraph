@@ -14,7 +14,7 @@ export default class DietItemRow {
 
 <tr data-index="${this.index}" class="diet-row">
 
-    <td class="py-3">
+    <td class="py-1">
 
         <input
             type="time"
@@ -23,7 +23,7 @@ export default class DietItemRow {
 
     </td>
 
-    <td class="py-3">
+    <td class="py-1">
 
         <input
             type="time"
@@ -32,7 +32,7 @@ export default class DietItemRow {
 
     </td>
 
-    <td class="py-3">
+    <td class="py-1">
 
         <input
             type="number"
@@ -43,7 +43,7 @@ export default class DietItemRow {
 
     </td>
 
-    <td class="py-3">
+    <td class="py-1">
 
         <input
             type="number"
@@ -53,19 +53,19 @@ export default class DietItemRow {
 
     </td>
 
-    <td class="diet-shots text-center py-3">
+    <td class="diet-shots text-center py-1">
 
         -
 
     </td>
 
-    <td class="diet-status text-center py-3">
+    <td class="diet-status text-center py-1">
 
         ⚪
 
     </td>
 
-    <td class="py-3">
+    <td class="py-1">
 
         <button
             class="btn btn-outline-danger btn-sm btnDeleteDietItem"

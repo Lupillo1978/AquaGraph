@@ -228,5 +228,120 @@
         },
         "createdAt": "2026-07-20T20:49:46.199Z",
         "updatedAt": "2026-07-20T20:49:46.199Z"
+    },
+    {
+        "id": "FEEDER-0013",
+        "code": "",
+        "name": "A1A3",
+        "pondId": "POND-0011",
+        "nodeId": "111",
+        "position": {
+            "lat": 26.00021141678755,
+            "lng": -109.39051508903505
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-08-08T20:56:05.674Z",
+        "updatedAt": "2026-08-08T20:56:05.674Z"
+    },
+    {
+        "id": "FEEDER-0014",
+        "code": "",
+        "name": "A2A3",
+        "pondId": "POND-0011",
+        "nodeId": "112",
+        "position": {
+            "lat": 26.000924996370077,
+            "lng": -109.39016103744508
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-08-08T20:57:00.641Z",
+        "updatedAt": "2026-08-08T20:57:00.641Z"
+    },
+    {
+        "id": "FEEDER-0015",
+        "code": "",
+        "name": "A3A3",
+        "pondId": "POND-0011",
+        "nodeId": "113",
+        "position": {
+            "lat": 26.001744643244116,
+            "lng": -109.38977479934694
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-08-08T20:57:43.092Z",
+        "updatedAt": "2026-08-08T20:57:43.092Z"
+    },
+    {
+        "id": "FEEDER-0016",
+        "code": "",
+        "name": "A4A3",
+        "pondId": "POND-0011",
+        "nodeId": "114",
+        "position": {
+            "lat": 26.00249678475516,
+            "lng": -109.38942074775697
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-08-08T20:58:17.543Z",
+        "updatedAt": "2026-08-08T20:58:17.543Z"
+    },
+    {
+        "id": "FEEDER-0017",
+        "code": "",
+        "name": "A5A3",
+        "pondId": "POND-0011",
+        "nodeId": "115",
+        "position": {
+            "lat": 26.003152493937783,
+            "lng": -109.38908815383913
+        },
+        "settings": {
+            "radius": 25,
+            "orientation": 0
+        },
+        "status": {
+            "online": false,
+            "battery": null,
+            "rssi": null,
+            "lastSeen": null
+        },
+        "createdAt": "2026-08-08T21:00:04.150Z",
+        "updatedAt": "2026-08-08T21:00:04.150Z"
     }
 ]

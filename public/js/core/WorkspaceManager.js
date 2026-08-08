@@ -30,9 +30,16 @@ export default class WorkspaceManager {
 
     }
 
-    render(content) {
+render(content) {
 
-     this.workspace.innerHTML = content;
+        this.workspace.innerHTML = content;
+
+        // Cuando se muestra el editor de dietas, confinar el scroll
+        // a la tabla de bloques (clase para compatibilidad de navegadores).
+        this.workspace.classList.toggle(
+            "diet-editor-mode",
+            content.includes("diet-editor-shell")
+        );
 
     }
 

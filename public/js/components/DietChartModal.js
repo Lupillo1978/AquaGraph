@@ -16,39 +16,55 @@ export default class DietChartModal {
      */
     buildSchedule(blocks) {
 
-        const schedule = [];
+const schedule = [];
 
         (blocks || []).forEach(block => {
 
-            const shots = this.calculateShots(block);
+const realShots = [];
 
-            if (shots <= 0) {
+            let current = this.timeToMinutes(block.start);
+
+            // "00:00" como hora de fin representa el final del día (24:00)
+            const end = this.timeToMinutes(block.end, true);
+
+            const interval = Number(block.interval);
+
+            if (interval <= 0) {
 
                 return;
 
             }
 
-            const foodPerShot = Number(block.percentage) / shots;
+            while (current < end) {
 
-            let current = this.timeToMinutes(block.start);
+                realShots.push(current);
 
-            const end = this.timeToMinutes(block.end);
+                current += interval;
 
-while (current < end) {
+            }
+
+            if (realShots.length === 0) {
+
+                return;
+
+            }
+
+            // Distribuir el porcentaje entre los disparos REALES generados
+            const foodPerShot = Number(block.percentage) / realShots.length;
+
+            realShots.forEach(minute => {
 
                 schedule.push({
 
-                    minute: current,
+                    minute,
 
                     percentage: foodPerShot,
 
-                    interval: Number(block.interval)
+                    interval
 
                 });
 
-                current += Number(block.interval);
-
-            }
+            });
 
         });
 
@@ -56,15 +72,11 @@ while (current < end) {
 
     }
 
-    calculateShots(block) {
+calculateShots(block) {
 
-        const start = block.start.split(":");
+        const startMinutes = this.timeToMinutes(block.start);
 
-        const end = block.end.split(":");
-
-        const startMinutes = Number(start[0]) * 60 + Number(start[1]);
-
-        const endMinutes = Number(end[0]) * 60 + Number(end[1]);
+        const endMinutes = this.timeToMinutes(block.end, true);
 
         const duration = endMinutes - startMinutes;
 
@@ -78,11 +90,22 @@ while (current < end) {
 
     }
 
-    timeToMinutes(time) {
+timeToMinutes(time, isEnd = false) {
 
         const parts = time.split(":");
 
-        return Number(parts[0]) * 60 + Number(parts[1]);
+        let hours = Number(parts[0]);
+
+        const minutes = Number(parts[1]);
+
+        // "00:00" usado como fin representa el final del día (24:00)
+        if (isEnd && hours === 0 && minutes === 0) {
+
+            hours = 24;
+
+        }
+
+        return hours * 60 + minutes;
 
     }
 

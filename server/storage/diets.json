@@ -6,123 +6,209 @@
         "blocks": [
             {
                 "start": "09:00",
+                "end": "10:00",
+                "percentage": 3,
+                "interval": 10
+            },
+            {
+                "start": "10:00",
                 "end": "11:00",
-                "percentage": 10,
+                "percentage": 4,
                 "interval": 10
             },
             {
                 "start": "11:00",
+                "end": "12:00",
+                "percentage": 6,
+                "interval": 10
+            },
+            {
+                "start": "12:00",
                 "end": "13:00",
-                "percentage": 15,
+                "percentage": 7,
                 "interval": 10
             },
             {
                 "start": "13:00",
+                "end": "14:00",
+                "percentage": 9,
+                "interval": 5
+            },
+            {
+                "start": "14:00",
                 "end": "15:00",
-                "percentage": 25,
-                "interval": 10
+                "percentage": 10,
+                "interval": 5
             },
             {
                 "start": "15:00",
+                "end": "16:00",
+                "percentage": 11,
+                "interval": 5
+            },
+            {
+                "start": "16:00",
                 "end": "17:00",
-                "percentage": 25,
-                "interval": 10
+                "percentage": 11,
+                "interval": 5
             },
             {
                 "start": "17:00",
+                "end": "18:00",
+                "percentage": 10,
+                "interval": 5
+            },
+            {
+                "start": "18:00",
                 "end": "19:00",
-                "percentage": 15,
-                "interval": 10
+                "percentage": 9,
+                "interval": 5
             },
             {
                 "start": "19:00",
-                "end": "21:00",
-                "percentage": 10,
+                "end": "20:00",
+                "percentage": 7,
                 "interval": 10
-            }
-        ],
-        "active": true,
-        "createdAt": "2026-07-23T04:55:13.919Z",
-        "updatedAt": "2026-07-23T04:55:13.919Z"
-    },
-    {
-        "id": "DIET-0002",
-        "name": "prueba2",
-        "description": "2026",
-        "blocks": [
+            },
             {
                 "start": "20:00",
                 "end": "21:00",
-                "percentage": 35,
-                "interval": 5
+                "percentage": 6,
+                "interval": 10
             },
             {
                 "start": "21:00",
                 "end": "22:00",
-                "percentage": 35,
-                "interval": 5
+                "percentage": 4,
+                "interval": 10
             },
             {
                 "start": "22:00",
                 "end": "23:00",
-                "percentage": 30,
-                "interval": 5
+                "percentage": 3,
+                "interval": 10
             }
         ],
         "active": true,
-        "createdAt": "2026-08-05T03:47:16.613Z",
-        "updatedAt": "2026-08-05T03:47:16.613Z"
+        "createdAt": "2026-08-08T21:13:21.038Z",
+        "updatedAt": "2026-08-08T21:13:21.038Z"
     },
     {
-        "id": "DIET-0003",
-        "name": "Prueba 3",
+        "id": "DIET-0002",
+        "name": "Prueba 2",
         "description": "2026",
         "blocks": [
             {
+                "start": "00:00",
+                "end": "01:00",
+                "percentage": 4,
+                "interval": 10
+            },
+            {
+                "start": "01:00",
+                "end": "02:00",
+                "percentage": 3,
+                "interval": 10
+            },
+            {
+                "start": "02:00",
+                "end": "03:00",
+                "percentage": 2,
+                "interval": 10
+            },
+            {
                 "start": "09:00",
+                "end": "10:00",
+                "percentage": 2,
+                "interval": 10
+            },
+            {
+                "start": "10:00",
                 "end": "11:00",
-                "percentage": 12,
-                "interval": 5
+                "percentage": 3,
+                "interval": 10
             },
             {
                 "start": "11:00",
+                "end": "12:00",
+                "percentage": 4,
+                "interval": 10
+            },
+            {
+                "start": "12:00",
                 "end": "13:00",
-                "percentage": 13,
-                "interval": 5
+                "percentage": 5,
+                "interval": 10
             },
             {
                 "start": "13:00",
+                "end": "14:00",
+                "percentage": 5,
+                "interval": 10
+            },
+            {
+                "start": "14:00",
                 "end": "15:00",
-                "percentage": 15,
-                "interval": 5
+                "percentage": 6,
+                "interval": 10
             },
             {
                 "start": "15:00",
+                "end": "16:00",
+                "percentage": 7,
+                "interval": 10
+            },
+            {
+                "start": "16:00",
                 "end": "17:00",
-                "percentage": 20,
-                "interval": 5
+                "percentage": 7,
+                "interval": 10
             },
             {
                 "start": "17:00",
+                "end": "18:00",
+                "percentage": 8,
+                "interval": 10
+            },
+            {
+                "start": "18:00",
                 "end": "19:00",
-                "percentage": 15,
-                "interval": 5
+                "percentage": 9,
+                "interval": 10
             },
             {
                 "start": "19:00",
+                "end": "20:00",
+                "percentage": 9,
+                "interval": 10
+            },
+            {
+                "start": "20:00",
                 "end": "21:00",
-                "percentage": 13,
-                "interval": 5
+                "percentage": 8,
+                "interval": 10
             },
             {
                 "start": "21:00",
+                "end": "22:00",
+                "percentage": 7,
+                "interval": 10
+            },
+            {
+                "start": "22:00",
                 "end": "23:00",
-                "percentage": 12,
-                "interval": 5
+                "percentage": 6,
+                "interval": 10
+            },
+            {
+                "start": "23:00",
+                "end": "00:00",
+                "percentage": 5,
+                "interval": 10
             }
         ],
         "active": true,
-        "createdAt": "2026-08-06T22:49:50.165Z",
-        "updatedAt": "2026-08-06T22:49:50.165Z"
+        "createdAt": "2026-08-08T21:43:06.853Z",
+        "updatedAt": "2026-08-08T21:43:06.853Z"
     }
 ]

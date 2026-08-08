@@ -318,89 +318,77 @@ export default class DietEngine {
 
     }
 
-    calculateShots(item) {
+calculateShots(item) {
 
-        const start = item.start.split(":");
+        const startMinutes = this.timeToMinutes(item.start);
 
-        const end = item.end.split(":");
+        const endMinutes = this.timeToMinutes(item.end, true);
 
-        const startMinutes =
+        const duration = endMinutes - startMinutes;
 
-            Number(start[0]) * 60 +
-
-            Number(start[1]);
-
-        const endMinutes =
-
-            Number(end[0]) * 60 +
-
-            Number(end[1]);
-
-        const duration =
-
-            endMinutes -
-
-            startMinutes;
-
-        if (
-
-            duration <= 0 ||
-
-            item.interval <= 0
-
-        ) {
+        if (duration <= 0 || item.interval <= 0) {
 
             return 0;
 
         }
 
-        return Math.floor(
-
-            duration /
-
-            item.interval
-
-        );
+        return Math.floor(duration / item.interval);
 
     }
 
-    buildDailySchedule() {
+buildDailySchedule() {
 
         const schedule = [];
 
         this.items.forEach(item => {
 
-            const shots = this.calculateShots(item);
+            const realShots = [];
 
-            if (shots <= 0) {
+            let current = this.timeToMinutes(item.start);
+
+            // "00:00" como hora de fin representa el final del día (24:00)
+            const end = this.timeToMinutes(item.end, true);
+
+            const interval = Number(item.interval);
+
+            if (interval <= 0) {
 
                 return;
 
             }
 
+            while (current < end) {
+
+                realShots.push(current);
+
+                current += interval;
+
+            }
+
+            if (realShots.length === 0) {
+
+                return;
+
+            }
+
+            // Distribuir el porcentaje entre los disparos REALES generados
             const foodPerShot =
 
-                Number(item.percentage) / shots;
+                Number(item.percentage) / realShots.length;
 
-            let current = this.timeToMinutes(item.start);
-
-            const end = this.timeToMinutes(item.end);
-
-while (current < end) {
+            realShots.forEach(minute => {
 
                 schedule.push({
 
-                    minute: current,
+                    minute,
 
                     percentage: foodPerShot,
 
-                    interval: Number(item.interval)
+                    interval
 
                 });
 
-                current += Number(item.interval);
-
-            }
+            });
 
         });
 
@@ -412,13 +400,22 @@ while (current < end) {
 
     }
 
-    timeToMinutes(time) {
+    timeToMinutes(time, isEnd = false) {
 
         const parts = time.split(":");
 
-        return Number(parts[0]) * 60 +
+        let hours = Number(parts[0]);
 
-            Number(parts[1]);
+        const minutes = Number(parts[1]);
+
+        // "00:00" usado como fin representa el final del día (24:00)
+        if (isEnd && hours === 0 && minutes === 0) {
+
+            hours = 24;
+
+        }
+
+        return hours * 60 + minutes;
 
     }
 
