@@ -1,18 +1,34 @@
+/*La clase InfoPanel administra el contenido del panel de información 
+de la aplicación AD&M.
+Sus principales responsabilidades son:
+Inicializar el panel y obtener el elemento HTML infoPanel.
+Mostrar la pantalla de bienvenida de la aplicación.
+Administrar las pantallas relacionadas con la creación de estanques.
+Administrar las pantallas relacionadas con la creación y configuración de alimentadores.
+Mostrar la información de un estanque utilizando PondView.
+Mostrar la información de un alimentador utilizando FeederView.
+Mostrar el panel de alimentación mediante FeedingPanelView y poner en 
+funcionamiento su lógica mediante FeedingPanelEngine.
+Mostrar u ocultar el panel mediante las clases de Bootstrap d-none.
+En pocas palabras
+InfoPanel funciona como un controlador de la interfaz del panel lateral, 
+encargándose de decidir qué contenido HTML debe mostrarse según la acción 
+que esté realizando el usuario, mientras delega la presentación y la lógica 
+específica a las clases View y Engine correspondientes.*/
 import PondView from "../views/PondView.js";
 import FeederView from "../views/FeederView.js";
 import FeedingPanelView from "../views/FeedingPanelView.js";
 import FeedingPanelEngine from "../engines/FeedingPanelEngine.js";
 
-
 export default class InfoPanel {
 
     constructor() {
         this.container = null;
+
         this.pondView = new PondView();
         this.feederView = new FeederView();
         this.feedingPanelView = new FeedingPanelView();
         this.feedingPanelEngine = new FeedingPanelEngine(this);
-
     }
 
     render() {
@@ -20,14 +36,16 @@ export default class InfoPanel {
         this.showWelcome();
     }
 
+    // =========================================================
     // ESTANQUES
+    // =========================================================
 
     showCreatePondStep1() {
         this.container.innerHTML = `
-            <div class="p-3">                
+            <div class="p-3">
                 <h5>Nuevo Estanque</h5>
                 <hr>
-            
+
                 <div class="alert alert-info">
                     <strong>Paso 1 de 3</strong><br>
                     Dibuje el perímetro del estanque sobre el mapa.
@@ -42,7 +60,9 @@ export default class InfoPanel {
         `;
     }
 
+    // =========================================================
     // ALIMENTADORES
+    // =========================================================
 
     showCreateFeederStep1(pond) {
         this.container.innerHTML = `
@@ -52,7 +72,8 @@ export default class InfoPanel {
 
                 <div class="alert alert-info">
                     <strong>Paso 1 de 2</strong><br>
-                    Seleccione la ubicación del alimentador haciendo clic dentro del estanque
+                    Seleccione la ubicación del alimentador haciendo clic
+                    dentro del estanque
                     <strong>${pond.name}</strong>.
                 </div>
 
@@ -83,10 +104,10 @@ export default class InfoPanel {
                     </label>
 
                     <input
-                         id="feederName"
-                         class="form-control"
-                         value="${feeder ? feeder.name : ""}"
-                         placeholder="Ej. Alimentador Norte">
+                        id="feederName"
+                        class="form-control"
+                        value="${feeder ? feeder.name : ""}"
+                        placeholder="Ej. Alimentador Norte">
                 </div>
 
                 <div class="mb-3">
@@ -95,10 +116,10 @@ export default class InfoPanel {
                     </label>
 
                     <input
-                         id="feederNode"
-                         class="form-control"
-                         value="${feeder ? feeder.nodeId : ""}"
-                         placeholder="Ej. 101">
+                        id="feederNode"
+                        class="form-control"
+                        value="${feeder ? feeder.nodeId : ""}"
+                        placeholder="Ej. 101">
                 </div>
 
                 <div class="mb-3">
@@ -129,7 +150,9 @@ export default class InfoPanel {
                     <button
                         id="btnSaveFeeder"
                         class="btn btn-success">
-                        ${feeder ? "Actualizar Alimentador" : "Guardar Alimentador"}
+                        ${feeder
+                            ? "Actualizar Alimentador"
+                            : "Guardar Alimentador"}
                     </button>
 
                     <button
@@ -142,12 +165,14 @@ export default class InfoPanel {
         `;
     }
 
+    // =========================================================
     // PANTALLAS GENERALES
+    // =========================================================
 
     showWelcome() {
         this.container.innerHTML = `
             <div class="p-3">
-                <h5>AD&M AquaControl</h5>
+                <h5>AD&M   Inicio</h5>
                 <hr>
                 <p>Seleccione un módulo desde el menú.</p>
             </div>
@@ -156,42 +181,27 @@ export default class InfoPanel {
 
     showPond(pond = null) {
         console.log("InfoPanel recibió:", pond);
+
         this.container.innerHTML = this.pondView.render(pond);
     }
 
     showFeeder(feeder) {
         console.log("InfoPanel recibió alimentador:", feeder);
+
         this.container.innerHTML = this.feederView.render(feeder);
     }
 
     showFeedingPanel(pond) {
+        this.container.innerHTML = this.feedingPanelView.render(pond);
 
-        this.container.innerHTML =
-
-            this.feedingPanelView.render(
-
-                pond
-
-            );
-
-        this.feedingPanelEngine.initialize(
-
-            pond
-
-        );
-
+        this.feedingPanelEngine.initialize(pond);
     }
 
     hide() {
-
         this.container.classList.add("d-none");
-
     }
 
     show() {
-
         this.container.classList.remove("d-none");
-
     }
-
 }
