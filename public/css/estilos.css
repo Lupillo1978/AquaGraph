@@ -516,9 +516,11 @@ EDITOR DE DIETAS
 .diet-table-wrapper {
     flex: 1;
     min-height: 0;
+    max-height: 300px;
     overflow-y: auto;
-    overflow-x: auto;
+    overflow-x: hidden;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
+
 }
 
 .diet-editor-table {
@@ -899,4 +901,14 @@ MODAL GRÁFICO DE DIETA
     .diet-modal-body {
         min-height: 260px;
     }
+}
+
+.header-brand-subtitle {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color:#1976D2;
+}
+
+h1 {
+    color:#1976D2;
 }
