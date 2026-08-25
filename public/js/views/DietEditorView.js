@@ -28,7 +28,7 @@ export default class DietEditorView {
     </div>
 
     <div class="row g-2 diet-main-row">
-        <div class="col-xl-8 diet-blocks-col">
+        <div class="col-12 col-xl-8 diet-blocks-col">
             <div class="card h-100 diet-blocks-card">
                 <div class="card-header d-flex justify-content-between align-items-center diet-card-header">
                     <span>Bloques de Alimentación</span>
@@ -56,7 +56,7 @@ export default class DietEditorView {
             </div>
         </div>
 
-        <div class="col-xl-4">
+        <div class="col-12 col-xl-4">
             <div class="card h-100 diet-chart-card">
                 <div class="card-header diet-card-header">Distribución de Alimentación por Bloque</div>
                 <div class="card-body p-2">
