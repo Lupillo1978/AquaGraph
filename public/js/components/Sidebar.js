@@ -46,7 +46,7 @@ export default class Sidebar {
                     <button
                         id="btnDiets"
                         class="btn btn-outline-light w-100 mb-2 text-start">
-                        <i class="me-2">🥗</i>Dietas
+                        <i class="me-2">🥗</i>Cambio
                     </button>
 
                     <button class="btn btn-outline-light w-100 mb-2 text-start">
@@ -56,7 +56,7 @@ export default class Sidebar {
                     <button
                         id="btnDietManager"
                         class="btn btn-outline-light w-100 mb-2 text-start">
-                        <i class="me-2">🍽️</i>Alimentación
+                        <i class="me-2">🍽️</i>Dietas
                     </button>
 
                     <button class="btn btn-outline-light w-100 mb-2 text-start">
