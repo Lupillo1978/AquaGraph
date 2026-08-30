@@ -14,7 +14,7 @@ export default class Header {
         document.getElementById("header").innerHTML = `
 <div class="d-flex justify-content-between align-items-center h-100 px-3">
     <h1 class="m-0">
-        AD&M <span class="header-brand-subtitle">La tecnologia a tu alcance</span> 
+        RGDC <span class="header-brand-subtitle">La tecnologia a tu alcance</span> 
     </h1>
 
     <div class="d-flex align-items-center gap-3">

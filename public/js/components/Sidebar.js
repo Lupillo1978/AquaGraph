@@ -33,7 +33,7 @@ export default class Sidebar {
                 <!-- Opciones del menú -->
                 <div id="sidebarMenu" class="sidebar-menu">
 
-                    <button class="btn btn-success w-100 mb-2 text-start">
+                    <button class="btn btn-info w-100 mb-2 text-start">
                         <i class="me-2">📊</i>Dashboard
                     </button>
 
