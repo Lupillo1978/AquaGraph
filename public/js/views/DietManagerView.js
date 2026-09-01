@@ -186,18 +186,34 @@ export default class DietManagerView {
 
     <td class="text-center">
 
-        <button
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
 
-            type="button"
+            <button
 
-            class="btn btn-info btn-sm diet-chart-btn"
+                type="button"
 
-            data-id="${diet.id}">
+                class="btn btn-info btn-sm diet-chart-btn"
 
-            📊 Ver Gráfico
+                data-id="${diet.id}">
 
-        </button>
+                📊 Ver Gráfico
 
+            </button>
+
+            <button
+
+                type="button"
+
+                class="btn btn-danger btn-sm diet-delete-btn"
+
+                data-id="${diet.id}">
+
+                🗑️ Eliminar
+
+            </button>
+
+        </div>
+ 
     </td>
 
 </tr>

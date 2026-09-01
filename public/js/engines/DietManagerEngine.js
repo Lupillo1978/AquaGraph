@@ -95,24 +95,75 @@ export default class DietManagerEngine {
         document
             .querySelectorAll(".diet-chart-btn")
             .forEach((button) => {
-
+ 
                 button.addEventListener(
                     "click",
                     (event) => {
-
+ 
                         event.stopPropagation();
-
+ 
                         const id = button.dataset.id;
-
+ 
                         const diet = this.diets.find(
                             (item) => item.id === id
                         );
-
+ 
                         if (diet) {
                             this.dietChartModal.open(diet);
                         }
                     }
                 );
             });
+
+        document
+            .querySelectorAll(".diet-delete-btn")
+            .forEach((button) => {
+
+                button.addEventListener(
+                    "click",
+                    async (event) => {
+
+                        event.stopPropagation();
+
+                        const id = button.dataset.id;
+
+                        await this.deleteDiet(id);
+                    }
+                );
+            });
+    }
+
+    async deleteDiet(dietId) {
+
+        const diet = this.diets.find(
+            (item) => item.id === dietId
+        );
+
+        const confirmed = confirm(
+            diet
+                ? `¿Desea eliminar la dieta "${diet.name}"?`
+                : "¿Desea eliminar esta dieta?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const response = await this.controller.delete(dietId);
+
+        if (!response.success) {
+            alert(response.message || "No fue posible eliminar la dieta.");
+            return;
+        }
+
+        this.diets = this.diets.filter(
+            (item) => item.id !== dietId
+        );
+
+        this.workspaceManager.render(
+            this.view.render(this.diets)
+        );
+
+        this.registerEvents();
     }
 }
