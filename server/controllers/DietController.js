@@ -41,12 +41,46 @@ class DietController {
     }
 
     create(req,res){
+ 
+        try{
+ 
+            const diet = this.service.create(
+ 
+                req.body
+ 
+            );
+ 
+            res.json({
+ 
+                success:true,
+ 
+                data:diet
+ 
+            });
+ 
+        }
+ 
+        catch(error){
+ 
+            res.status(400).json({
+ 
+                success:false,
+ 
+                message:error.message
+ 
+            });
+ 
+        }
+ 
+    }
+
+    delete(req,res){
 
         try{
 
-            const diet = this.service.create(
+            this.service.delete(
 
-                req.body
+                req.params.id
 
             );
 
@@ -54,7 +88,7 @@ class DietController {
 
                 success:true,
 
-                data:diet
+                message:"Dieta eliminada correctamente."
 
             });
 
@@ -73,7 +107,7 @@ class DietController {
         }
 
     }
-
+ 
 }
 
 module.exports = DietController;

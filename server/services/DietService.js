@@ -13,35 +13,61 @@ class DietService {
     }
 
     create(data) {
+ 
+        const diets = DietRepository.getAll();
+ 
+        const diet = new Diet({
+ 
+            id: IdGenerator.generate(
+ 
+                "DIET",
+ 
+                diets
+ 
+            ),
+ 
+            name: data.name,
+ 
+            description: data.description,
+ 
+            blocks: data.blocks
+ 
+        });
+ 
+        diets.push(diet);
+ 
+        DietRepository.saveAll(diets);
+ 
+        return diet;
+ 
+    }
+
+    delete(id) {
 
         const diets = DietRepository.getAll();
 
-        const diet = new Diet({
+        const index = diets.findIndex(
 
-            id: IdGenerator.generate(
+            item => item.id === id
 
-                "DIET",
+        );
 
-                diets
+        if (index === -1) {
 
-            ),
+            throw new Error(
 
-            name: data.name,
+                "Dieta no encontrada."
 
-            description: data.description,
+            );
 
-            blocks: data.blocks
+        }
 
-        });
-
-        diets.push(diet);
+        diets.splice(index, 1);
 
         DietRepository.saveAll(diets);
 
-        return diet;
-
     }
-
+ 
 }
 
 module.exports = DietService;
