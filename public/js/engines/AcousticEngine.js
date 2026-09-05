@@ -12,6 +12,7 @@ export default class AcousticEngine {
         this.pollTimer = null;
         this.simulationTimer = null;
         this.simulationRunning = false;
+        this.timelineZoom = 1;
     }
 
     async show() {
@@ -34,6 +35,13 @@ export default class AcousticEngine {
         document.getElementById("btnToggleSimulation")?.addEventListener("click", () => this.toggleSimulation());
         document.getElementById("btnSaveAcousticConfig")?.addEventListener("click", () => this.saveConfig());
         document.getElementById("btnSeedAcousticHistory")?.addEventListener("click", () => this.seedHistory());
+        document.getElementById("btnTimelineZoomIn")?.addEventListener("click", () => this.setTimelineZoom(this.timelineZoom * 2));
+        document.getElementById("btnTimelineZoomOut")?.addEventListener("click", () => this.setTimelineZoom(this.timelineZoom / 2));
+        document.getElementById("btnTimelineZoomReset")?.addEventListener("click", () => this.resetTimelineZoom());
+        document.getElementById("acousticTimelineScroll")?.addEventListener("wheel", event => this.handleTimelineWheel(event), { passive: false });
+        document.getElementById("acousticTimelineScroll")?.addEventListener("scroll", event => this.syncHourRuler(event.currentTarget));
+        document.getElementById("acousticTimeline")?.addEventListener("mousemove", event => this.showTimelineTooltip(event));
+        document.getElementById("acousticTimeline")?.addEventListener("mouseleave", () => this.hideTimelineTooltip());
         ["simActivity", "simNoise"].forEach(id => {
             document.getElementById(id)?.addEventListener("input", event => {
                 document.getElementById(`${id}Output`).textContent = `${event.target.value}%`;
@@ -171,11 +179,17 @@ export default class AcousticEngine {
         const container = document.getElementById("acousticHistory");
         if (!response.success) return;
 
-        if (response.data.length < 12) {
+        const simulatedHistory = response.data.every(item => item.simulated);
+        const historySpan = response.data.length > 1
+            ? new Date(response.data[response.data.length - 1].timestamp).getTime() - new Date(response.data[0].timestamp).getTime()
+            : 0;
+
+        if (response.data.length < 12 || (simulatedHistory && historySpan < 12 * 60 * 60 * 1000)) {
             await this.controller.seedHistory(this.pondId);
             response = await this.controller.getHistory(this.pondId);
         }
 
+        this.timelineHistory = response.data || [];
         this.drawTimeline(response.data || []);
         if (!container || !response.data.length) return;
         container.innerHTML = response.data.slice(0, 8).map(item => `
@@ -195,9 +209,10 @@ export default class AcousticEngine {
         if (!canvas) return;
 
         const context = canvas.getContext("2d");
-        const width = canvas.clientWidth || 900;
+        const viewport = canvas.parentElement?.clientWidth || 900;
+        const width = Math.max(viewport, viewport * this.timelineZoom);
         const height = 300;
-        const padding = { top: 22, right: 24, bottom: 38, left: 48 };
+        const padding = { top: 22, right: 12, bottom: 38, left: 10 };
         const plotWidth = width - padding.left - padding.right;
         const plotHeight = height - padding.top - padding.bottom;
         const points = history
@@ -212,10 +227,19 @@ export default class AcousticEngine {
 
         canvas.width = width;
         canvas.height = height;
+        canvas.style.width = `${width}px`;
+        const timelineContent = document.getElementById("acousticTimelineContent");
+        if (timelineContent) {
+            timelineContent.style.width = `${width}px`;
+        }
+        const hourRuler = document.getElementById("acousticHourRuler");
+        if (hourRuler) {
+            hourRuler.style.width = `${width}px`;
+        }
         context.clearRect(0, 0, width, height);
         context.font = "11px Segoe UI, sans-serif";
         context.strokeStyle = "rgba(176, 208, 201, 0.14)";
-        context.fillStyle = "#86a39b";
+        context.fillStyle = "#536d6a";
         context.lineWidth = 1;
 
         for (let index = 0; index <= 4; index += 1) {
@@ -225,7 +249,6 @@ export default class AcousticEngine {
             context.moveTo(padding.left, y);
             context.lineTo(width - padding.right, y);
             context.stroke();
-            context.fillText(`${Math.round(value * 100)}`, 14, y + 4);
         }
 
         const drawReference = (value, color, dash = []) => {
@@ -243,10 +266,14 @@ export default class AcousticEngine {
         drawReference(0.25, "#4aa87e", [2, 5]);
 
         if (points.length) {
+            const responseValue = point => Number.isFinite(point.responseIndex)
+                ? point.responseIndex
+                : Number.isFinite(point.activityIndex) ? point.activityIndex : 0;
+
             context.beginPath();
             points.forEach((point, index) => {
                 const x = xFor(point.timestamp);
-                const y = yFor(Number.isFinite(point.activityIndex) ? point.activityIndex : 0);
+                const y = yFor(responseValue(point));
                 index ? context.lineTo(x, y) : context.moveTo(x, y);
             });
             context.lineTo(xFor(points[points.length - 1].timestamp), yFor(0));
@@ -258,7 +285,7 @@ export default class AcousticEngine {
             context.beginPath();
             points.forEach((point, index) => {
                 const x = xFor(point.timestamp);
-                const y = yFor(Number.isFinite(point.activityIndex) ? point.activityIndex : 0);
+                const y = yFor(responseValue(point));
                 index ? context.lineTo(x, y) : context.moveTo(x, y);
             });
             context.strokeStyle = "#e25245";
@@ -268,11 +295,11 @@ export default class AcousticEngine {
             points.forEach(point => {
                 if (point.decision !== "FEED" || !point.feedAmountKg) return;
                 const x = xFor(point.timestamp);
-                const y = yFor(Math.min(1, Number(point.feedAmountKg) / 0.5));
+                const y = yFor(Math.min(1, Number(point.turnDurationSeconds || 0) / 40));
                 context.strokeStyle = "#278fc0";
-                context.lineWidth = 3;
+                context.lineWidth = 4;
                 context.beginPath();
-                context.moveTo(x, yFor(0));
+                context.moveTo(x, padding.top + plotHeight);
                 context.lineTo(x, y);
                 context.stroke();
                 context.fillStyle = "#278fc0";
@@ -280,14 +307,10 @@ export default class AcousticEngine {
                 context.arc(x, y, 3, 0, Math.PI * 2);
                 context.fill();
             });
-        }
 
-        const labels = points.length ? [points[0], points[Math.floor(points.length / 2)], points[points.length - 1]] : [];
-        labels.forEach(point => {
-            const x = xFor(point.timestamp);
-            context.fillStyle = "#86a39b";
-            context.fillText(new Date(point.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), x - 22, height - 12);
-        });
+            this.drawContextLine(context, points, point => point.waterTemperature, 27.2, 29.0, "#5b86a6", xFor, yFor);
+            this.drawContextLine(context, points, point => point.dissolvedOxygen, 4.8, 5.5, "#9b884b", xFor, yFor);
+        }
 
         const dateElement = document.getElementById("acousticTimelineDate");
         if (dateElement) {
@@ -295,5 +318,102 @@ export default class AcousticEngine {
                 ? new Date(points[points.length - 1].timestamp).toLocaleDateString()
                 : "Sin datos históricos";
         }
+
+        const zoomElement = document.getElementById("acousticTimelineZoom");
+        if (zoomElement) {
+            zoomElement.textContent = `${this.timelineZoom}x`;
+        }
+        this.syncHourRuler(document.getElementById("acousticTimelineScroll"));
+    }
+
+    syncHourRuler(scroll) {
+        const ruler = document.getElementById("acousticHourRuler");
+        if (!scroll || !ruler) return;
+        ruler.style.transform = `translateX(-${scroll.scrollLeft}px)`;
+    }
+
+    drawContextLine(context, points, valueFor, minimum, maximum, color, xFor, yFor) {
+        const values = points.filter(point => Number.isFinite(valueFor(point)));
+        if (!values.length) return;
+
+        context.save();
+        context.strokeStyle = color;
+        context.lineWidth = 1.5;
+        context.beginPath();
+        values.forEach((point, index) => {
+            const normalized = (valueFor(point) - minimum) / (maximum - minimum);
+            const x = xFor(point.timestamp);
+            const y = yFor(Math.max(0, Math.min(1, normalized)));
+            index ? context.lineTo(x, y) : context.moveTo(x, y);
+        });
+        context.stroke();
+        context.restore();
+    }
+
+    showTimelineTooltip(event) {
+        const canvas = event.currentTarget;
+        const tooltip = document.getElementById("acousticTimelineTooltip");
+        if (!tooltip || !this.timelineHistory?.length) return;
+
+        const bounds = canvas.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+        const sorted = this.timelineHistory
+            .filter(item => item.timestamp)
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        const index = Math.round(ratio * (sorted.length - 1));
+        const point = sorted[index];
+        if (!point) return;
+
+        const activity = Number.isFinite(point.responseIndex)
+            ? point.responseIndex
+            : point.activityIndex;
+        tooltip.innerHTML = `
+            <strong>${new Date(point.timestamp).toLocaleTimeString()}</strong>
+            <span>Respuesta: ${Number.isFinite(activity) ? `${Math.round(activity * 100)}%` : "sin datos"}</span>
+            <span>Tiempo de giro: ${point.turnDurationSeconds ?? "--"} seg</span>
+            <span>Alimento: ${point.feedAmountKg || 0} kg</span>
+            <span>Temp.: ${point.waterTemperature ?? "--"} °C · O₂: ${point.dissolvedOxygen ?? "--"} mg/L</span>
+        `;
+        tooltip.style.left = `${Math.max(8, Math.min(canvas.clientWidth - 220, event.offsetX + 12))}px`;
+        tooltip.style.top = `${Math.max(8, event.offsetY - 76)}px`;
+        tooltip.classList.add("is-visible");
+    }
+
+    hideTimelineTooltip() {
+        document.getElementById("acousticTimelineTooltip")?.classList.remove("is-visible");
+    }
+
+    setTimelineZoom(zoom, anchorRatio = 0.5) {
+        const scroll = document.getElementById("acousticTimelineScroll");
+        if (!scroll) return;
+
+        const oldWidth = Math.max(scroll.clientWidth, scroll.clientWidth * this.timelineZoom);
+        const oldScrollPosition = scroll.scrollLeft + scroll.clientWidth * anchorRatio;
+        const oldRatio = oldScrollPosition / oldWidth;
+        this.timelineZoom = Math.max(1, Math.min(4, zoom));
+        this.drawTimeline(this.timelineHistory || []);
+
+        const newWidth = Math.max(scroll.clientWidth, scroll.clientWidth * this.timelineZoom);
+        scroll.scrollLeft = Math.max(0, Math.min(
+            newWidth - scroll.clientWidth,
+            newWidth * oldRatio - scroll.clientWidth * anchorRatio
+        ));
+    }
+
+    resetTimelineZoom() {
+        const scroll = document.getElementById("acousticTimelineScroll");
+        this.timelineZoom = 1;
+        this.drawTimeline(this.timelineHistory || []);
+        if (scroll) scroll.scrollLeft = 0;
+    }
+
+    handleTimelineWheel(event) {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        const scroll = event.currentTarget;
+        const bounds = scroll.getBoundingClientRect();
+        const anchorRatio = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+        const direction = event.deltaY < 0 ? 2 : 0.5;
+        this.setTimelineZoom(this.timelineZoom * direction, anchorRatio);
     }
 }

@@ -40,6 +40,10 @@ export default class AcousticView {
             <div class="acoustic-timeline-actions">
                 <small id="acousticTimelineRange">Últimas evaluaciones</small>
                 <button id="btnSeedAcousticHistory" type="button" class="btn btn-outline-secondary btn-sm">Generar historial simulado</button>
+                <button id="btnTimelineZoomOut" type="button" class="btn btn-outline-secondary btn-sm" title="Alejar gráfica">−</button>
+                <strong id="acousticTimelineZoom">1x</strong>
+                <button id="btnTimelineZoomIn" type="button" class="btn btn-outline-secondary btn-sm" title="Acercar gráfica">+</button>
+                <button id="btnTimelineZoomReset" type="button" class="btn btn-outline-secondary btn-sm">24 h</button>
             </div>
         </div>
         <div class="acoustic-timeline-nav">
@@ -47,12 +51,42 @@ export default class AcousticView {
             <strong id="acousticTimelineDate">Actividad del estanque</strong>
             <span>Día siguiente →</span>
         </div>
-        <canvas id="acousticTimeline" height="300"></canvas>
+        <div class="acoustic-timeline-frame">
+            <div class="acoustic-fixed-axis acoustic-left-axis" aria-hidden="true">
+                <div class="acoustic-axis-scale"><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span></div>
+                <b>Tiempo de giro<br>(seg)</b>
+            </div>
+            <div id="acousticTimelineScroll" class="acoustic-timeline-scroll" tabindex="0" aria-label="Línea temporal desplazable">
+                <div id="acousticTimelineContent" class="acoustic-timeline-content">
+                    <canvas id="acousticTimeline" height="300"></canvas>
+                    <div id="acousticTimelineTooltip" class="acoustic-timeline-tooltip" role="status"></div>
+                </div>
+            </div>
+            <div class="acoustic-fixed-axis acoustic-right-axis" aria-hidden="true">
+                <div class="acoustic-axis-scale"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+                <b>Respuesta<br>(%)</b>
+            </div>
+        </div>
+        <div class="acoustic-hour-frame">
+            <div class="acoustic-hour-axis-spacer"></div>
+            <div class="acoustic-hour-scroll">
+                <div id="acousticHourRuler" class="acoustic-hour-ruler" aria-label="Horas del día">
+                    <span>00:00</span><span>01:00</span><span>02:00</span><span>03:00</span><span>04:00</span><span>05:00</span>
+                    <span>06:00</span><span>07:00</span><span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span>
+                    <span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span><span>17:00</span>
+                    <span>18:00</span><span>19:00</span><span>20:00</span><span>21:00</span><span>22:00</span><span>23:00</span>
+                </div>
+            </div>
+            <div class="acoustic-hour-axis-spacer right"></div>
+        </div>
+        <div class="acoustic-timeline-hint">Deslice la barra inferior para recorrer las 24 horas del día.</div>
         <div class="acoustic-chart-legend">
-            <span><i class="legend-red"></i>Actividad acústica</span>
-            <span><i class="legend-blue"></i>Eventos de alimentación</span>
+              <span><i class="legend-red"></i>Respuesta del camarón (%)</span>
+              <span><i class="legend-blue"></i>Tiempo de giro (seg)</span>
             <span><i class="legend-yellow"></i>Umbral sónico</span>
             <span><i class="legend-green"></i>Señal estable</span>
+            <span><i class="legend-teal"></i>Temperatura del agua</span>
+            <span><i class="legend-olive"></i>Oxígeno disuelto</span>
         </div>
     </section>
 

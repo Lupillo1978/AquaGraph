@@ -891,6 +891,13 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
     background: #dce8e4;
 }
 
+.acoustic-timeline-actions strong {
+    min-width: 24px;
+    color: #3f5d59;
+    font-size: 0.72rem;
+    text-align: center;
+}
+
 .acoustic-timeline-nav {
     display: flex;
     align-items: center;
@@ -909,15 +916,187 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
 #acousticTimeline {
     display: block;
     width: 100%;
+    min-width: 100%;
     height: 300px;
     background: #fdfefd;
     border: 1px solid #d8e3df;
+}
+
+.acoustic-timeline-frame {
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
+    height: 300px;
+    background: #fdfefd;
+    border: 1px solid #d8e3df;
+}
+
+.acoustic-fixed-axis {
+    position: relative;
+    flex: 0 0 48px;
+    height: 328px;
+    color: #536d6a;
+    font-size: 0.66rem;
+    background: #fdfefd;
+}
+
+.acoustic-axis-scale {
+    display: flex;
+    height: 240px;
+    padding-top: 0;
+    margin-top: 22px;
+    margin-bottom: 38px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.acoustic-axis-scale span {
+    display: block;
+    line-height: 1;
+    color: #243c3d !important;
+    visibility: visible !important;
+}
+
+.acoustic-left-axis .acoustic-axis-scale span {
+    padding-right: 8px;
+    text-align: right;
+}
+
+.acoustic-fixed-axis b {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    color: #405c58;
+    font-size: 0.58rem;
+    font-weight: 600;
+    line-height: 1.1;
+    text-align: center;
+    transform: translateY(-50%) rotate(-90deg);
+}
+
+.acoustic-right-axis {
+    flex-basis: 58px;
+}
+
+.acoustic-right-axis .acoustic-axis-scale span {
+    padding-left: 8px;
+    text-align: left;
+}
+
+.acoustic-right-axis b {
+    transform: translateY(-50%) rotate(90deg);
+}
+
+.acoustic-timeline-scroll {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 300px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: #fdfefd;
+    scrollbar-color: #8aa7a0 #dfe9e5;
+    scrollbar-width: thin;
+}
+
+.acoustic-hour-ruler {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    width: 100%;
+    min-width: 100%;
+    height: 28px;
+    padding: 0 2px;
+    align-items: center;
+    border-top: 1px solid #cbdad5;
+    background: #eef5f2;
+    color: #243c3d;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.acoustic-timeline-content {
+    position: relative;
+    width: 100%;
+    min-width: 100%;
+}
+
+.acoustic-hour-frame {
+    display: flex;
+    width: 100%;
+    height: 34px;
+    background: #eef5f2;
+    border: 1px solid #cbdad5;
+    border-top: 0;
+}
+
+.acoustic-hour-axis-spacer {
+    flex: 0 0 48px;
+}
+
+.acoustic-hour-axis-spacer.right {
+    flex-basis: 58px;
+}
+
+.acoustic-hour-scroll {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.acoustic-hour-ruler span {
+    display: block !important;
+    visibility: visible !important;
+    overflow: visible;
+}
+
+.acoustic-timeline-scroll:focus-visible {
+    outline: 2px solid #278fc0;
+    outline-offset: 2px;
+}
+
+.acoustic-timeline-hint {
+    padding-top: 0.35rem;
+    color: #6d8581;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.acoustic-timeline-tooltip {
+    position: absolute;
+    z-index: 2;
+    display: none;
+    width: 210px;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid #9bb7af;
+    background: rgba(255, 255, 255, 0.96);
+    color: #294441;
+    box-shadow: 0 5px 16px rgba(31, 60, 54, 0.18);
+    font-size: 0.7rem;
+    pointer-events: none;
+}
+
+.acoustic-timeline-tooltip.is-visible {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.acoustic-timeline-tooltip strong {
+    color: #243c3d;
 }
 
 .acoustic-chart-legend {
     display: flex;
     flex-wrap: wrap;
     gap: 0.9rem;
+    align-items: center;
+    margin-top: 0.45rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #d8e3df;
+    background: #edf3f1;
     padding-top: 0.65rem;
     color: #526a67;
     font-size: 0.72rem;
@@ -932,13 +1111,16 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
 .acoustic-chart-legend i {
     display: inline-block;
     width: 11px;
-    height: 3px;
+    height: 4px;
+    border-radius: 2px;
 }
 
 .legend-red { background: #e25245; }
 .legend-blue { background: #278fc0; }
 .legend-yellow { background: #e1bd55; }
 .legend-green { background: #4aa87e; }
+.legend-teal { background: #5b86a6; }
+.legend-olive { background: #9b884b; }
 
 .acoustic-panel {
     padding: 1rem;

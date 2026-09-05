@@ -76,7 +76,7 @@ class AcousticService {
         return this.state.history.filter(item => item.pondId === pondId).slice(-100).reverse();
     }
 
-    seedHistory(pondId, sampleCount = 48) {
+    seedHistory(pondId, sampleCount = 97) {
         const pond = this.getPonds().find(item => item.id === pondId);
         const config = this.getConfig(pondId);
         const feederIds = pond ? pond.feeders.map(feeder => feeder.id) : [];
@@ -85,7 +85,7 @@ class AcousticService {
         let consumedKg = 0;
 
         for (let index = 0; index < sampleCount; index += 1) {
-            const timestamp = new Date(now - (sampleCount - index) * 5 * 60000).toISOString();
+            const timestamp = new Date(now - (sampleCount - index) * 15 * 60000).toISOString();
             const cycle = index % 12;
             const pulse = cycle === 2 || cycle === 3 ? 0.3 : 0;
             const activityIndex = Number(Math.max(0.12, Math.min(0.9, 0.38 + (cycle / 18) + pulse + Math.sin(index * 0.8) * 0.08)).toFixed(3));
@@ -93,6 +93,7 @@ class AcousticService {
                 ? cycle === 2
                 : activityIndex >= config.minimumActivity && cycle === 2;
             const feedAmountKg = shouldFeed ? config.initialAmountKg : 0;
+            const responseIndex = Number(Math.max(0.08, Math.min(0.96, activityIndex + pulse * 0.35)).toFixed(3));
             consumedKg += feedAmountKg;
 
             samples.push({
@@ -101,11 +102,15 @@ class AcousticService {
                 feederIds,
                 mode: config.mode,
                 activityIndex,
+                responseIndex,
+                turnDurationSeconds: shouldFeed ? Number((12 + activityIndex * 14).toFixed(1)) : 0,
                 rms: Number((0.18 + activityIndex * 0.72).toFixed(3)),
                 soundLevel: Number((35 + activityIndex * 55).toFixed(1)),
                 dominantFrequency: Math.round(2800 + activityIndex * 1800),
                 signalQuality: 0.93,
                 noiseLevel: Number((0.08 + (index % 5) * 0.02).toFixed(2)),
+                waterTemperature: Number((28.1 + Math.sin(index / 8) * 0.25).toFixed(2)),
+                dissolvedOxygen: Number((5.2 + Math.cos(index / 7) * 0.18).toFixed(2)),
                 threshold: config.minimumActivity,
                 feedAmountKg,
                 remainingKg: Math.max(0, config.maximumDailyKg - consumedKg),
@@ -193,6 +198,7 @@ class AcousticService {
             decision,
             reason,
             feedAmountKg,
+            turnDurationSeconds: decision === "FEED" ? config.feedDurationSeconds : 0,
             consumedKg: Number((consumed + feedAmountKg).toFixed(3)),
             remainingKg: Number((remaining - feedAmountKg).toFixed(3)),
             eventsToday: events + (decision === "FEED" ? 1 : 0),
@@ -212,6 +218,7 @@ class AcousticService {
             rms: measurement.rms,
             threshold: config.minimumActivity,
             feedAmountKg,
+            turnDurationSeconds: decision === "FEED" ? config.feedDurationSeconds : 0,
             remainingKg: status.remainingKg,
             decision,
             reason,
