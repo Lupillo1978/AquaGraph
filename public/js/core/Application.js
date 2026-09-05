@@ -32,6 +32,7 @@ import PondEngine from "../engines/PondEngine.js";
 import FeederEngine from "../engines/FeederEngine.js";
 import DietEngine from "../engines/DietEngine.js";
 import DietManagerEngine from "../engines/DietManagerEngine.js";
+import AcousticEngine from "../engines/AcousticEngine.js";
 
 import WorkspaceManager from "./WorkspaceManager.js";
 
@@ -56,6 +57,10 @@ export default class Application {
 
         // Engines
         this.dietManager = new DietManagerEngine(
+            this.workspaceManager
+        );
+
+        this.acousticEngine = new AcousticEngine(
             this.workspaceManager
         );
 
@@ -104,6 +109,12 @@ export default class Application {
             .getElementById("btnDiets")
             .addEventListener("click", () => {
                 this.dietEngine.showEditor();
+            });
+
+        document
+            .getElementById("btnAcousticMode")
+            .addEventListener("click", () => {
+                this.acousticEngine.show();
             });
     }
 }

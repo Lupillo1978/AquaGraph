@@ -8,6 +8,7 @@ const feederRoutes = require("./feeders");
 
 const dietsRoutes = require("./diets");
 const bridgeRoutes = require("./bridge");
+const acousticRoutes = require("./acoustic");
 
 router.get("/health", (req, res) => {
 
@@ -29,5 +30,7 @@ router.use("/feeders", feederRoutes);
 router.use("/diets", dietsRoutes);
 
 router.use("/bridge", bridgeRoutes);
+
+router.use("/acoustic", acousticRoutes);
 
 module.exports = router;

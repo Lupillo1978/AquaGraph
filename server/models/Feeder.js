@@ -12,6 +12,8 @@ class Feeder {
 
         this.nodeId = data.nodeId ?? "";
 
+        this.mode = data.mode ?? "TIMER";
+
         this.position = data.position ?? {
 
             lat: 0,

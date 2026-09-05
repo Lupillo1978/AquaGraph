@@ -74,6 +74,36 @@ class DietController {
 
     }
 
+    delete(req, res) {
+
+        try {
+
+            const diet = this.service.delete(req.params.id);
+
+            res.json({
+
+                success: true,
+
+                data: diet
+
+            });
+
+        }
+
+        catch(error) {
+
+            res.status(error.statusCode || 400).json({
+
+                success: false,
+
+                message: error.message
+
+            });
+
+        }
+
+    }
+
 }
 
 module.exports = DietController;

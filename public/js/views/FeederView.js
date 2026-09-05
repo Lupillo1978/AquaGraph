@@ -37,6 +37,11 @@ export default class FeederView {
                 </div>
 
                 <div class="mb-3">
+                    <strong>Modo de operación</strong><br>
+                    <span class="badge bg-${feeder.mode === "SONIC" ? "success" : "secondary"}">${feeder.mode || "TIMER"}</span>
+                </div>
+
+                <div class="mb-3">
 
                     <strong>Posición</strong><br>
 

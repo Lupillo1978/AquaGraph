@@ -114,5 +114,37 @@ export default class DietManagerEngine {
                     }
                 );
             });
+
+        document
+            .querySelectorAll(".diet-delete-btn")
+            .forEach((button) => {
+
+                button.addEventListener(
+                    "click",
+                    async (event) => {
+
+                        event.stopPropagation();
+
+                        const id = button.dataset.id;
+                        const diet = this.diets.find(
+                            (item) => item.id === id
+                        );
+                        const name = diet ? diet.name : "esta dieta";
+
+                        if (!confirm(`¿Eliminar la dieta "${name}"?`)) {
+                            return;
+                        }
+
+                        const response = await this.controller.delete(id);
+
+                        if (!response.success) {
+                            alert(response.message || "No se pudo eliminar la dieta.");
+                            return;
+                        }
+
+                        await this.show();
+                    }
+                );
+            });
     }
 }

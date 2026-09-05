@@ -59,6 +59,12 @@ export default class Sidebar {
                         <i class="me-2">🍽️</i>Dietas
                     </button>
 
+                    <button
+                        id="btnAcousticMode"
+                        class="btn btn-outline-light w-100 mb-2 text-start">
+                        <i class="me-2">◉</i>Modo Sónico
+                    </button>
+
                     <button class="btn btn-outline-light w-100 mb-2 text-start">
                         <i class="me-2">🌊</i>AquaGraph
                     </button>

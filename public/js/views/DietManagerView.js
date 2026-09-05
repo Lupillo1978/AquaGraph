@@ -198,6 +198,18 @@ export default class DietManagerView {
 
         </button>
 
+            <button
+
+                type="button"
+
+                class="btn btn-danger btn-sm diet-delete-btn ms-1"
+
+                data-id="${diet.id}">
+
+                Eliminar
+
+            </button>
+
     </td>
 
 </tr>

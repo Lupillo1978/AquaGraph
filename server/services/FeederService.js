@@ -74,6 +74,8 @@ class FeederService {
 
     feeder.nodeId = data.nodeId ?? feeder.nodeId;
 
+    feeder.mode = data.mode ?? feeder.mode;
+
     feeder.position = data.position ?? feeder.position;
 
     feeder.settings = data.settings ?? feeder.settings;
