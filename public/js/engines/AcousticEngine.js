@@ -211,8 +211,8 @@ export default class AcousticEngine {
             ? new Date(response.data[response.data.length - 1].timestamp).getTime() - new Date(response.data[0].timestamp).getTime()
             : 0;
 
-        if (response.data.length < 12 || (simulatedHistory && historySpan < 12 * 60 * 60 * 1000)) {
-            await this.controller.seedHistory(this.pondId);
+        if (this.timelineDayOffset <= 0 && (response.data.length < 12 || (simulatedHistory && historySpan < 12 * 60 * 60 * 1000))) {
+            await this.controller.seedHistory(this.pondId, this.getTimelineDate());
             response = await this.controller.getHistory(this.pondId, this.getTimelineDate());
         }
 

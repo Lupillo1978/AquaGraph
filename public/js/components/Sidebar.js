@@ -33,8 +33,10 @@ export default class Sidebar {
                 <!-- Opciones del menú -->
                 <div id="sidebarMenu" class="sidebar-menu">
 
-                    <button class="btn btn-outline-light w-100 mb-2 text-start">
-                        <i class="me-2">📊</i>Dashboard
+                    <button
+                        id="btnHome"
+                        class="btn btn-outline-light w-100 mb-2 text-start">
+                        <i class="me-2">📊</i>Inicio
                     </button>
 
                     <button

@@ -82,8 +82,8 @@ export default class AcousticView {
         </div>
         <div class="acoustic-timeline-hint">Deslice la barra inferior para recorrer las 24 horas del día.</div>
         <div class="acoustic-chart-legend">
-              <span><i class="legend-red"></i>Respuesta del camarón (%)</span>
-              <span><i class="legend-blue"></i>Tiempo de giro (seg)</span>
+              <span><i class="legend-red"></i><b>Respuesta</b><em>del camarón (%)</em></span>
+              <span><i class="legend-blue"></i><b>Tiempo de giro</b><em>(seg)</em></span>
             <span><i class="legend-yellow"></i>Umbral sónico</span>
             <span><i class="legend-green"></i>Señal estable</span>
             <span><i class="legend-teal"></i>Temperatura del agua</span>

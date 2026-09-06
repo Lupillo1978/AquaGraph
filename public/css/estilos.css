@@ -1100,13 +1100,16 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
     position: absolute;
     z-index: 2;
     display: none;
-    width: 210px;
-    padding: 0.55rem 0.65rem;
-    border: 1px solid #9bb7af;
-    background: rgba(255, 255, 255, 0.96);
-    color: #294441;
-    box-shadow: 0 5px 16px rgba(31, 60, 54, 0.18);
-    font-size: 0.7rem;
+    width: 235px;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #6d8e88;
+    border-left: 4px solid #e25245;
+    border-radius: 6px;
+    background: rgba(20, 31, 34, 0.97);
+    color: #eaf4f1;
+    box-shadow: 0 8px 22px rgba(10, 20, 22, 0.35);
+    font-size: 0.74rem;
+    line-height: 1.35;
     pointer-events: none;
 }
 
@@ -1116,7 +1119,27 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
 }
 
 .acoustic-timeline-tooltip strong {
-    color: #243c3d;
+    display: block;
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.35rem;
+    border-bottom: 1px solid rgba(214, 235, 228, 0.2);
+    color: #ffffff;
+    font-size: 0.82rem;
+}
+
+.acoustic-timeline-tooltip span {
+    display: block;
+    color: #c7dad5;
+}
+
+.acoustic-timeline-tooltip span:nth-of-type(1) {
+    color: #ff8b80;
+    font-weight: 600;
+}
+
+.acoustic-timeline-tooltip span:nth-of-type(2) {
+    color: #5fc2ee;
+    font-weight: 600;
 }
 
 .acoustic-chart-legend {
@@ -1137,6 +1160,18 @@ SELECTORES DEL PANEL DE ALIMENTACIÓN
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
+    color: #526a67;
+    white-space: nowrap;
+}
+
+.acoustic-chart-legend b {
+    color: #243c3d;
+    font-weight: 700;
+}
+
+.acoustic-chart-legend em {
+    color: #617b78;
+    font-style: normal;
 }
 
 .acoustic-chart-legend i {

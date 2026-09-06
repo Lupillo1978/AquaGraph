@@ -106,6 +106,13 @@ export default class Application {
             });
 
         document
+            .getElementById("btnHome")
+            .addEventListener("click", () => {
+                this.workspaceManager.showMap();
+                this.infoPanel.showWelcome();
+            });
+
+        document
             .getElementById("btnDiets")
             .addEventListener("click", () => {
                 this.dietEngine.showEditor();

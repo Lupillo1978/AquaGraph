@@ -110,6 +110,16 @@ class AcousticService {
             : this.localDateKey(new Date());
         const dayStart = new Date(`${requestedDayKey}T00:00:00`);
         const todayKey = this.localDateKey(new Date());
+
+        if (requestedDayKey > todayKey) {
+            this.state.history = this.state.history.filter(item => (
+                item.pondId !== pondId ||
+                this.localDateKey(item.timestamp) !== requestedDayKey
+            ));
+            this.save();
+            return [];
+        }
+
         const dayEnd = requestedDayKey === todayKey
             ? Math.min(dayStart.getTime() + 24 * 60 * 60000, Date.now())
             : dayStart.getTime() + 24 * 60 * 60000;
