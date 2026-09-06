@@ -10,7 +10,7 @@ export default class AcousticView {
     <div class="acoustic-heading">
         <div>
             <span class="acoustic-eyebrow">OPERACION INTELIGENTE</span>
-            <h2>Modo Sónico</h2>
+            <h2>Modo Sónico LDC</h2>
             <p>Actividad acústica como indicador configurable, nunca como medición absoluta de apetito.</p>
         </div>
         <div class="acoustic-controls">
