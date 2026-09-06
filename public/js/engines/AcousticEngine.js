@@ -13,6 +13,25 @@ export default class AcousticEngine {
         this.simulationTimer = null;
         this.simulationRunning = false;
         this.timelineZoom = 1;
+        this.timelineDayOffset = 0;
+    }
+
+    formatLocalTime(value) {
+        return new Date(value).toLocaleTimeString("es-MX", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            timeZone: "America/Mazatlan"
+        });
+    }
+
+    formatLocalDate(value) {
+        return new Date(value).toLocaleDateString("es-MX", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            timeZone: "America/Mazatlan"
+        });
     }
 
     async show() {
@@ -25,7 +44,12 @@ export default class AcousticEngine {
             await this.selectPond(this.ponds[0].id);
         }
         clearInterval(this.pollTimer);
-        this.pollTimer = setInterval(() => this.refreshStatus(), 3000);
+        this.pollTimer = setInterval(() => {
+            this.refreshStatus();
+            if (this.timelineDayOffset === 0) {
+                this.renderHistory();
+            }
+        }, 60000);
     }
 
     registerEvents() {
@@ -38,8 +62,11 @@ export default class AcousticEngine {
         document.getElementById("btnTimelineZoomIn")?.addEventListener("click", () => this.setTimelineZoom(this.timelineZoom * 2));
         document.getElementById("btnTimelineZoomOut")?.addEventListener("click", () => this.setTimelineZoom(this.timelineZoom / 2));
         document.getElementById("btnTimelineZoomReset")?.addEventListener("click", () => this.resetTimelineZoom());
+        document.getElementById("btnPreviousAcousticDay")?.addEventListener("click", () => this.changeTimelineDay(-1));
+        document.getElementById("btnNextAcousticDay")?.addEventListener("click", () => this.changeTimelineDay(1));
         document.getElementById("acousticTimelineScroll")?.addEventListener("wheel", event => this.handleTimelineWheel(event), { passive: false });
         document.getElementById("acousticTimelineScroll")?.addEventListener("scroll", event => this.syncHourRuler(event.currentTarget));
+        document.querySelector(".acoustic-hour-scroll")?.addEventListener("scroll", event => this.syncTimelineScroll(event.currentTarget));
         document.getElementById("acousticTimeline")?.addEventListener("mousemove", event => this.showTimelineTooltip(event));
         document.getElementById("acousticTimeline")?.addEventListener("mouseleave", () => this.hideTimelineTooltip());
         ["simActivity", "simNoise"].forEach(id => {
@@ -175,7 +202,7 @@ export default class AcousticEngine {
     }
 
     async renderHistory() {
-        let response = await this.controller.getHistory(this.pondId);
+        let response = await this.controller.getHistory(this.pondId, this.getTimelineDate());
         const container = document.getElementById("acousticHistory");
         if (!response.success) return;
 
@@ -186,22 +213,43 @@ export default class AcousticEngine {
 
         if (response.data.length < 12 || (simulatedHistory && historySpan < 12 * 60 * 60 * 1000)) {
             await this.controller.seedHistory(this.pondId);
-            response = await this.controller.getHistory(this.pondId);
+            response = await this.controller.getHistory(this.pondId, this.getTimelineDate());
         }
 
         this.timelineHistory = response.data || [];
         this.drawTimeline(response.data || []);
         if (!container || !response.data.length) return;
         container.innerHTML = response.data.slice(0, 8).map(item => `
-            <div class="acoustic-history-row"><time>${new Date(item.timestamp).toLocaleTimeString()}</time><strong>${item.decision}</strong><span>${Number.isFinite(item.activityIndex) ? `${Math.round(item.activityIndex * 100)}%` : "sin señal"}</span><span>${item.reason}</span></div>
+            <div class="acoustic-history-row"><time>${this.formatLocalTime(item.timestamp)}</time><strong>${item.decision}</strong><span>${Number.isFinite(item.activityIndex) ? `${Math.round(item.activityIndex * 100)}%` : "sin señal"}</span><span>${item.reason}</span></div>
         `).join("");
     }
 
     async seedHistory() {
-        const response = await this.controller.seedHistory(this.pondId);
+        const response = await this.controller.seedHistory(this.pondId, this.getTimelineDate());
         if (response.success) {
             await this.renderHistory();
         }
+    }
+
+    getTimelineDate() {
+        const date = new Date();
+        const parts = new Intl.DateTimeFormat("en-CA", {
+            timeZone: "America/Mazatlan",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }).formatToParts(date);
+        const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+        const localDate = new Date(`${values.year}-${values.month}-${values.day}T12:00:00`);
+        localDate.setDate(localDate.getDate() + this.timelineDayOffset);
+        return `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}T00:00:00.000Z`;
+    }
+
+    async changeTimelineDay(offset) {
+        this.timelineDayOffset += offset;
+        await this.seedHistory();
+        const scroll = document.getElementById("acousticTimelineScroll");
+        if (scroll) scroll.scrollLeft = 0;
     }
 
     drawTimeline(history) {
@@ -209,7 +257,7 @@ export default class AcousticEngine {
         if (!canvas) return;
 
         const context = canvas.getContext("2d");
-        const viewport = canvas.parentElement?.clientWidth || 900;
+        const viewport = document.getElementById("acousticTimelineScroll")?.clientWidth || 900;
         const width = Math.max(viewport, viewport * this.timelineZoom);
         const height = 300;
         const padding = { top: 22, right: 12, bottom: 38, left: 10 };
@@ -217,13 +265,14 @@ export default class AcousticEngine {
         const plotHeight = height - padding.top - padding.bottom;
         const points = history
             .filter(item => item.timestamp)
-            .slice(-80)
             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-        const minTime = points.length ? new Date(points[0].timestamp).getTime() : Date.now() - 3600000;
-        const maxTime = points.length ? new Date(points[points.length - 1].timestamp).getTime() : Date.now();
-        const timeSpan = Math.max(maxTime - minTime, 60000);
+        const selectedDate = this.getTimelineDate().slice(0, 10);
+        const minTime = new Date(`${selectedDate}T00:00:00`).getTime();
+        const maxTime = minTime + 24 * 60 * 60000;
+        const timeSpan = maxTime - minTime;
         const xFor = timestamp => padding.left + ((new Date(timestamp).getTime() - minTime) / timeSpan) * plotWidth;
         const yFor = value => padding.top + (1 - Math.max(0, Math.min(1, value))) * plotHeight;
+        this.timelineGeometry = { minTime, maxTime, timeSpan, padding, plotWidth, width };
 
         canvas.width = width;
         canvas.height = height;
@@ -235,6 +284,9 @@ export default class AcousticEngine {
         const hourRuler = document.getElementById("acousticHourRuler");
         if (hourRuler) {
             hourRuler.style.width = `${width}px`;
+            hourRuler.querySelectorAll("span").forEach((label, hour) => {
+                label.style.left = `${(hour / 23) * 100}%`;
+            });
         }
         context.clearRect(0, 0, width, height);
         context.font = "11px Segoe UI, sans-serif";
@@ -312,10 +364,21 @@ export default class AcousticEngine {
             this.drawContextLine(context, points, point => point.dissolvedOxygen, 4.8, 5.5, "#9b884b", xFor, yFor);
         }
 
+        // La escala horaria forma parte del gráfico para que siempre sea visible.
+        context.save();
+        context.fillStyle = "#172f32";
+        context.font = "bold 10px Segoe UI, sans-serif";
+        context.textAlign = "center";
+        for (let hour = 0; hour < 24; hour += 1) {
+            const x = padding.left + (hour / 23) * plotWidth;
+            context.fillText(`${String(hour).padStart(2, "0")}:00`, x, height - 12);
+        }
+        context.restore();
+
         const dateElement = document.getElementById("acousticTimelineDate");
         if (dateElement) {
             dateElement.textContent = points.length
-                ? new Date(points[points.length - 1].timestamp).toLocaleDateString()
+                ? this.formatLocalDate(points[points.length - 1].timestamp)
                 : "Sin datos históricos";
         }
 
@@ -328,8 +391,15 @@ export default class AcousticEngine {
 
     syncHourRuler(scroll) {
         const ruler = document.getElementById("acousticHourRuler");
-        if (!scroll || !ruler) return;
-        ruler.style.transform = `translateX(-${scroll.scrollLeft}px)`;
+        const hourScroll = document.querySelector(".acoustic-hour-scroll");
+        if (!scroll || !ruler || !hourScroll) return;
+        hourScroll.scrollLeft = scroll.scrollLeft;
+    }
+
+    syncTimelineScroll(hourScroll) {
+        const scroll = document.getElementById("acousticTimelineScroll");
+        if (!scroll || !hourScroll) return;
+        scroll.scrollLeft = hourScroll.scrollLeft;
     }
 
     drawContextLine(context, points, valueFor, minimum, maximum, color, xFor, yFor) {
@@ -356,19 +426,28 @@ export default class AcousticEngine {
         if (!tooltip || !this.timelineHistory?.length) return;
 
         const bounds = canvas.getBoundingClientRect();
+        const geometry = this.timelineGeometry;
         const ratio = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+        const hoveredTime = geometry
+            ? geometry.minTime + ratio * geometry.timeSpan
+            : Date.now();
         const sorted = this.timelineHistory
             .filter(item => item.timestamp)
             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-        const index = Math.round(ratio * (sorted.length - 1));
-        const point = sorted[index];
+        const point = sorted.reduce((closest, candidate) => {
+            if (!closest) return candidate;
+            return Math.abs(new Date(candidate.timestamp).getTime() - hoveredTime) <
+                Math.abs(new Date(closest.timestamp).getTime() - hoveredTime)
+                ? candidate
+                : closest;
+        }, null);
         if (!point) return;
 
         const activity = Number.isFinite(point.responseIndex)
             ? point.responseIndex
             : point.activityIndex;
         tooltip.innerHTML = `
-            <strong>${new Date(point.timestamp).toLocaleTimeString()}</strong>
+            <strong>${this.formatLocalTime(point.timestamp)}</strong>
             <span>Respuesta: ${Number.isFinite(activity) ? `${Math.round(activity * 100)}%` : "sin datos"}</span>
             <span>Tiempo de giro: ${point.turnDurationSeconds ?? "--"} seg</span>
             <span>Alimento: ${point.feedAmountKg || 0} kg</span>
@@ -390,7 +469,7 @@ export default class AcousticEngine {
         const oldWidth = Math.max(scroll.clientWidth, scroll.clientWidth * this.timelineZoom);
         const oldScrollPosition = scroll.scrollLeft + scroll.clientWidth * anchorRatio;
         const oldRatio = oldScrollPosition / oldWidth;
-        this.timelineZoom = Math.max(1, Math.min(4, zoom));
+        this.timelineZoom = Math.max(1, Math.min(20, zoom));
         this.drawTimeline(this.timelineHistory || []);
 
         const newWidth = Math.max(scroll.clientWidth, scroll.clientWidth * this.timelineZoom);
@@ -404,7 +483,10 @@ export default class AcousticEngine {
         const scroll = document.getElementById("acousticTimelineScroll");
         this.timelineZoom = 1;
         this.drawTimeline(this.timelineHistory || []);
-        if (scroll) scroll.scrollLeft = 0;
+        if (scroll) {
+            scroll.scrollLeft = 0;
+            this.syncHourRuler(scroll);
+        }
     }
 
     handleTimelineWheel(event) {

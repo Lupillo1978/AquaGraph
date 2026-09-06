@@ -47,9 +47,9 @@ export default class AcousticView {
             </div>
         </div>
         <div class="acoustic-timeline-nav">
-            <span>← Día anterior</span>
+            <button id="btnPreviousAcousticDay" type="button">← Día anterior</button>
             <strong id="acousticTimelineDate">Actividad del estanque</strong>
-            <span>Día siguiente →</span>
+            <button id="btnNextAcousticDay" type="button">Día siguiente →</button>
         </div>
         <div class="acoustic-timeline-frame">
             <div class="acoustic-fixed-axis acoustic-left-axis" aria-hidden="true">
@@ -70,6 +70,7 @@ export default class AcousticView {
         <div class="acoustic-hour-frame">
             <div class="acoustic-hour-axis-spacer"></div>
             <div class="acoustic-hour-scroll">
+                <div class="acoustic-hour-title">HORARIO DEL DÍA</div>
                 <div id="acousticHourRuler" class="acoustic-hour-ruler" aria-label="Horas del día">
                     <span>00:00</span><span>01:00</span><span>02:00</span><span>03:00</span><span>04:00</span><span>05:00</span>
                     <span>06:00</span><span>07:00</span><span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span>

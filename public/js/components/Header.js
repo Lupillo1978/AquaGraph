@@ -37,16 +37,18 @@ export default class Header {
 
         const now = new Date();
 
-        const date = now.toLocaleDateString("es-ES", {
+        const date = now.toLocaleDateString("es-MX", {
             day: "2-digit",
             month: "2-digit",
-            year: "numeric"
+            year: "numeric",
+            timeZone: "America/Mazatlan"
         });
 
-        const time = now.toLocaleTimeString("es-ES", {
+        const time = now.toLocaleTimeString("es-MX", {
             hour: "2-digit",
             minute: "2-digit",
-            second: "2-digit"
+            second: "2-digit",
+            timeZone: "America/Mazatlan"
         });
 
         clockElement.textContent = `${date} ${time}`;

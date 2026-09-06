@@ -33,14 +33,17 @@ export default class AcousticController {
         return await response.json();
     }
 
-    async getHistory(pondId) {
-        const response = await fetch(`/api/acoustic/history/${pondId}`);
+    async getHistory(pondId, date) {
+        const query = date ? `?date=${encodeURIComponent(date)}` : "";
+        const response = await fetch(`/api/acoustic/history/${pondId}${query}`);
         return await response.json();
     }
 
-    async seedHistory(pondId) {
+    async seedHistory(pondId, date) {
         const response = await fetch(`/api/acoustic/history/${pondId}/seed`, {
-            method: "POST"
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ date })
         });
         return await response.json();
     }

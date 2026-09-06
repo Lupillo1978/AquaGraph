@@ -5,6 +5,7 @@ const PondRepository = require("../repositories/PondRepository");
 const FeederRepository = require("../repositories/FeederRepository");
 
 const storageFile = path.join(__dirname, "../storage/acoustic.json");
+const LOCAL_TIME_ZONE = "America/Mazatlan";
 const DEFAULT_CONFIG = {
     mode: "TIMER",
     source: "SIMULATOR",
@@ -42,6 +43,17 @@ class AcousticService {
         fs.writeFileSync(storageFile, JSON.stringify(this.state, null, 4));
     }
 
+    localDateKey(date) {
+        const parts = new Intl.DateTimeFormat("en-CA", {
+            timeZone: LOCAL_TIME_ZONE,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }).formatToParts(new Date(date));
+        const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+        return `${values.year}-${values.month}-${values.day}`;
+    }
+
     getPonds() {
         const feeders = FeederRepository.getAll();
 
@@ -72,20 +84,45 @@ class AcousticService {
         return this.state.statuses[pondId] || this.emptyStatus(pondId);
     }
 
-    getHistory(pondId) {
-        return this.state.history.filter(item => item.pondId === pondId).slice(-100).reverse();
+    getHistory(pondId, selectedDate = null) {
+        const history = this.state.history.filter(item => item.pondId === pondId);
+
+        if (!selectedDate) {
+            return history.slice(-100).reverse();
+        }
+
+        const dayKey = String(selectedDate).slice(0, 10);
+        const todayKey = this.localDateKey(new Date());
+        const now = Date.now();
+
+        return history
+            .filter(item => this.localDateKey(item.timestamp) === dayKey)
+            .filter(item => dayKey !== todayKey || new Date(item.timestamp).getTime() <= now)
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     }
 
-    seedHistory(pondId, sampleCount = 97) {
+    seedHistory(pondId, sampleCount = 97, selectedDate = null) {
         const pond = this.getPonds().find(item => item.id === pondId);
         const config = this.getConfig(pondId);
         const feederIds = pond ? pond.feeders.map(feeder => feeder.id) : [];
-        const now = Date.now();
+        const requestedDayKey = selectedDate
+            ? String(selectedDate).slice(0, 10)
+            : this.localDateKey(new Date());
+        const dayStart = new Date(`${requestedDayKey}T00:00:00`);
+        const todayKey = this.localDateKey(new Date());
+        const dayEnd = requestedDayKey === todayKey
+            ? Math.min(dayStart.getTime() + 24 * 60 * 60000, Date.now())
+            : dayStart.getTime() + 24 * 60 * 60000;
+        const availableSamples = Math.max(
+            1,
+            Math.floor((dayEnd - dayStart.getTime()) / (15 * 60000)) + 1
+        );
+        const samplesToGenerate = Math.min(sampleCount, availableSamples);
         const samples = [];
         let consumedKg = 0;
 
-        for (let index = 0; index < sampleCount; index += 1) {
-            const timestamp = new Date(now - (sampleCount - index) * 15 * 60000).toISOString();
+        for (let index = 0; index < samplesToGenerate; index += 1) {
+            const timestamp = new Date(dayStart.getTime() + index * 15 * 60000).toISOString();
             const cycle = index % 12;
             const pulse = cycle === 2 || cycle === 3 ? 0.3 : 0;
             const activityIndex = Number(Math.max(0.12, Math.min(0.9, 0.38 + (cycle / 18) + pulse + Math.sin(index * 0.8) * 0.08)).toFixed(3));
@@ -122,7 +159,10 @@ class AcousticService {
             });
         }
 
-        this.state.history = this.state.history.filter(item => item.pondId !== pondId);
+        this.state.history = this.state.history.filter(item => (
+            item.pondId !== pondId ||
+            this.localDateKey(item.timestamp) !== requestedDayKey
+        ));
         this.state.history.push(...samples);
         this.save();
         return samples;
